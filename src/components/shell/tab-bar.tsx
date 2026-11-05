@@ -74,11 +74,13 @@ function Tab({
         ativo ? "text-accent" : "text-text-3",
       )}
     >
-      <Icon
-        size={26}
-        strokeWidth={ativo ? 2 : 1.7}
-        className="transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:scale-[0.85] group-active:duration-[var(--dur-quick)]"
-      />
+      <span className="flex h-[30px] items-center justify-center">
+        <Icon
+          size={26}
+          strokeWidth={ativo ? 2 : 1.7}
+          className="transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:scale-[0.85] group-active:duration-[var(--dur-quick)]"
+        />
+      </span>
       {tab.label}
     </NavLink>
   );

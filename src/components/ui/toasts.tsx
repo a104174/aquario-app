@@ -6,7 +6,7 @@ import { cx } from "@/lib/cx";
 export function Toasts() {
   const toasts = useToasts();
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-[calc(var(--safe-top)+6px)] z-[80] flex flex-col items-center gap-2 px-4">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--tabbar-h)+var(--safe-bottom)+12px)] z-[80] flex flex-col-reverse items-center gap-2 px-4">
       {toasts.map((t) => (
         <button
           key={t.id}

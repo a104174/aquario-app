@@ -145,7 +145,9 @@ export function criarQueryClient() {
       queries: {
         networkMode: "offlineFirst",
         staleTime: 30_000,
-        gcTime: 1000 * 60 * 60 * 24 * 30, // 30 dias (>= maxAge do persister)
+        // Infinity: nunca recolher (a idade é limitada pelo maxAge do persister).
+        // Atenção: valores > 2^31 ms (~24,8 dias) fazem o setTimeout disparar logo.
+        gcTime: Infinity,
         retry: (n, e) => eErroDeRede(e) && n < 2,
         refetchOnWindowFocus: true,
       },

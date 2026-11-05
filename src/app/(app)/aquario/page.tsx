@@ -1,9 +1,12 @@
-import { Screen } from "@/components/shell/screen";
+import { Suspense } from "react";
+import { DetalheAquario, DetalheSkeleton } from "./detalhe";
 
-export default function Page() {
+// /aquario?id=… — uma única página estática (pré-cacheada pelo SW), por isso
+// abre offline para qualquer aquário.
+export default function AquarioPage() {
   return (
-    <Screen titulo="Aquário">
-      <p className="text-text-2">Em breve.</p>
-    </Screen>
+    <Suspense fallback={<DetalheSkeleton />}>
+      <DetalheAquario />
+    </Suspense>
   );
 }

@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 import { ActionSheetHost } from "@/components/ui/action-sheet";
 import { Toasts } from "@/components/ui/toasts";
+import { RegistarSheet } from "@/components/registar/registar-sheet";
 import { useSession } from "@/lib/auth/session";
 import { TabBar } from "./tab-bar";
 
-export function AppShell({ children, sheets }: { children: ReactNode; sheets?: ReactNode }) {
+export function AppShell({ children }: { children: ReactNode }) {
   const { session, pronto } = useSession();
   const router = useRouter();
 
@@ -27,7 +28,7 @@ export function AppShell({ children, sheets }: { children: ReactNode; sheets?: R
         {children}
         <TabBar />
       </div>
-      {sheets}
+      <RegistarSheet />
       <ActionSheetHost />
       <Toasts />
     </>

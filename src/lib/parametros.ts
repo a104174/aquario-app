@@ -10,6 +10,8 @@ export interface InfoParametro {
   decimais: number;
   /** Valores de referência genéricos para água doce tropical. */
   faixa: (v: number) => Faixa;
+  /** Intervalo "ok" desenhado como banda neutra no gráfico. */
+  referencia: [number, number];
 }
 
 const entre = (v: number, a: number, b: number) => v >= a && v <= b;
@@ -17,6 +19,7 @@ const entre = (v: number, a: number, b: number) => v >= a && v <= b;
 export const INFO_PARAMETROS: Record<Parametro, InfoParametro> = {
   nh3_nh4: {
     chave: "nh3_nh4",
+    referencia: [0, 0.1],
     nome: "Amónia/amónio",
     curto: "NH₃/NH₄",
     unidade: "mg/L",
@@ -25,6 +28,7 @@ export const INFO_PARAMETROS: Record<Parametro, InfoParametro> = {
   },
   no2: {
     chave: "no2",
+    referencia: [0, 0.1],
     nome: "Nitrito",
     curto: "NO₂",
     unidade: "mg/L",
@@ -33,6 +37,7 @@ export const INFO_PARAMETROS: Record<Parametro, InfoParametro> = {
   },
   no3: {
     chave: "no3",
+    referencia: [0, 25],
     nome: "Nitrato",
     curto: "NO₃",
     unidade: "mg/L",
@@ -41,6 +46,7 @@ export const INFO_PARAMETROS: Record<Parametro, InfoParametro> = {
   },
   ph: {
     chave: "ph",
+    referencia: [6.5, 7.8],
     nome: "pH",
     curto: "pH",
     unidade: "",
@@ -49,6 +55,7 @@ export const INFO_PARAMETROS: Record<Parametro, InfoParametro> = {
   },
   gh: {
     chave: "gh",
+    referencia: [4, 16],
     nome: "Dureza geral",
     curto: "GH",
     unidade: "°dGH",
@@ -57,6 +64,7 @@ export const INFO_PARAMETROS: Record<Parametro, InfoParametro> = {
   },
   kh: {
     chave: "kh",
+    referencia: [3, 10],
     nome: "Dureza carbonatada",
     curto: "KH",
     unidade: "°dKH",
@@ -65,6 +73,7 @@ export const INFO_PARAMETROS: Record<Parametro, InfoParametro> = {
   },
   temperatura_c: {
     chave: "temperatura_c",
+    referencia: [22, 28],
     nome: "Temperatura",
     curto: "Temp.",
     unidade: "°C",

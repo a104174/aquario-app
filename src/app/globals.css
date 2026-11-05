@@ -57,6 +57,13 @@
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --tabbar-h: 52px;
+
+  /* Série dos gráficos (validada com o validador dataviz: banda de
+   * luminosidade, croma e contraste >= 3:1 contra --surface) */
+  --chart-series: #0b8aa3;
+  --chart-wash: rgb(11 138 163 / 0.1);
+  --chart-grid: rgb(12 26 36 / 0.08);
+  --chart-band: rgb(12 26 36 / 0.045);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -85,6 +92,10 @@
     --shadow-card: 0 0 0 1px rgb(230 241 246 / 0.05);
     --skeleton: rgb(230 241 246 / 0.07);
     --skeleton-shine: rgb(230 241 246 / 0.08);
+    --chart-series: #22a6bc;
+    --chart-wash: rgb(34 166 188 / 0.1);
+    --chart-grid: rgb(230 241 246 / 0.08);
+    --chart-band: rgb(230 241 246 / 0.05);
   }
 }
 
@@ -297,7 +308,7 @@
     }
   }
 
-  /* Toast: chega de cima (direção = autoridade/notificação), sai a acelerar */
+  /* Toast: sobe de baixo (chegada), por cima da tab bar; sai a acelerar */
   .toast-enter {
     animation: toast-in var(--dur-std) var(--ease-out) both;
   }
@@ -307,7 +318,46 @@
   @keyframes toast-in {
     from {
       opacity: 0;
-      transform: translateY(-24px) scale(0.96);
+      transform: translateY(24px) scale(0.96);
+    }
+  }
+
+  /* Remoção de uma linha: desvanece e colapsa a altura (exit = ease-in,
+   * ~70% da entrada). O colapso começa 60ms depois para a linha "sair"
+   * antes de o espaço fechar (follow-through). */
+  .colapsar {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition:
+      grid-template-rows var(--dur-exit) var(--ease-in) 60ms,
+      opacity var(--dur-exit) var(--ease-in),
+      transform var(--dur-exit) var(--ease-in);
+  }
+  .colapsar > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .colapsar[data-saindo] {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+
+  /* Gráfico: a linha "desenha-se" da esquerda para a direita (direção =
+   * tempo/progresso) e a área chega logo a seguir (follow-through). */
+  .grafico-linha {
+    stroke-dasharray: 1;
+    animation: desenhar var(--dur-slow) var(--ease-in-out) both;
+  }
+  .grafico-area {
+    animation: vt-fade-in var(--dur-std) var(--ease-out) 200ms both;
+  }
+  @keyframes desenhar {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
     }
   }
 
@@ -492,6 +542,8 @@ html.no-vt[data-nav="tab"] .screen-enter {
     animation-delay: 0ms;
   }
   .shake,
+  .grafico-linha,
+  .grafico-area,
   .header-ambient,
   .toast-enter,
   .toast-exit,

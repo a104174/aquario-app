@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 import { defaultCache } from "@serwist/turbopack/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { CacheFirst, ExpirationPlugin, Serwist } from "serwist";
+import { CacheFirst, ExpirationPlugin, NetworkOnly, Serwist } from "serwist";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -39,6 +39,12 @@ const serwist = new Serwist({
           },
         ],
       }),
+    },
+    // API do Supabase (REST, auth, functions, uploads): nunca cachear no SW.
+    // Os dados já vivem no IndexedDB (TanStack Query) e são privados.
+    {
+      matcher: ({ url, sameOrigin }) => !sameOrigin && /\/(rest|auth|functions|storage)\/v1\//.test(url.pathname),
+      handler: new NetworkOnly(),
     },
     ...defaultCache,
   ],
