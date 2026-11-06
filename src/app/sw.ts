@@ -79,7 +79,7 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(title, {
       body: data.body ?? "",
       icon: "/icons/manifest-icon-192.maskable.png",
-      badge: "/icons/favicon-196.png",
+      badge: "/icons/badge-96.png",
       tag: data.tag ?? "lembrete-tpa",
       data: {
         url: data.url ?? "/",

@@ -78,13 +78,8 @@ export function LoginFlow() {
     <div className="altura-app flex flex-col">
       {/* Hero: zona por trás da status bar sempre escura (texto branco) */}
       <div className="header-ambient relative flex min-h-0 flex-1 flex-col items-center justify-end overflow-hidden px-6 pb-10 pt-[calc(var(--safe-top)+24px)] text-white">
-        <svg viewBox="0 0 520 300" className="hero-login-icone enter-up mb-5 w-24" aria-hidden>
-          <path
-            d="M20 150 C 100 0, 320 -20, 420 110 L 500 40 C 488 110, 488 190, 500 260 L 420 190 C 320 320, 100 300, 20 150 Z"
-            fill="#5fd6e6"
-          />
-          <circle cx="130" cy="125" r="22" fill="#05141d" />
-        </svg>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/icons/logo-256.png" alt="" width={96} height={96} className="hero-login-icone enter-up mb-5 h-24 w-24 rounded-[22px] shadow-lg" />
         <h1 className="enter-up text-[34px] font-bold tracking-tight" style={{ ["--i" as string]: 1 }}>
           Aquário
         </h1>
