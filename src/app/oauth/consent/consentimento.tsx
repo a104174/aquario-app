@@ -30,7 +30,7 @@ export function Consentimento() {
       return;
     }
     supabase()
-      .auth.oauth.getAuthorizationDetails(id)
+      .then((sb) => sb.auth.oauth.getAuthorizationDetails(id))
       .then(({ data, error }) => {
         if (error || !data) return setErro("Este pedido expirou ou já foi usado. Volta a ligar o conector.");
         if ("redirect_url" in data && !("authorization_id" in data)) {
@@ -56,8 +56,8 @@ export function Consentimento() {
   async function decidir(aprovar: boolean) {
     setAEnviar(true);
     const r = aprovar
-      ? await supabase().auth.oauth.approveAuthorization(id, { skipBrowserRedirect: true })
-      : await supabase().auth.oauth.denyAuthorization(id, { skipBrowserRedirect: true });
+      ? await (await supabase()).auth.oauth.approveAuthorization(id, { skipBrowserRedirect: true })
+      : await (await supabase()).auth.oauth.denyAuthorization(id, { skipBrowserRedirect: true });
     if (r.error || !r.data) {
       setAEnviar(false);
       return setErro("Não foi possível concluir. Tenta outra vez.");

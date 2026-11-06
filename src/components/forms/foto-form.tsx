@@ -10,6 +10,7 @@ import { lerImagemColada, processarImagem, type ImagemProcessada } from "@/lib/i
 import { useColecao, useGuardar } from "@/lib/query/dados";
 import { chaveThumb, guardarFotoPendente } from "@/lib/query/fotos-locais";
 import type { EtiquetaFoto, Foto, TipoEventoFoto } from "@/lib/tipos";
+import { PainelCamara, useCamara } from "./camara";
 import { Chips, ErroForm, Grupo, InputLinha, Linha, SeletorAquario } from "./campos";
 import { lembrarAquario, useAquarioEscolhido, type PropsForm } from "./comum";
 
@@ -41,6 +42,7 @@ export function FotoForm({
   const [erro, setErro] = useState<string | null>(null);
   const camaraRef = useRef<HTMLInputElement>(null);
   const galeriaRef = useRef<HTMLInputElement>(null);
+  const camara = useCamara(camaraRef);
 
   useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview]);
 
@@ -142,7 +144,7 @@ export function FotoForm({
         ) : (
           <button
             type="button"
-            onClick={() => camaraRef.current?.click()}
+            onClick={camara.abrir}
             className="pressable flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 text-accent"
           >
             <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft">
@@ -153,10 +155,20 @@ export function FotoForm({
         )}
       </div>
 
+      <PainelCamara
+        painel={camara.painel}
+        onContinuar={camara.continuar}
+        onFechar={camara.fechar}
+        onGaleria={() => {
+          camara.fechar();
+          galeriaRef.current?.click();
+        }}
+      />
+
       {!inicial && (
         <div className="mb-5 grid grid-cols-3 gap-2">
           {[
-            { t: "Câmara", f: () => camaraRef.current?.click() },
+            { t: "Câmara", f: camara.abrir },
             { t: "Galeria", f: () => galeriaRef.current?.click() },
             { t: "Colar print", f: colar },
           ].map((b) => (

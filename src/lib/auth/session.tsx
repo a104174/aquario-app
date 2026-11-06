@@ -33,10 +33,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     // efeito lemos o localStorage (síncrono, sem rede).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setEstado({ session: sessaoGuardada(), pronto: true });
-    const { data } = supabase().auth.onAuthStateChange((_evt, session) => {
-      setEstado({ session, pronto: true });
+    let cancelar: (() => void) | null = null;
+    let vivo = true;
+    void supabase().then((sb) => {
+      if (!vivo) return;
+      const { data } = sb.auth.onAuthStateChange((_evt, session) => setEstado({ session, pronto: true }));
+      cancelar = () => data.subscription.unsubscribe();
     });
-    return () => data.subscription.unsubscribe();
+    return () => {
+      vivo = false;
+      cancelar?.();
+    };
   }, []);
 
   return <SessionContext.Provider value={estado}>{children}</SessionContext.Provider>;

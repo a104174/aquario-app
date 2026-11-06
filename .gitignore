@@ -53,3 +53,4 @@ supabase/.branches
 reviews/*/ciclo-*/*/
 !reviews/*/ciclo-0/*/
 reviews/*/ciclo-0/*/videos/
+reviews/*/dbg/

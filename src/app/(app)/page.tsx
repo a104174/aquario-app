@@ -1,7 +1,7 @@
 "use client";
 
 import { EstadoErro } from "@/components/ui/estado-erro";
-import { useState } from "react";
+import { useDeferredValue, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { CartaoAquario } from "@/components/aquarios/cartao-aquario";
 import { Exterior } from "@/components/fontes/exterior";
@@ -18,12 +18,14 @@ import type { Aquario } from "@/lib/tipos";
 
 export default function AquariosPage() {
   const aquarios = useColecao("aquarios");
+  const fontes = useColecao("fontes");
   const tpas = useColecao("tpas").data;
   const medicoes = useColecao("medicoes").data;
   const fauna = useColecao("fauna").data;
   const intervalo = useDefinicoes().data?.intervalo_tpa_dias ?? DEFINICOES_PADRAO.intervalo_tpa_dias;
   const [novo, setNovo] = useState(false);
   const naoLidos = (useColecao("alertas").data ?? []).filter((a) => !a.lido).length;
+  const lista = useDeferredValue(aquarios.data);
 
   const n = aquarios.data?.length ?? 0;
 
@@ -33,10 +35,10 @@ export default function AquariosPage() {
       subtitulo={aquarios.data ? (n === 1 ? "1 aquário" : `${n} aquários`) : " "}
       acoes={
         <>
-          <NavLink href="/alertas" tipo="forward" aria-label="Alertas" className="pressable relative flex h-11 w-11 items-center justify-center rounded-full text-white">
+          <NavLink href="/alertas" tipo="forward" aria-label={naoLidos ? `Alertas, ${naoLidos} por ler` : "Alertas"} className="pressable relative flex h-11 w-11 items-center justify-center rounded-full text-white">
             <IconSino size={24} />
             {naoLidos > 0 && (
-              <span className="pop-in absolute right-1 top-1.5 min-w-[18px] rounded-full bg-danger px-1 text-center text-[11px] font-bold leading-[18px] text-white">
+              <span aria-hidden className="pop-in absolute right-1 top-1.5 min-w-[18px] rounded-full bg-danger px-1 text-center text-[11px] font-bold leading-[18px] text-white">
                 {naoLidos}
               </span>
             )}
@@ -49,7 +51,7 @@ export default function AquariosPage() {
     >
       {aquarios.isError && !aquarios.data ? (
         <EstadoErro onRetry={() => void aquarios.refetch()} aTentar={aquarios.isFetching} />
-      ) : aquarios.isPending ? (
+      ) : aquarios.isPending || fontes.isPending ? (
         <div className="skeleton-delay space-y-3">
           <SkeletonCartao />
           <SkeletonCartao />
@@ -60,7 +62,7 @@ export default function AquariosPage() {
       ) : (
         <div className="space-y-3">
           <Exterior compacto />
-          {aquarios.data!.map((a, i) => (
+          {(lista ?? aquarios.data!).map((a, i) => (
             <CartaoAquario key={a.id} aquario={a} tpas={tpas} medicoes={medicoes} fauna={fauna} intervalo={intervalo} indice={i} />
           ))}
         </div>
@@ -76,7 +78,7 @@ function Vazio({ onNovo }: { onNovo: () => void }) {
 
   async function criarMeus() {
     setACriar(true);
-    const { data, error } = await supabase().rpc("criar_aquarios_iniciais");
+    const { data, error } = await (await supabase()).rpc("criar_aquarios_iniciais");
     setACriar(false);
     if (error) return toast("Não foi possível criar os aquários (estás online?).", "erro");
     qc.setQueryData<Aquario[]>(["aquarios"], data as Aquario[]);

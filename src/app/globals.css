@@ -398,26 +398,32 @@
     }
   }
 
-  /* Ambient do header: luz da água a derivar devagar (gás/fluido: lento) */
+  /* Ambient do header: luz da água a derivar devagar (gás/fluido: lento).
+   * Só transform num pseudo-elemento (compositor) — animar
+   * background-position obrigava a repintar o header em cada frame. */
   .header-ambient {
-    background:
-      radial-gradient(120% 80% at 20% -10%, rgb(127 230 242 / 0.16), transparent 60%),
-      linear-gradient(180deg, var(--header-from), var(--header-to));
-    background-size:
-      200% 100%,
-      100% 100%;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--header-from), var(--header-to));
+  }
+  .header-ambient::before {
+    content: "";
+    position: absolute;
+    inset: -30% -60% auto -60%;
+    height: 160%;
+    z-index: -1;
+    background: radial-gradient(60% 50% at 30% 20%, rgb(127 230 242 / 0.16), transparent 70%);
     animation: caustics 14s var(--ease-in-out) infinite alternate;
+    will-change: transform;
+    pointer-events: none;
   }
   @keyframes caustics {
     from {
-      background-position:
-        0% 0%,
-        0 0;
+      transform: translateX(-12%);
     }
     to {
-      background-position:
-        100% 0%,
-        0 0;
+      transform: translateX(12%);
     }
   }
 }
@@ -562,7 +568,7 @@ html.no-vt[data-nav="tab"] .screen-enter {
   .shake,
   .grafico-linha,
   .grafico-area,
-  .header-ambient,
+  .header-ambient::before,
   .toast-enter,
   .toast-exit,
   .viewer-enter,
@@ -578,6 +584,10 @@ html.no-vt[data-nav="tab"] .screen-enter {
   }
   ::view-transition-new(*) {
     animation-direction: reverse !important;
+  }
+  /* sem morph de posição/tamanho: o grupo salta, só o conteúdo faz fade */
+  ::view-transition-group(*) {
+    animation: none !important;
   }
 }
 
@@ -701,5 +711,56 @@ html {
   }
   .a-levantar {
     transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Paisagem: o fundo (oceano, cartões da tab bar) vai até às bordas,
+ *  mas o conteúdo afasta-se do notch/Dynamic Island como no iOS.
+ * ------------------------------------------------------------------ */
+.conteudo-ecra {
+  padding-left: max(16px, calc(var(--safe-left) + 4px));
+  padding-right: max(16px, calc(var(--safe-right) + 4px));
+}
+.header-ambient {
+  padding-left: max(20px, calc(var(--safe-left) + 8px));
+  padding-right: max(20px, calc(var(--safe-right) + 8px));
+}
+.barra-header {
+  padding-left: max(8px, var(--safe-left));
+  padding-right: max(8px, var(--safe-right));
+}
+.tabbar {
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+}
+.toasts {
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  /* pouco espaço vertical: large title mais baixo, conteúdo com largura de leitura */
+  .header-ambient {
+    padding-bottom: 28px;
+  }
+  /* tab bar compacta do iOS em paisagem: ícone ao lado do rótulo */
+  :root {
+    --tabbar-h: 44px;
+  }
+  .tabbar-grelha {
+    max-width: 640px;
+  }
+  .tabbar .tab {
+    flex-direction: row;
+    gap: 6px;
+    font-size: 13px;
+  }
+  .tabbar .tab > span {
+    transform: scale(0.85);
+  }
+  .conteudo-ecra > * {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

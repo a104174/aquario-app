@@ -54,7 +54,10 @@ export default function HistoricoPage() {
       titulo="Histórico"
       subtitulo={tpas.data ? plural(eventos.length, "registo", "registos") : " "}
       hero={
-        (aquarios.data?.length ?? 0) > 1 && (
+        // enquanto os aquários carregam, reserva a altura dos chips (CLS = 0)
+        aquarios.isPending ? (
+          <div className="mt-4 h-11" aria-hidden />
+        ) : (aquarios.data?.length ?? 0) > 1 && (
           <div className="mt-4">
             <Chips
               escuro

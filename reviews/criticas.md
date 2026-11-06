@@ -62,3 +62,30 @@ Corrigido:
 | Sensação nativa | 8 | — |
 
 Piores defeitos para o ciclo 3: (1) performance não medida com Lighthouse, frame de 233 ms ao abrir a sheet; (2) permissões (câmara/notificações) sem explicação prévia nem ecrã útil se negadas; (3) landscape, reduced-motion e snap points das sheets não verificados.
+
+## Ciclo 3 — performance, permissões, paisagem e "reduzir movimento"
+
+Corrigido:
+- **Performance** (Lighthouse mobile): cliente Supabase mínimo (auth/postgrest/storage/functions, sem Realtime) carregado a pedido; sheets (vaul), action sheet, visualizador, gráficos e galeria fora do bundle inicial e montados só na 1.ª utilização (o 1.º toque no ecrã pré-carrega o código das sheets); listas longas com `useDeferredValue` (a timeline monta vazia e enche num render interrompível); uma só subscrição às fotos na timeline (era uma por linha); cáusticas do header animadas só com `transform`; CLS: cartão "Instalar" no fim das Definições, altura reservada para os filtros do Histórico, Aquários espera pelas fontes externas antes de sair do skeleton; contraste AA e ordem de títulos (h1 → h2).
+- **Permissões**: notificações — folha "Lembretes na hora certa" com o que vai ser enviado ANTES do pedido do iOS ("Permitir notificações" / "Agora não"); se recusadas, passos para voltar a permitir + "Usar email entretanto"; se a app não estiver instalada, passos para a instalar. Câmara — explicação antes do 1.º pedido (só uma vez), e se bloqueada: passos + "Usar a galeria".
+- **Paisagem**: conteúdo, título, barra do header, tab bar e toasts afastados do notch/Dynamic Island (`safe-area-inset-left/right`); tab bar compacta do iOS (ícone ao lado do rótulo, 44 px); largura de leitura máx. 680 px; sheets cabem (Guardar visível).
+- **Reduzir movimento**: o grupo da View Transition do header deixou de fazer morph de posição; teste novo confirma que navegação, separadores e voltar só usam fades.
+- Restauro de scroll mais robusto (tenta até 3 s enquanto o conteúdo diferido chega, desiste ao primeiro toque/roda).
+- Testes novos (`estados.spec.ts`): permissões (4), paisagem (4 × 2 dispositivos), reduzir movimento.
+
+Lighthouse mobile (desempenho / acessibilidade / boas práticas / SEO): Aquários 92/100/100/100 · Detalhe 91/100/100/100 · Histórico 93/100/100/100 · Definições 92/100/100/100 (antes: 95/100/81, 87/98/81, 86/98/81, 85/95/81). Instalável: 0 erros. CLS ≤ 0,032.
+
+`npm run test:mobile`: 174 passados, 0 falhados (WebKit: iPhone 15, SE, 15 Pro Max; Chromium: Pixel 7).
+
+| Área | Nota | Evidência (capturas ciclo-3) |
+|---|---|---|
+| Teclado/formulários | 8 | teclado-* nos 3 iPhones e Pixel: campo e Guardar acima do teclado, tab bar escondida |
+| Scroll | 8 | restauro, topo, pull-to-refresh verdes; fim-de-scroll sem conteúdo tapado |
+| Gestos/navegação | 8 | swipe da borda, sheets a arrastar, visualizador (zoom/pinça/swipe), toque longo |
+| Micro-interações | 8 | 0 alvos < 44 px (incl. paisagem); explicações de permissão com botões claros |
+| Motion | 9 | reduzir movimento só com fades; CPU 4×: navegação 46 fps, sheet 47 fps |
+| Layout/safe areas | 9 | paisagem com notch respeitado, tab bar compacta, SE/Pro Max sem cortes, modo escuro |
+| Performance | 8 | Lighthouse ≥ 90 nos 4 ecrãs; TBT 310–370 ms |
+| Sensação nativa | 8 | permissões ao estilo iOS, sheets e transições consistentes |
+
+Piores defeitos que restam (ciclo final): (1) navegação para o Detalhe com CPU 4× ainda tem 3 frames > 50 ms (pior 150 ms) — montagem do ecrã; (2) sheets de formulários longos sem "detents" (meia altura/altura total) — decidido manter altura ajustada ao conteúdo, como as sheets de formulário do iOS, e documentar; (3) campos de data mostram segundos no WebKit de testes (Linux) — no iPhone o seletor é nativo; confirmar no aparelho.

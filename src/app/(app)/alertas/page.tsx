@@ -62,7 +62,7 @@ export default function AlertasPage() {
       ) : (
         grupos.map((g, gi) => (
           <section key={g.dia} className="enter-up mb-5" style={{ ["--i" as string]: Math.min(gi, 6) }}>
-            <h3 className="mb-1.5 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">{cabecalhoDia(g.data)}</h3>
+            <h2 className="mb-1.5 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">{cabecalhoDia(g.data)}</h2>
             <div className="overflow-hidden rounded-[14px] bg-surface">
               {g.itens.map((a) => (
                 <button

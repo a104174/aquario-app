@@ -11,7 +11,7 @@ const db = criarDados("cheio");
 const ASSETS = path.join(import.meta.dirname, "..", "tests", "mobile", "assets");
 const cors = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "*",
+  "Access-Control-Allow-Headers": "authorization, apikey, content-type, accept, accept-profile, content-profile, prefer, range, x-client-info, x-supabase-api-version",
   "Access-Control-Allow-Methods": "GET,POST,PATCH,DELETE,OPTIONS,HEAD",
   "Access-Control-Expose-Headers": "Content-Range",
 };

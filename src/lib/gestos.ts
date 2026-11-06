@@ -30,10 +30,15 @@ export function useMemoriaScroll(ref: RefObject<HTMLElement | null>) {
     tentar();
     const ro = new ResizeObserver(tentar);
     if (el.firstElementChild) [...el.children].forEach((c) => ro.observe(c));
-    const fim = setTimeout(() => {
+    // Conteúdo diferido (useDeferredValue) pode chegar tarde em aparelhos
+    // lentos: continuar a tentar até 3 s, mas desistir mal o utilizador mexa.
+    const desistir = () => {
       restaurado = true;
       ro.disconnect();
-    }, 1500);
+    };
+    const fim = setTimeout(desistir, 3000);
+    el.addEventListener("touchstart", desistir, { passive: true, once: true });
+    el.addEventListener("wheel", desistir, { passive: true, once: true });
     const guardar = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
@@ -48,6 +53,8 @@ export function useMemoriaScroll(ref: RefObject<HTMLElement | null>) {
       // (não guardar aqui: no cleanup o elemento já saiu do DOM e scrollTop é 0)
       clearTimeout(fim);
       ro.disconnect();
+      el.removeEventListener("touchstart", desistir);
+      el.removeEventListener("wheel", desistir);
       el.removeEventListener("scroll", guardar);
       window.removeEventListener("aquario:topo", topo);
     };

@@ -6,7 +6,7 @@ import { escolher } from "@/components/ui/action-sheet";
 import { cx } from "@/lib/cx";
 import { hora, num } from "@/lib/formato";
 import { INFO_PARAMETROS } from "@/lib/parametros";
-import { useApagar, useColecao } from "@/lib/query/dados";
+import { useApagar } from "@/lib/query/dados";
 import { abrirVisualizador } from "@/lib/visualizador-store";
 import type { Colecao } from "@/lib/query/keys";
 import { abrirRegistar, type TipoRegisto } from "@/lib/ui-store";
@@ -33,6 +33,7 @@ export function LinhaEvento({
   condicionadores,
   mostrarAquario,
   aquarioContexto,
+  fotosTodas,
 }: {
   evento: Evento;
   aquarios?: Aquario[];
@@ -40,10 +41,10 @@ export function LinhaEvento({
   mostrarAquario?: boolean;
   /** Aquário do ecrã atual (para transferências recebidas) */
   aquarioContexto?: string;
+  fotosTodas?: { id: string; aquario_id: string }[];
 }) {
   const apagar = useApagar(COLECAO[evento.tipo]);
   const toqueLongo = useToqueLongo(() => void opcoes());
-  const { data: fotosTodas } = useColecao("fotos");
   const [saindo, setSaindo] = useState(false);
   const nomeAquario = aquarios?.find((a) => a.id === evento.aquario_id)?.nome;
 

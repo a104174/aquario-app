@@ -49,7 +49,7 @@ export function LoginFlow() {
     if (!/^\S+@\S+\.\S+$/.test(em)) return falhar("Escreve um email válido.");
     setAEnviar(true);
     setErro(null);
-    const { error } = await supabase().auth.signInWithOtp({ email: em, options: { shouldCreateUser: true } });
+    const { error } = await (await supabase()).auth.signInWithOtp({ email: em, options: { shouldCreateUser: true } });
     setAEnviar(false);
     if (error) return falhar(traduzirErro(error.message));
     try {
@@ -63,7 +63,7 @@ export function LoginFlow() {
   async function verificar(token: string) {
     setAEnviar(true);
     setErro(null);
-    const { error } = await supabase().auth.verifyOtp({ email: email.trim().toLowerCase(), token, type: "email" });
+    const { error } = await (await supabase()).auth.verifyOtp({ email: email.trim().toLowerCase(), token, type: "email" });
     setAEnviar(false);
     if (error) {
       setCodigo("");

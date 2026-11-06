@@ -88,7 +88,7 @@ export function Screen({
             compacto ? "bg-[var(--header-to)] shadow-[0_0.5px_0_rgb(255_255_255/0.12)]" : "bg-transparent",
           )}
         >
-          <div className="relative flex h-11 items-center justify-between px-2">
+          <div className="barra-header relative flex h-11 items-center justify-between px-2">
             <div className="flex min-w-[88px] items-center">
               {voltar && (
                 <button
@@ -162,7 +162,7 @@ export function Seccao({
     <section className={cx("mb-6", className)}>
       {(titulo || acao) && (
         <div className="mb-2 flex items-end justify-between px-1">
-          <h3 className="text-[13px] font-semibold uppercase tracking-wide text-text-2">{titulo}</h3>
+          <h2 className="text-[13px] font-semibold uppercase tracking-wide text-text-2">{titulo}</h2>
           {acao}
         </div>
       )}

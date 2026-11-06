@@ -154,6 +154,8 @@ export async function captura(page: Page, testInfo: TestInfo, nome: string, opts
       const m = document.createElement("div");
       m.id = "__moldura";
       m.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:2147483647;font:600 15px -apple-system,system-ui,sans-serif";
+      // em paisagem não há status bar nem ilha no topo
+      if (innerWidth > innerHeight) safeTop = 0;
       const ilha = safeTop >= 47 ? `<div style="position:absolute;top:11px;left:50%;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000"></div>` : "";
       const barra = safeTop > 0 ? `<div style="position:absolute;top:${safeTop >= 47 ? 17 : 3}px;left:${safeTop >= 47 ? 34 : 12}px;color:#fff;mix-blend-mode:difference">9:41</div>` : "";
       const home = safeBottom > 0 ? `<div style="position:absolute;bottom:8px;left:50%;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:#000;opacity:.85;mix-blend-mode:difference;filter:invert(1)"></div>` : "";

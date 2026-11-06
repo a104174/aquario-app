@@ -1,11 +1,10 @@
 "use client";
 
 import { EstadoErro } from "@/components/ui/estado-erro";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
-import { GraficoParametro } from "@/components/charts/grafico-parametro";
-import { Galeria } from "@/components/fotos/galeria";
 import { Ninhadas } from "@/components/fauna/ninhadas";
 import { Chips, Segmentado } from "@/components/forms/campos";
 import { Timeline } from "@/components/eventos/timeline";
@@ -26,6 +25,12 @@ import type { Parametro } from "@/lib/tipos";
 
 const ORDEM_GRAFICOS: Parametro[] = ["no3", "ph", "temperatura_c", "no2", "nh3_nh4", "kh", "gh"];
 import { cx } from "@/lib/cx";
+
+const GraficoParametro = dynamic(() => import("@/components/charts/grafico-parametro").then((m) => m.GraficoParametro), {
+  ssr: false,
+  loading: () => <div className="skeleton h-[200px]" />,
+});
+const Galeria = dynamic(() => import("@/components/fotos/galeria").then((m) => m.Galeria), { ssr: false });
 
 type Vista = "registos" | "graficos" | "fauna" | "fotos";
 
@@ -238,9 +243,9 @@ function Graficos({ aquarioId }: { aquarioId: string }) {
         <Chips opcoes={disponiveis.map((p) => ({ valor: p, texto: INFO_PARAMETROS[p].curto }))} valor={atual} onValor={setParam} />
       </div>
       <div className="rounded-[18px] bg-surface p-4">
-        <h3 className="text-[17px] font-semibold">
+        <h2 className="text-[17px] font-semibold">
           {info.nome} <span className="font-normal text-text-2">({info.curto}{info.unidade ? ` · ${info.unidade}` : ""})</span>
-        </h3>
+        </h2>
         <p className="mb-2 text-[13px] text-text-2">
           {plural(pontos.length, "medição", "medições")} · faixa sombreada = referência {num(info.referencia[0], 2)}–
           {num(info.referencia[1], 2)}

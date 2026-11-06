@@ -112,8 +112,14 @@ test("tocar na tab ativa volta ao topo", async ({ app }) => {
 test("scroll restaurado ao voltar do detalhe", async ({ app }) => {
   await app.goto("/historico");
   await assentar(app);
+  // a lista entra num render diferido: esperar que tenha altura para 600 px
+  await app.waitForFunction(() => {
+    const s = document.querySelector(".scroll-area")!;
+    return s.scrollHeight - s.clientHeight > 900;
+  });
   await app.evaluate(() => document.querySelector(".scroll-area")!.scrollTo({ top: 600 }));
   await app.waitForTimeout(300);
+  expect(await app.evaluate(() => document.querySelector(".scroll-area")!.scrollTop)).toBe(600);
   await app.getByRole("link", { name: "Aquários" }).click();
   await assentar(app, 700);
   await app.getByRole("link", { name: "Histórico" }).click();
