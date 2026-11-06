@@ -57,7 +57,7 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  --tabbar-h: 52px;
+  --tabbar-h: 64px;
 
   /* Série dos gráficos (validada com o validador dataviz: banda de
    * luminosidade, croma e contraste >= 3:1 contra --surface) */

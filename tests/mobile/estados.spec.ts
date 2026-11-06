@@ -157,7 +157,7 @@ async function rodar(app: Page, nome: string) {
 }
 
 for (const [ecra, url] of [
-  ["aquarios", "/"],
+  ["aquarios", "/aquarios"],
   ["detalhe", "/aquario?id=a1"],
   ["historico", "/historico"],
 ] as const) {
@@ -243,7 +243,7 @@ async function amostrarMovimento(app: Page, acao: () => Promise<void>, ms = 900)
 
 test("reduzir movimento: só fades", async ({ app, erros }, info) => {
   await app.emulateMedia({ reducedMotion: "reduce" });
-  await app.goto("/");
+  await app.goto("/aquarios");
   await assentar(app, 1200);
   const nav = await amostrarMovimento(app, () => app.getByRole("link", { name: /Principal/ }).first().click());
   await assentar(app);

@@ -22,6 +22,12 @@ function Base({ size = 24, children, ...rest }: P & { children: React.ReactNode 
   );
 }
 
+export const IconCasa = (p: P) => (
+  <Base {...p}>
+    <path d="m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9" />
+  </Base>
+);
+
 export const IconAquario = (p: P) => (
   <Base {...p}>
     <rect x="3" y="5" width="18" height="14" rx="2.5" />

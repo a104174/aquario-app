@@ -28,7 +28,7 @@ await p.evaluate(() =>
 );
 await ctx.close();
 
-const paginas = { aquarios: "/", detalhe: "/aquario?id=a1", historico: "/historico", definicoes: "/definicoes" };
+const paginas = { inicio: "/", aquarios: "/aquarios", detalhe: "/aquario?id=a1", historico: "/historico", definicoes: "/definicoes" };
 const notas = {};
 // Mediana de N corridas por ecrã (recomendação do Lighthouse: uma corrida
 // isolada varia vários pontos com a carga da máquina).

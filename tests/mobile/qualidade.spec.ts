@@ -3,7 +3,7 @@ import { achado, assentar, expect, test } from "./fixtures";
 
 test.describe("acessibilidade (axe-core)", () => {
   test.beforeEach(({}, info) => test.skip(!["iphone-15", "pixel-7"].includes(info.project.name)));
-  for (const [nome, url] of [["aquarios", "/"], ["detalhe", "/aquario?id=a1"], ["historico", "/historico"], ["definicoes", "/definicoes"], ["fontes", "/fontes"]]) {
+  for (const [nome, url] of [["aquarios", "/aquarios"], ["detalhe", "/aquario?id=a1"], ["historico", "/historico"], ["definicoes", "/definicoes"], ["fontes", "/fontes"]]) {
     test(`axe ${nome}`, async ({ app }, info) => {
       await app.goto(url);
       await assentar(app, 1200);
@@ -17,7 +17,7 @@ test.describe("acessibilidade (axe-core)", () => {
 
 test.describe("estabilidade visual (CLS)", () => {
   test.beforeEach(({}, info) => test.skip(!["iphone-15", "pixel-7"].includes(info.project.name)));
-  for (const [nome, url] of [["aquarios", "/"], ["historico", "/historico"], ["galeria", "/aquario?id=a1"]]) {
+  for (const [nome, url] of [["aquarios", "/aquarios"], ["historico", "/historico"], ["galeria", "/aquario?id=a1"]]) {
     test(`CLS ${nome}`, async ({ app }) => {
       await app.addInitScript(() => {
         (window as unknown as { __cls: number }).__cls = 0;
@@ -70,7 +70,7 @@ test.describe("performance (Chromium, CPU 4×)", () => {
 
   test("transições e sheets com CPU 4×", async ({ app }, info) => {
     const cdp = await app.context().newCDPSession(app);
-    await app.goto("/");
+    await app.goto("/aquarios");
     await assentar(app, 1200);
     await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
     const nav = await medir(app, async () => {

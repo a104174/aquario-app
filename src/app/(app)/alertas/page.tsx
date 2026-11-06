@@ -126,7 +126,7 @@ export default function AlertasPage() {
     <Screen
       titulo="Alertas"
       subtitulo={alertas.data ? (ativos.length ? `${ativos.length} ${ativos.length === 1 ? "ação" : "ações"}` : "Tudo tratado") : " "}
-      voltar={{ href: "/", texto: "Aquários" }}
+      voltar={{ href: "/", texto: "Início" }}
       acoes={
         naoLidos.length > 0 && (
           <BotaoHeader label="Marcar tudo como lido" onClick={() => naoLidos.forEach((a) => guardar.mutate({ ...a, lido: true }))}>

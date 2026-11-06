@@ -36,7 +36,7 @@ type Vista = "registos" | "graficos" | "fauna" | "fotos";
 
 export function DetalheSkeleton() {
   return (
-    <Screen titulo=" " voltar={{ href: "/", texto: "Aquários" }}>
+    <Screen titulo=" " voltar={{ href: "/aquarios", texto: "Aquários" }}>
       <div className="skeleton-delay">
         <SkeletonLista linhas={6} />
       </div>
@@ -68,14 +68,14 @@ export function DetalheAquario() {
 
   if (aquarios.isError && !aquarios.data)
     return (
-      <Screen titulo="Aquário" voltar={{ href: "/", texto: "Aquários" }}>
+      <Screen titulo="Aquário" voltar={{ href: "/aquarios", texto: "Aquários" }}>
         <EstadoErro onRetry={() => void aquarios.refetch()} aTentar={aquarios.isFetching} />
       </Screen>
     );
   if (aquarios.isPending) return <DetalheSkeleton />;
   if (!aquario) {
     return (
-      <Screen titulo="Aquário" voltar={{ href: "/", texto: "Aquários" }}>
+      <Screen titulo="Aquário" voltar={{ href: "/aquarios", texto: "Aquários" }}>
         <p className="py-10 text-center text-text-2">Este aquário já não existe.</p>
       </Screen>
     );
@@ -99,7 +99,7 @@ export function DetalheAquario() {
         destrutivo: true,
       });
       if (ok) {
-        navegar("/", "back", true);
+        navegar("/aquarios", "back", true);
         apagar.mutate({ id });
       }
     }
@@ -108,7 +108,7 @@ export function DetalheAquario() {
   return (
     <Screen
       titulo={aquario.nome}
-      voltar={{ href: "/", texto: "Aquários" }}
+      voltar={{ href: "/aquarios", texto: "Aquários" }}
       acoes={
         <BotaoHeader label="Opções do aquário" onClick={menu}>
           <IconMaisOpcoes size={26} />

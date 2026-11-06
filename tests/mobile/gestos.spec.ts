@@ -16,13 +16,13 @@ test.afterEach(async ({ page }, info) => {
 });
 
 test("transições: aquários → detalhe → voltar", async ({ app }, info) => {
-  await app.goto("/");
+  await app.goto("/aquarios");
   await assentar(app);
   await app.locator(`a[href="/aquario?id=a1"]`).filter({ hasText: "Principal (Aquatlantis Vienna)" }).first().click();
   await app.waitForURL(/aquario/);
   await assentar(app, 900);
   await app.getByRole("button", { name: /Aquários/ }).first().click();
-  await app.waitForURL((u) => u.pathname === "/");
+  await app.waitForURL((u) => u.pathname === "/aquarios");
   await assentar(app, 900);
   await captura(app, info, "transicao-voltar");
 });
@@ -32,7 +32,7 @@ test("swipe a partir da borda esquerda volta atrás", async ({ app }) => {
   await assentar(app);
   await gesto(app, [linha({ x: 4, y: 420 }, { x: 300, y: 430 }, 16)]);
   await app.waitForTimeout(900);
-  expect.soft(new URL(app.url()).pathname, "swipe da borda não voltou atrás").toBe("/");
+  expect.soft(new URL(app.url()).pathname, "swipe da borda não voltou atrás").toBe("/aquarios");
 });
 
 test("sheet: arrastar para baixo fecha", async ({ app }, info) => {

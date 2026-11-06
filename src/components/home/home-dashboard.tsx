@@ -12,10 +12,10 @@ import { useColecao, useDefinicoes, DEFINICOES_PADRAO } from "@/lib/query/dados"
 export function HomeDashboard() {
   const { data: aquarios = [] } = useColecao("aquarios");
   const { data: tpas = [] } = useColecao("tpas");
-  const { data: fotos = [] } = useColecao("fotos");
-  const { data: alertas = [] } = useColecao("alertas");
+  const { data: fotos } = useColecao("fotos");
+  const { data: alertas } = useColecao("alertas");
   const intervalo = useDefinicoes().data?.intervalo_tpa_dias ?? DEFINICOES_PADRAO.intervalo_tpa_dias;
-  const ativos = alertas.filter((a) => estadoAtivo(a.estado));
+  const ativos = (alertas ?? []).filter((a) => estadoAtivo(a.estado));
 
   const ciclos = aquarios.map((aquario) => {
     const ultima = tpas.find((t) => t.aquario_id === aquario.id);
@@ -27,45 +27,44 @@ export function HomeDashboard() {
     <>
       <section className="mb-6">
         <h2 className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">Agora</h2>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <NavLink
             href="/alertas"
             tipo="forward"
-            className="pressable rounded-[16px] bg-surface p-3 shadow-[var(--shadow-card)]"
+            className="pressable min-w-0 rounded-[18px] bg-surface p-4 shadow-[var(--shadow-card)]"
           >
             <span className={`flex h-8 w-8 items-center justify-center rounded-full ${ativos.length ? "bg-danger-soft text-danger" : "bg-ok-soft text-ok"}`}>
               <IconSino size={18} />
             </span>
-            <span className="mt-3 block text-[22px] font-bold tabular-nums">{ativos.length}</span>
-            <span className="block text-[11px] leading-tight text-text-2">{ativos.length === 1 ? "alerta ativo" : "alertas ativos"}</span>
+            <span className="mt-3 block text-[22px] font-bold tabular-nums">{alertas ? ativos.length : "—"}</span>
+            <span className="block text-[13px] leading-tight text-text-2">{ativos.length === 1 ? "alerta ativo" : "alertas ativos"}</span>
           </NavLink>
 
           <NavLink
-            href={proxima ? `/aquario?id=${proxima.aquario.id}` : "/"}
+            href={proxima ? `/aquario?id=${proxima.aquario.id}` : "/aquarios"}
             tipo="forward"
-            className="pressable rounded-[16px] bg-surface p-3 shadow-[var(--shadow-card)]"
+            className="pressable min-w-0 rounded-[18px] bg-surface p-4 shadow-[var(--shadow-card)]"
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-soft text-accent">
               <IconGota size={18} />
             </span>
-            <span className="mt-3 block truncate text-[15px] font-bold">
-              {proxima?.dias == null ? "Sem TPA" : proxima.dias >= intervalo ? `${proxima.dias} dias` : `em ${intervalo - proxima.dias} d`}
+            <span className="mt-3 block text-[17px] font-bold leading-tight">
+              {!proxima ? "Próxima TPA" : proxima.dias == null ? "Sem registo de TPA" : proxima.dias > intervalo ? `Em atraso: ${proxima.dias - intervalo} d` : proxima.dias === intervalo ? "TPA hoje" : `TPA em ${intervalo - proxima.dias} d`}
             </span>
-            <span className="block truncate text-[11px] leading-tight text-text-2">{proxima?.aquario.nome ?? "Próxima TPA"}</span>
+            <span className="mt-1 block text-[13px] leading-tight text-text-2">{proxima?.aquario.nome ?? "Ver aquários"}</span>
           </NavLink>
 
-          <div className="rounded-[16px] bg-surface p-3 shadow-[var(--shadow-card)]">
+          <div className="col-span-2 flex items-center gap-3 rounded-[18px] bg-surface px-4 py-3 shadow-[var(--shadow-card)]">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgb(139_92_246/0.14)] text-[#8b5cf6]">
               <IconCamara size={18} />
             </span>
-            <span className="mt-3 block text-[22px] font-bold tabular-nums">{fotos.length}</span>
-            <span className="block text-[11px] leading-tight text-text-2">{fotos.length === 1 ? "fotografia" : "fotografias"}</span>
+            <span className="text-[18px] font-bold tabular-nums">{fotos?.length ?? "—"}</span>
+            <span className="text-[13px] text-text-2">{fotos?.length === 1 ? "fotografia registada" : "fotografias registadas"}</span>
           </div>
         </div>
       </section>
 
       <AtalhosRapidos />
-      <FotosEmDestaque fotos={fotos} aquarios={aquarios} />
 
       {ativos.length > 0 && (
         <section className="mb-6">
@@ -94,6 +93,7 @@ export function HomeDashboard() {
           </div>
         </section>
       )}
+      {fotos && <FotosEmDestaque fotos={fotos} aquarios={aquarios} />}
     </>
   );
 }

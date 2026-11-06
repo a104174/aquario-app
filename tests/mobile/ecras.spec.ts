@@ -2,7 +2,8 @@ import { achado, assentar, captura, expect, test, verificarLayout } from "./fixt
 
 // Ecrãs principais (com dados), em todos os dispositivos
 const ECRAS: [string, string][] = [
-  ["aquarios", "/"],
+  ["inicio", "/"],
+  ["aquarios", "/aquarios"],
   ["detalhe", "/aquario?id=a1"],
   ["historico", "/historico"],
   ["definicoes", "/definicoes"],
@@ -52,7 +53,7 @@ test.describe("ecrãs com dados", () => {
 
 test.describe("modo escuro", () => {
   test.use({ colorScheme: "dark" });
-  for (const [nome, url] of ECRAS.slice(0, 5)) {
+  for (const [nome, url] of ECRAS.slice(0, 6)) {
     test(`${nome} escuro`, async ({ app, erros }, info) => {
       await app.goto(url);
       await assentar(app);
@@ -68,7 +69,7 @@ test.describe("estados (iPhone 15)", () => {
 
   test.describe("vazio", () => {
     test.use({ cenario: "vazio" });
-    for (const [nome, url] of [["aquarios", "/"], ["historico", "/historico"], ["alertas", "/alertas"], ["desejos", "/desejos"]]) {
+    for (const [nome, url] of [["aquarios", "/aquarios"], ["historico", "/historico"], ["alertas", "/alertas"], ["desejos", "/desejos"]]) {
       test(`${nome} vazio`, async ({ app, erros }, info) => {
         await app.goto(url);
         await assentar(app);
@@ -82,7 +83,7 @@ test.describe("estados (iPhone 15)", () => {
   test.describe("a carregar", () => {
     test.use({ rede: "lento" });
     test("aquarios a carregar", async ({ app }, info) => {
-      await app.goto("/");
+      await app.goto("/aquarios");
       await app.waitForTimeout(900);
       await captura(app, info, "aquarios-a-carregar");
       await expect(app.locator(".skeleton").first()).toBeVisible();
@@ -96,7 +97,7 @@ test.describe("estados (iPhone 15)", () => {
 
   test.describe("erro", () => {
     test.use({ rede: "erro" });
-    for (const [nome, url] of [["aquarios", "/"], ["historico", "/historico"]]) {
+    for (const [nome, url] of [["aquarios", "/aquarios"], ["historico", "/historico"]]) {
       test(`${nome} erro`, async ({ app }, info) => {
         await app.goto(url);
         await assentar(app, 2500);
@@ -107,7 +108,7 @@ test.describe("estados (iPhone 15)", () => {
   });
 
   test("offline", async ({ app, context }, info) => {
-    await app.goto("/");
+    await app.goto("/aquarios");
     await assentar(app);
     await context.setOffline(true);
     await app.evaluate(() => window.dispatchEvent(new Event("offline")));
@@ -151,7 +152,7 @@ test.describe("sheets e formulários (iPhone 15 + SE)", () => {
     });
   }
   test("novo aquário", async ({ app }, info) => {
-    await app.goto("/");
+    await app.goto("/aquarios");
     await assentar(app);
     await app.getByRole("button", { name: "Novo aquário" }).click();
     await assentar(app, 700);

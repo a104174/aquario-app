@@ -2,14 +2,15 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { IconAquario, IconDefinicoes, IconHistorico, IconMais } from "@/components/icons";
+import { IconAquario, IconCasa, IconDefinicoes, IconHistorico, IconMais } from "@/components/icons";
 import { cx } from "@/lib/cx";
 import { abrirRegistar } from "@/lib/ui-store";
 import { irAoTopo } from "@/lib/gestos";
 import { NavLink } from "./nav";
 
 const TABS = [
-  { href: "/", label: "Aquários", icon: IconAquario, ativo: (p: string) => p === "/" || p.startsWith("/aquario") || p.startsWith("/alertas") },
+  { href: "/", label: "Início", icon: IconCasa, ativo: (p: string) => p === "/" || p === "/alertas" },
+  { href: "/aquarios", label: "Aquários", icon: IconAquario, ativo: (p: string) => p === "/aquarios" || p === "/aquario" },
   { href: "/historico", label: "Histórico", icon: IconHistorico, ativo: (p: string) => p.startsWith("/historico") },
   { href: "/definicoes", label: "Definições", icon: IconDefinicoes, ativo: (p: string) => ["/definicoes", "/produtos", "/desejos", "/ferias", "/fontes"].some((r) => p.startsWith(r)) },
 ];
@@ -17,28 +18,30 @@ const TABS = [
 export function TabBar() {
   const pathname = usePathname();
 
-  const [aquarios, historico, definicoes] = TABS;
+  const [inicio, aquarios, historico, definicoes] = TABS;
 
   return (
     <nav
+      aria-label="Navegação principal"
       style={{ viewTransitionName: "app-tabbar" }}
       className="tabbar fixed inset-x-0 bottom-0 z-30 border-t border-separator bg-[var(--tabbar)] pb-[var(--safe-bottom)] backdrop-blur-xl backdrop-saturate-150"
     >
-      <div className="tabbar-grelha mx-auto grid h-[var(--tabbar-h)] max-w-lg grid-cols-4">
+      <div className="tabbar-grelha mx-auto grid h-[var(--tabbar-h)] max-w-lg grid-cols-5">
+        <Tab tab={inicio} ativo={inicio.ativo(pathname)} pathname={pathname} />
         <Tab tab={aquarios} ativo={aquarios.ativo(pathname)} pathname={pathname} />
         <button
           type="button"
           onClick={() => {
             // No detalhe de um aquário, o registo já vem com ele escolhido
-            const id = pathname.startsWith("/aquario")
+            const id = pathname === "/aquario"
               ? new URLSearchParams(window.location.search).get("id") ?? undefined
               : undefined;
             abrirRegistar({ aquarioId: id });
           }}
-          className="tab group flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-accent"
+          className="tab group flex flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-accent"
         >
-          <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-accent text-accent-contrast transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:scale-[0.85] group-active:duration-[var(--dur-quick)]">
-            <IconMais size={20} strokeWidth={2.4} />
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent text-accent-contrast shadow-[var(--shadow-card)] transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:scale-[0.85] group-active:duration-[var(--dur-quick)]">
+            <IconMais size={25} strokeWidth={2.4} />
           </span>
           Registar
         </button>
@@ -65,7 +68,7 @@ function Tab({
     <NavLink
       href={tab.href}
       tipo={ativo && pathname !== tab.href ? "back" : "tab"}
-      aria-current={ativo ? "page" : undefined}
+      aria-current={mesmaRota ? "page" : ativo ? "location" : undefined}
       onClick={(e) => {
         if (mesmaRota) {
           e.preventDefault();
