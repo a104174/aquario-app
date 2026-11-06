@@ -583,9 +583,12 @@ html.no-vt[data-nav="tab"] .screen-enter {
 html {
   background-color: var(--tabbar-solido);
 }
+/* Com teclado, a app ocupa exatamente a zona visível (o iOS pode tê-la
+   deslocado ao focar): sem espaço em branco nem conteúdo atrás do teclado */
 html[data-teclado] .altura-app {
+  top: var(--vv-topo, 0px);
   bottom: auto;
-  height: var(--vv-h, 100dvh);
+  height: var(--vvh, 100dvh);
 }
 
 /* ------------------------------------------------------------------ *
@@ -701,13 +704,30 @@ html[data-teclado] .conteudo-ecra {
   transition: bottom var(--dur-std) var(--ease-out);
 }
 html[data-teclado] .toasts {
-  bottom: calc(var(--kb, 0px) + 12px);
+  top: calc(var(--vv-fundo, 100dvh) - 12px);
+  bottom: auto;
+  translate: 0 -100%;
 }
 
+/* Sheets ancoradas ao FUNDO DA ZONA VISÍVEL (não à base do ecrã): com o
+   teclado aberto ficam coladas ao topo dele, mesmo quando o iOS desloca o
+   viewport para mostrar o campo. Sem teclado, --vv-fundo = base do ecrã.
+   Header e rodapé (Guardar) fixos; só o meio faz scroll.
+   Motion: segue o teclado com a curva de assinatura (280 ms); o slide de
+   abrir/fechar do vaul (transform) compõe-se com este translate. */
 .sheet-conteudo {
-  translate: 0 calc(-1 * var(--kb, 0px));
-  max-height: calc(var(--vv-h, 100dvh) - var(--safe-top) - 10px);
-  transition: translate var(--dur-std) var(--ease-out);
+  top: var(--vv-fundo, 100dvh);
+  bottom: auto;
+  translate: 0 -100%;
+  max-height: calc(var(--vvh, 100dvh) - var(--safe-top) - 10px);
+  transition:
+    top var(--dur-std) var(--ease-out),
+    max-height var(--dur-std) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-conteudo {
+    transition: none;
+  }
 }
 html[data-teclado] .rodape-sheet {
   padding-bottom: 12px;

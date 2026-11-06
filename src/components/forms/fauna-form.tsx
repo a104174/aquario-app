@@ -168,7 +168,6 @@ export function FaunaForm({ formId, inicial, aquarioId, onFeito, contexto, edita
           <Linha rotulo="Espécie" htmlFor="fauna-especie">
             <InputLinha
               id="fauna-especie"
-              enterKeyHint="done"
               value={especie}
               onChange={(e) => escolherEspecie(e.target.value)}
               readOnly={detalhar || !!contexto}

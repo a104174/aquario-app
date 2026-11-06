@@ -50,7 +50,7 @@ export function NinhadaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<N
       <SeletorAquario aquarios={aquarios} valor={aqId} onValor={setAqId} />
       <Grupo rodape="Sem contar alevins: só a mãe e a data. Avisos aos 25 dias (novo parto) e às 4 e 6 semanas (separar machos).">
         <Linha rotulo="Mãe" htmlFor="ninhada-mae">
-          <InputLinha id="ninhada-mae" enterKeyHint="done" value={mae} onChange={(e) => setMae(e.target.value)} placeholder="ex.: fêmea cauda amarela" />
+          <InputLinha id="ninhada-mae" value={mae} onChange={(e) => setMae(e.target.value)} placeholder="ex.: fêmea cauda amarela" />
         </Linha>
         <Linha rotulo="Parto">
           <InputLinha type="date" value={data} onChange={(e) => setData(e.target.value)} />
