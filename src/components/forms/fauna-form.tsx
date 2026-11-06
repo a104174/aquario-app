@@ -69,6 +69,7 @@ export function FaunaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Fau
         <Linha rotulo="Espécie" htmlFor="fauna-especie">
           <InputLinha
             id="fauna-especie"
+            enterKeyHint="done"
             value={especie}
             onChange={(e) => setEspecie(e.target.value)}
             placeholder="ex.: Neon"

@@ -1,0 +1,7 @@
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: tpa-litros sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: fauna-especie sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: ninhada-mae sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: tpa-litros sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: fauna-especie sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: ninhada-mae sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"transições e sheets com CPU 4×","tipo":"perf","texto":"navegação: {\"fps\":37,\"longos\":2,\"pior\":150} · sheet: {\"fps\":35,\"longos\":2,\"pior\":233}"}

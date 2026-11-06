@@ -39,3 +39,26 @@ Corrigido:
 | Sensação nativa | 6 | falta gestos |
 
 Piores defeitos para o ciclo 2: (1) sem swipe da borda nem gestos no visualizador; (2) scroll não restaurado / tocar na tab não vai ao topo / sem pull-to-refresh; (3) sem toque longo nem proteção contra toques repetidos (risco de TPA duplicada).
+
+## Ciclo 2 — gestos, scroll e micro-interações
+
+Corrigido:
+- `lib/gestos.ts`: memória de scroll por rota (restaura ao voltar a uma tab/ecrã), tocar na tab ativa → topo (scroll suave), puxar para atualizar (listeners passivos; funciona com o bounce do iOS e no Android; indicador com resistência, "pop" e haptic no limiar), swipe a partir da borda esquerda para voltar (o ecrã segue o dedo; ≥ 35% da largura ou rápido → sai e volta atrás; senão assenta), toque longo (antecipação: a linha "levanta"; abre a action sheet).
+- Timeline: toque = editar (fotos: visualizador); toque longo = menu (Editar / Adicionar foto / Apagar).
+- Visualizador: pinça 1–4× mantendo o ponto debaixo dos dedos, duplo toque 2,5× no ponto, arrastar com zoom (com limites), swipe nativo entre fotos e arrastar para baixo para fechar só sem zoom; retirado `touch-none` da raiz (podia impedir o swipe entre fotos no iPhone).
+- Zoom de acessibilidade: retirado `user-scalable=no`; `touch-action: manipulation` na interface.
+- Botões ignoram toques repetidos (800 ms); "Fiz TPA" 1×/1,5 s por aquário.
+- Haptics (Android): sucesso, aviso, seleção (stepper, segmentado, interruptor), limiares de gestos, toque longo.
+
+| Área | Nota | Evidência |
+|---|---|---|
+| Teclado/formulários | 8 | testes de teclado verdes nos 3 dispositivos; Enter avança |
+| Scroll | 8 | tocar na tab → topo; pull-to-refresh com pedido de dados; restauro corrigido no fim do ciclo (cleanup do React 19 lia scrollTop 0) |
+| Gestos/navegação | 8 | swipe da borda volta atrás; duplo toque e pinça fazem zoom; arrastar para baixo fecha; toque longo abre ações; sheets fecham a arrastar/tocar no fundo |
+| Micro-interações | 8 | 0 alvos < 44 px; proteção contra duplos toques; haptics |
+| Motion | 8 | Pixel CPU 4×: navegação 37 fps (2 frames > 50 ms), sheet 35 fps (pior 233 ms) |
+| Layout/safe areas | 8 | — |
+| Performance | 7 | falta Lighthouse |
+| Sensação nativa | 8 | — |
+
+Piores defeitos para o ciclo 3: (1) performance não medida com Lighthouse, frame de 233 ms ao abrir a sheet; (2) permissões (câmara/notificações) sem explicação prévia nem ecrã útil se negadas; (3) landscape, reduced-motion e snap points das sheets não verificados.

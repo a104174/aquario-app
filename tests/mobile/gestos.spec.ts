@@ -70,8 +70,8 @@ test("visualizador: duplo toque, pinça, swipe e fechar", async ({ app }, info) 
   await assentar(app, 900);
   const escala = () =>
     app.evaluate(() => {
-      const img = document.querySelector('[role="dialog"] [data-atual="true"] img, [role="dialog"] img') as HTMLElement | null;
-      const t = img ? getComputedStyle(img.parentElement!).transform : "none";
+      const slide = document.querySelector('[role="dialog"] [data-atual="true"]') as HTMLElement | null;
+      const t = slide ? getComputedStyle(slide).transform : "none";
       return t === "none" ? 1 : new DOMMatrix(t).a;
     });
   // duplo toque

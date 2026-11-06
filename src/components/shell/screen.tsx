@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, ViewTransition, type ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useState, ViewTransition, type ReactNode } from "react";
 import { IconChevronEsquerda } from "@/components/icons";
 import { cx } from "@/lib/cx";
+import { useMemoriaScroll, usePuxarParaAtualizar, useSwipeVoltar } from "@/lib/gestos";
 import { useNavegar } from "./nav";
 import { EstadoSync } from "./estado-sync";
 
@@ -20,6 +22,7 @@ export function Screen({
   acoes,
   hero,
   children,
+  puxarParaAtualizar = true,
 }: {
   titulo: string;
   subtitulo?: ReactNode;
@@ -28,10 +31,26 @@ export function Screen({
   /** Conteúdo extra dentro da zona oceano, por baixo do título. */
   hero?: ReactNode;
   children: ReactNode;
+  /** Puxar para atualizar (por defeito volta a pedir os dados visíveis). */
+  puxarParaAtualizar?: boolean | (() => Promise<unknown>);
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const ecraRef = useRef<HTMLDivElement>(null);
+  const ptrRef = useRef<HTMLDivElement>(null);
   const [compacto, setCompacto] = useState(false);
   const navegar = useNavegar();
+  const qc = useQueryClient();
+
+  const atualizar = useCallback(
+    () => (typeof puxarParaAtualizar === "function" ? puxarParaAtualizar() : qc.refetchQueries({ type: "active" })),
+    [puxarParaAtualizar, qc],
+  );
+  const voltarHref = voltar?.href;
+  const aoVoltar = useCallback(() => voltarHref && navegar(voltarHref, "back"), [voltarHref, navegar]);
+
+  useMemoriaScroll(scrollRef);
+  usePuxarParaAtualizar(scrollRef, ptrRef, puxarParaAtualizar ? atualizar : null);
+  useSwipeVoltar(ecraRef, voltar ? aoVoltar : null);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -50,7 +69,16 @@ export function Screen({
 
   return (
     <ViewTransition enter={DIRECIONAL} exit={DIRECIONAL} default="none">
-      <div className="absolute inset-0">
+      <div ref={ecraRef} className="absolute inset-0 bg-bg">
+        {/* Indicador de "puxar para atualizar" */}
+        {puxarParaAtualizar && (
+          <div ref={ptrRef} className="ptr" aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+              <path d="M20 12a8 8 0 1 1-2.34-5.66" />
+              <path d="M20 4v5h-5" />
+            </svg>
+          </div>
+        )}
         {/* Header fixo */}
         <header
           style={{ viewTransitionName: "app-header" }}

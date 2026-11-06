@@ -9,7 +9,8 @@
     "lint": "eslint",
     "assets": "node scripts/gerar-assets.mjs",
     "typecheck": "tsc --noEmit",
-    "test:mobile": "bash scripts/test-mobile.sh"
+    "test:mobile": "bash scripts/test-mobile.sh",
+    "lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.4.0",

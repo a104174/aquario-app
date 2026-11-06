@@ -642,3 +642,64 @@ html[data-teclado] .hero-login-icone {
   height: 0;
   margin: 0;
 }
+
+/* ------------------------------------------------------------------ *
+ *  Gestos
+ * ------------------------------------------------------------------ */
+/* Interface: sem zoom por duplo toque (mas o pinch de acessibilidade
+ * continua a funcionar — não usamos user-scalable=no) */
+html {
+  touch-action: manipulation;
+}
+
+/* Puxar para atualizar */
+.ptr {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--safe-top) + 50px);
+  z-index: 15;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.15);
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.6);
+  pointer-events: none;
+}
+.ptr-pop {
+  animation: ptr-pop var(--dur-std) var(--ease-pop);
+}
+@keyframes ptr-pop {
+  50% {
+    scale: 1.15;
+  }
+}
+.ptr[data-estado="a-atualizar"] svg {
+  animation: ptr-roda 0.8s linear infinite;
+}
+@keyframes ptr-roda {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* Toque longo: antecipação ("levantar") enquanto o dedo está pousado */
+.a-levantar {
+  transform: scale(0.97);
+  transition: transform 450ms var(--ease-in-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptr-pop,
+  .ptr[data-estado="a-atualizar"] svg {
+    animation: none;
+  }
+  .a-levantar {
+    transform: none;
+  }
+}

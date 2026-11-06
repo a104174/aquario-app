@@ -4,6 +4,7 @@ import { novoId, ultimaTpa } from "./derivados";
 import { num } from "./formato";
 import { estadoStock } from "./produtos";
 import { useApagar, useColecao, useGuardar } from "./query/dados";
+import { vibrar } from "./haptic";
 import { toast } from "./toast";
 import { abrirRegistar } from "./ui-store";
 
@@ -12,6 +13,8 @@ import { abrirRegistar } from "./ui-store";
  * mesmo condicionador (ou o primeiro em uso). Toast com "Anular" durante 6 s.
  * Sem TPA anterior, abre o formulário.
  */
+const ultimoRegisto = new Map<string, number>();
+
 export function useFizTpa() {
   const { data: tpas } = useColecao("tpas");
   const { data: produtos } = useColecao("produtos");
@@ -28,6 +31,9 @@ export function useFizTpa() {
   }
 
   function registar(aquarioId: string) {
+    const agora = Date.now();
+    if (agora - (ultimoRegisto.get(aquarioId) ?? 0) < 1500) return; // toque repetido
+    ultimoRegisto.set(aquarioId, agora);
     const s = sugestao(aquarioId);
     if (!s) return abrirRegistar({ tipo: "tpa", aquarioId });
     const id = novoId();
@@ -41,6 +47,7 @@ export function useFizTpa() {
       notas: null,
     });
     const doseTxt = s.cond && s.dose != null ? ` · ${num(s.dose, 2)} ml ${s.cond.nome}` : "";
+    vibrar("sucesso");
     toast(`✓ TPA de ${num(s.litros, 1)} L${doseTxt}`, "ok", 6000, { texto: "Anular", onClick: () => apagar.mutate({ id }) });
     if (s.cond) {
       const futuro = [{ id, aquario_id: aquarioId, data: new Date().toISOString(), litros: s.litros, condicionador_id: s.cond.id, dose_ml: s.dose, notas: null }, ...(tpas ?? [])];

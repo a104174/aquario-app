@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { IconAquario, IconDefinicoes, IconHistorico, IconMais } from "@/components/icons";
 import { cx } from "@/lib/cx";
 import { abrirRegistar } from "@/lib/ui-store";
+import { irAoTopo } from "@/lib/gestos";
 import { NavLink } from "./nav";
 
 const TABS = [
@@ -66,7 +67,10 @@ function Tab({
       tipo={ativo && pathname !== tab.href ? "back" : "tab"}
       aria-current={ativo ? "page" : undefined}
       onClick={(e) => {
-        if (mesmaRota) e.preventDefault();
+        if (mesmaRota) {
+          e.preventDefault();
+          irAoTopo();
+        }
       }}
       className={cx(
         "group flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium",

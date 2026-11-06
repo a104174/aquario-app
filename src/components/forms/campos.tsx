@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
 import { IconMais } from "@/components/icons";
 import { cx } from "@/lib/cx";
+import { vibrar } from "@/lib/haptic";
 import type { Aquario } from "@/lib/tipos";
 
 /** Grupo estilo "inset grouped" do iOS. */
@@ -119,7 +120,10 @@ export function Segmentado<T extends string>({
           type="button"
           role="tab"
           aria-selected={o.valor === valor}
-          onClick={() => onValor(o.valor)}
+          onClick={() => {
+            if (o.valor !== valor) vibrar("leve");
+            onValor(o.valor);
+          }}
           className={cx(
             "relative z-10 h-11 truncate px-1 text-[14px] font-medium transition-colors duration-[var(--dur-quick)]",
             o.valor === valor ? "text-text" : "text-text-2",
@@ -214,6 +218,7 @@ export function Stepper({
   const mudar = (d: number) => {
     const n = Math.min(max, Math.max(min, valor + d));
     if (n !== valor) {
+      vibrar("leve");
       onValor(n);
       setK((x) => x + 1);
     }
@@ -266,7 +271,10 @@ export function Interruptor({
       aria-checked={ligado}
       aria-label={label}
       disabled={disabled}
-      onClick={() => onMudar(!ligado)}
+      onClick={() => {
+        vibrar("leve");
+        onMudar(!ligado);
+      }}
       className="group flex h-11 w-[55px] shrink-0 items-center justify-center disabled:opacity-40"
     >
       <span

@@ -74,6 +74,7 @@ test("inputs: inputmode, enterkeyhint, autocomplete", async ({ app }, info) => {
     await abrirForm(app, rotulo);
     // o enterkeyhint é atribuído no foco (next/done consoante haja campo seguinte)
     const campos = await app.evaluate(async () => {
+      (document.activeElement as HTMLElement | null)?.blur();
       const lista = [...document.querySelectorAll<HTMLInputElement>("[data-vaul-drawer] input:not([type=hidden]):not([type=file]), [data-vaul-drawer] textarea")];
       const out = [];
       for (const i of lista) {
