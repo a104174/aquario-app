@@ -274,7 +274,8 @@ async function lojaWoo(base: string, palavras: string[]): Promise<Record<string,
   for (const p of palavras) {
     const r = await obter(`${base}/wp-json/wc/store/v1/products?search=${encodeURIComponent(p)}&per_page=100`, { headers: { Accept: "application/json" } });
     if (!r.ok || !(r.headers.get("content-type") ?? "").includes("json")) throw new Error(`Store API indisponível (HTTP ${r.status})`);
-    for (const x of (await r.json()) as Record<string, any>[]) {
+    type ProdutoWoo = { id: number; name: string; permalink?: string; is_in_stock?: boolean; prices?: { price?: string; currency_minor_unit?: number } };
+    for (const x of (await r.json()) as ProdutoWoo[]) {
       const minor = Number(x.prices?.currency_minor_unit ?? 2);
       out[String(x.id)] = {
         nome: semHtml(String(x.name)),
