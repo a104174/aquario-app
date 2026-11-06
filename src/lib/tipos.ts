@@ -84,8 +84,16 @@ export interface Alerta {
   url: string | null;
   lido: boolean;
   criado_em: string;
+  notificado_em: string | null;
   canal: "push" | "email" | "app" | null;
+  estado: EstadoAlerta;
+  adiado_ate: string | null;
+  resolvido_em: string | null;
+  tentativas_envio: number;
+  ultimo_erro: string | null;
 }
+
+export type EstadoAlerta = "pendente" | "adiado" | "resolvido" | "ignorado";
 
 export interface Tpa {
   id: UUID;

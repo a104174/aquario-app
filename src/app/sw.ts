@@ -58,7 +58,14 @@ serwist.addEventListeners();
 // ------------------------------------------------------------------
 // Web Push — lembretes de TPA
 // ------------------------------------------------------------------
-type PushPayload = { title?: string; body?: string; url?: string; tag?: string };
+type PushPayload = {
+  title?: string;
+  body?: string;
+  url?: string;
+  tag?: string;
+  categoria?: string;
+  alertaId?: string;
+};
 
 self.addEventListener("push", (event) => {
   let data: PushPayload = {};
@@ -74,14 +81,24 @@ self.addEventListener("push", (event) => {
       icon: "/icons/manifest-icon-192.maskable.png",
       badge: "/icons/favicon-196.png",
       tag: data.tag ?? "lembrete-tpa",
-      data: { url: data.url ?? "/" },
-    }),
+      data: {
+        url: data.url ?? "/",
+        adiarUrl: data.alertaId ? `/alertas?adiar=${encodeURIComponent(data.alertaId)}` : undefined,
+      },
+      actions: data.alertaId
+        ? [
+            { action: "abrir", title: "Ver agora" },
+            { action: "adiar", title: "Lembrar amanhã" },
+          ]
+        : [{ action: "abrir", title: "Ver alertas" }],
+    } as NotificationOptions),
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const url = (event.notification.data as { url?: string } | undefined)?.url ?? "/";
+  const data = event.notification.data as { url?: string; adiarUrl?: string } | undefined;
+  const url = event.action === "adiar" ? data?.adiarUrl ?? "/alertas" : data?.url ?? "/";
   event.waitUntil(
     (async () => {
       const janelas = await self.clients.matchAll({ type: "window", includeUncontrolled: true });

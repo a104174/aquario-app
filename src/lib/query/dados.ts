@@ -140,9 +140,21 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
     return;
   }
   if (c === "alertas") {
-    // o utilizador só pode marcar como lido (os alertas são criados pelo servidor)
+    // Os alertas são criados pelo servidor; o utilizador só altera o seu
+    // estado de leitura e ciclo de vida (resolver, ignorar ou adiar).
     const a = linha as Alerta;
-    const { error } = await supabase().from("alertas").update({ lido: a.lido }).eq("id", a.id);
+    const { error } = await supabase()
+      .from("alertas")
+      .update({
+        lido: a.lido,
+        estado: a.estado,
+        adiado_ate: a.adiado_ate,
+        resolvido_em: a.resolvido_em,
+        notificado_em: a.notificado_em,
+        canal: a.canal,
+        ultimo_erro: a.ultimo_erro,
+      })
+      .eq("id", a.id);
     if (error) throw error;
     return;
   }

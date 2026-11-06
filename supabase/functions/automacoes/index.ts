@@ -35,7 +35,13 @@ Deno.serve(async (req) => {
       const fontes = await verificarFontes({ userId: data.user.id, forcar: true });
       return json({ tarefa, fontes, envio: await despachar() });
     }
-    const r = await enviarPush(data.user.id, { title: "Aquário", body: "Notificações a funcionar 🐟", url: "/definicoes", tag: "teste" });
+    const r = await enviarPush(data.user.id, {
+      title: "🐟 Notificações a funcionar",
+      body: "O Aquário avisa-te quando houver algo importante.",
+      url: "/definicoes",
+      tag: "teste",
+      categoria: "Teste",
+    });
     return json({ teste: true, ...r });
   }
 

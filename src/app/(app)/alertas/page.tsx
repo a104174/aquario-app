@@ -1,43 +1,97 @@
 "use client";
 
-import { useMemo } from "react";
-import { IconeAlerta } from "@/components/alertas/icone-alerta";
+import { useEffect, useMemo, useRef } from "react";
+import { CartaoAlerta } from "@/components/alertas/cartao-alerta";
 import { IconVisto } from "@/components/icons";
 import { useNavegar } from "@/components/shell/nav";
 import { BotaoHeader, Screen } from "@/components/shell/screen";
 import { SkeletonLista } from "@/components/ui/skeleton";
-import { cx } from "@/lib/cx";
-import { cabecalhoDia, hora } from "@/lib/formato";
+import { amanhaDeManha, estadoAtivo } from "@/lib/alertas";
+import { feedbackTatil } from "@/lib/haptics";
 import { useColecao, useGuardar } from "@/lib/query/dados";
 import type { Alerta } from "@/lib/tipos";
 
 export default function AlertasPage() {
   const alertas = useColecao("alertas");
   const guardar = useGuardar("alertas");
+  const guardarAlerta = guardar.mutate;
   const navegar = useNavegar();
+  const acaoDaNotificacao = useRef(false);
   const lista = useMemo(() => alertas.data ?? [], [alertas.data]);
   const naoLidos = lista.filter((a) => !a.lido);
-
-  const grupos = useMemo(() => {
-    const g: { dia: string; data: string; itens: Alerta[] }[] = [];
-    for (const a of lista) {
-      const dia = new Date(a.criado_em).toDateString();
-      const ult = g.at(-1);
-      if (ult?.dia === dia) ult.itens.push(a);
-      else g.push({ dia, data: a.criado_em, itens: [a] });
-    }
-    return g;
-  }, [lista]);
+  const ativos = lista.filter((a) => estadoAtivo(a.estado));
+  const historico = lista.filter((a) => !estadoAtivo(a.estado)).slice(0, 20);
 
   function abrir(a: Alerta) {
     if (!a.lido) guardar.mutate({ ...a, lido: true });
     if (a.url) navegar(a.url, "forward");
   }
 
+  function resolver(a: Alerta) {
+    feedbackTatil("sucesso");
+    guardar.mutate({
+      ...a,
+      lido: true,
+      estado: "resolvido",
+      adiado_ate: null,
+      resolvido_em: new Date().toISOString(),
+    });
+  }
+
+  function ignorar(a: Alerta) {
+    feedbackTatil();
+    guardar.mutate({
+      ...a,
+      lido: true,
+      estado: "ignorado",
+      adiado_ate: null,
+      resolvido_em: new Date().toISOString(),
+    });
+  }
+
+  function adiar(a: Alerta) {
+    feedbackTatil();
+    guardar.mutate({
+      ...a,
+      lido: true,
+      estado: "adiado",
+      adiado_ate: amanhaDeManha().toISOString(),
+      resolvido_em: null,
+      notificado_em: null,
+      canal: null,
+      ultimo_erro: null,
+    });
+  }
+
+  // A ação "Lembrar amanhã" de browsers que suportam botões no push
+  // abre esta rota com o id. No iOS, tocar no push continua a abrir o
+  // destino principal porque os botões de ações podem não ser mostrados.
+  useEffect(() => {
+    if (acaoDaNotificacao.current || !alertas.data) return;
+    const id = new URLSearchParams(window.location.search).get("adiar");
+    if (!id) return;
+    acaoDaNotificacao.current = true;
+    const alerta = alertas.data.find((a) => a.id === id);
+    if (alerta) {
+      feedbackTatil();
+      guardarAlerta({
+        ...alerta,
+        lido: true,
+        estado: "adiado",
+        adiado_ate: amanhaDeManha().toISOString(),
+        resolvido_em: null,
+        notificado_em: null,
+        canal: null,
+        ultimo_erro: null,
+      });
+    }
+    window.history.replaceState(null, "", "/alertas");
+  }, [alertas.data, guardarAlerta]);
+
   return (
     <Screen
       titulo="Alertas"
-      subtitulo={alertas.data ? (naoLidos.length ? `${naoLidos.length} por ler` : "Tudo lido") : " "}
+      subtitulo={alertas.data ? (ativos.length ? `${ativos.length} ${ativos.length === 1 ? "ação" : "ações"}` : "Tudo tratado") : " "}
       voltar={{ href: "/", texto: "Aquários" }}
       acoes={
         naoLidos.length > 0 && (
@@ -57,38 +111,49 @@ export default function AlertasPage() {
           <p className="mt-1 text-text-2">Quando houver algo a fazer, aparece aqui e no telemóvel.</p>
         </div>
       ) : (
-        grupos.map((g, gi) => (
-          <section key={g.dia} className="enter-up mb-5" style={{ ["--i" as string]: Math.min(gi, 6) }}>
-            <h3 className="mb-1.5 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">{cabecalhoDia(g.data)}</h3>
-            <div className="overflow-hidden rounded-[14px] bg-surface">
-              {g.itens.map((a) => (
-                <button
-                  key={a.id}
-                  type="button"
-                  onClick={() => abrir(a)}
-                  className="pressable-row relative flex w-full items-start gap-3 px-4 py-3 text-left after:absolute after:bottom-0 after:left-[64px] after:right-0 after:h-px after:bg-separator last:after:hidden"
-                >
-                  <IconeAlerta tipo={a.tipo} />
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-baseline justify-between gap-2">
-                      <span className={cx("text-[16px]", a.lido ? "font-medium text-text-2" : "font-semibold")}>{a.titulo}</span>
-                      <span className="shrink-0 text-[13px] tabular-nums text-text-3">{hora(a.criado_em)}</span>
-                    </span>
-                    <span className="block text-[14px] text-text-2">{a.mensagem}</span>
-                  </span>
-                  {/* ponto de "não lido": encolhe e desaparece ao marcar */}
-                  <span
-                    aria-label={a.lido ? undefined : "Não lido"}
-                    className={cx(
-                      "mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-accent transition-[transform,opacity] duration-[var(--dur-std)] ease-[var(--ease-out)]",
-                      a.lido ? "scale-0 opacity-0" : "scale-100 opacity-100",
-                    )}
+        <>
+          <section className="enter-up mb-6">
+            <h2 className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">A fazer</h2>
+            {ativos.length ? (
+              <div className="space-y-3">
+                {ativos.map((a) => (
+                  <CartaoAlerta
+                    key={a.id}
+                    alerta={a}
+                    onAbrir={() => abrir(a)}
+                    onResolver={() => resolver(a)}
+                    onAdiar={() => adiar(a)}
+                    onIgnorar={() => ignorar(a)}
                   />
-                </button>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-[14px] bg-ok-soft px-4 py-4 text-center text-ok">
+                <p className="font-semibold">Tudo tratado 🐟</p>
+                <p className="mt-0.5 text-[14px] opacity-80">Não há ações pendentes.</p>
+              </div>
+            )}
           </section>
-        ))
+
+          {historico.length > 0 && (
+            <section className="enter-up mb-5" style={{ ["--i" as string]: 1 }}>
+              <h2 className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">Tratados recentemente</h2>
+              <div className="space-y-2">
+                {historico.map((a) => (
+                  <CartaoAlerta
+                    key={a.id}
+                    alerta={a}
+                    historico
+                    onAbrir={() => abrir(a)}
+                    onResolver={() => resolver(a)}
+                    onAdiar={() => adiar(a)}
+                    onIgnorar={() => ignorar(a)}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
     </Screen>
   );
