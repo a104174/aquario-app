@@ -69,7 +69,13 @@ export function Screen({
 
   return (
     <ViewTransition enter={DIRECIONAL} exit={DIRECIONAL} default="none">
-      <div ref={ecraRef} className="absolute inset-0 bg-bg">
+      <div
+        ref={ecraRef}
+        className="absolute inset-0"
+        // ao puxar para atualizar vê-se o que está por trás: a metade de cima
+        // tem a cor do topo do header, para o "oceano" não partir
+        style={{ background: "linear-gradient(var(--header-from) 50%, var(--bg) 50%)" }}
+      >
         {/* Indicador de "puxar para atualizar" */}
         {puxarParaAtualizar && (
           <div ref={ptrRef} className="ptr" aria-hidden>
