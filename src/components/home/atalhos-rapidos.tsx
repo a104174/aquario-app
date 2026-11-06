@@ -57,9 +57,9 @@ export function AtalhosRapidos() {
   }
 
   return (
-    <section className="mb-6">
-      <div className="mb-2 flex items-center justify-between px-1">
-        <h2 className="text-[13px] font-semibold uppercase tracking-wide text-text-2">Registo rápido</h2>
+    <section aria-labelledby="inicio-atalhos">
+      <div className="flex items-center justify-between">
+        <h2 id="inicio-atalhos" className="mare-seccao !mb-0">Registo rápido</h2>
         <button
           type="button"
           onClick={() => setAEditar((v) => !v)}
@@ -92,7 +92,7 @@ export function AtalhosRapidos() {
           })}
         </div>
       ) : (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {atalhos.map((tipo) => {
             const opcao = OPCOES.find((o) => o.tipo === tipo)!;
             const Icon = opcao.icon;
@@ -104,12 +104,15 @@ export function AtalhosRapidos() {
                   feedbackTatil();
                   abrirRegistar({ tipo });
                 }}
-                className="pressable flex min-h-[82px] min-w-0 flex-col items-center justify-center gap-1.5 rounded-[16px] bg-surface px-1.5 text-center shadow-[var(--shadow-card)]"
+                className="mare-toque mare-superficie flex min-h-[65px] min-w-0 items-center gap-2.5 rounded-[17px] px-2.5 py-2 text-left"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <span className="grid size-8 shrink-0 place-items-center rounded-[9px] border border-accent/20 bg-accent-soft text-accent">
                   <Icon size={20} />
                 </span>
-                <span className="w-full truncate text-[12px] font-semibold">{opcao.titulo}</span>
+                <span className="min-w-0">
+                  <span className="block text-[13px] font-semibold leading-tight">{opcao.titulo}</span>
+                  <span className="mt-0.5 block text-[11px] leading-tight text-text-2">{opcao.descricao}</span>
+                </span>
               </button>
             );
           })}

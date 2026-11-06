@@ -59,6 +59,11 @@ test.describe("modo escuro", () => {
       await assentar(app);
       await captura(app, info, `${nome}-escuro`);
       await verificarLayout(app, info, `${nome}-escuro`);
+      if (nome === "inicio") {
+        await verificarFixos(app, nome);
+        await expect(app.locator(".mare-album button[tabindex='0'] img")).toBeVisible();
+        await captura(app, info, "inicio-escuro-fim-scroll");
+      }
       expect(erros).toEqual([]);
     });
   }

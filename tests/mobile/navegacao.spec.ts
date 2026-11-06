@@ -33,3 +33,23 @@ test("Início e Aquários têm destinos próprios; Registar fica no centro", asy
   await expect(app.getByRole("dialog").getByRole("button", { name: "AQUARIUS 20 L", exact: true })).toHaveAttribute("aria-pressed", "true");
   expect(erros).toEqual([]);
 });
+
+test("Início liga a manutenção ao aquário e abre a memória selecionada", async ({ app, erros }) => {
+  await app.emulateMedia({ reducedMotion: "reduce" });
+  await app.goto("/");
+  const agora = app.getByRole("region", { name: "Agora" });
+  await expect(agora.getByRole("link", { name: /Ciclo de TPA.*de atraso.*AQUARIUS 20 L/ })).toHaveAttribute("href", "/aquario?id=a2");
+  await expect(agora.getByRole("link", { name: /2 alertas ativos/ })).toHaveAttribute("href", "/alertas");
+
+  const album = app.getByRole("region", { name: "Memórias recentes" });
+  const foto = album.getByRole("button", { name: "Fotografia 2", exact: true });
+  await foto.click();
+  await expect(foto).toHaveAttribute("aria-current", "true");
+  await expect(album.getByRole("button", { name: "Pausar rotação" })).toHaveCount(0);
+  const fotografia = album.getByRole("button", { name: /Abrir fotografia de/ });
+  await expect(fotografia.locator("img")).toBeVisible();
+  await expect.poll(() => fotografia.locator("img").evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await fotografia.click();
+  await expect(app.getByRole("dialog", { name: "Fotografia" })).toBeVisible();
+  expect(erros).toEqual([]);
+});
