@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
@@ -60,6 +61,12 @@ export function DetalheAquario() {
   );
   const sugestaoTpa = fizTpa.sugestao(id);
 
+  if (aquarios.isError && !aquarios.data)
+    return (
+      <Screen titulo="Aquário" voltar={{ href: "/", texto: "Aquários" }}>
+        <EstadoErro onRetry={() => void aquarios.refetch()} aTentar={aquarios.isFetching} />
+      </Screen>
+    );
   if (aquarios.isPending) return <DetalheSkeleton />;
   if (!aquario) {
     return (

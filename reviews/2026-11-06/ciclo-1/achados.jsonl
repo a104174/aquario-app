@@ -1,0 +1,25 @@
+{"projeto":"iphone-15","teste":"axe aquarios","tipo":"axe:serious","texto":"aquarios: color-contrast (8) .text-warning"}
+{"projeto":"iphone-15","teste":"axe aquarios","tipo":"axe:moderate","texto":"aquarios: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"iphone-15","teste":"axe detalhe","tipo":"axe:serious","texto":"detalhe: color-contrast (2) .inline-flex"}
+{"projeto":"iphone-15","teste":"axe detalhe","tipo":"axe:moderate","texto":"detalhe: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"iphone-15","teste":"axe historico","tipo":"axe:serious","texto":"historico: color-contrast (9) section:nth-child(1) > .rounded-\\[14px\\].bg-surface.\\[\\&\\>div\\:last-child_button\\]\\:after\\:hidden > .colapsar:nth-child(1) > div > .pressable-row.items-start.gap-3 > .min-w-0.flex-1 > .text-accent.block.truncate"}
+{"projeto":"iphone-15","teste":"axe historico","tipo":"axe:moderate","texto":"historico: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"iphone-15","teste":"axe definicoes","tipo":"axe:moderate","texto":"definicoes: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"iphone-15","teste":"axe fontes","tipo":"axe:serious","texto":"fontes: color-contrast (5) .text-warning.font-semibold"}
+{"projeto":"iphone-15","teste":"axe fontes","tipo":"axe:moderate","texto":"fontes: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: tpa-litros sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: fauna-especie sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: ninhada-mae sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: tpa-litros sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: fauna-especie sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: ninhada-mae sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"axe aquarios","tipo":"axe:serious","texto":"aquarios: color-contrast (10) .text-warning"}
+{"projeto":"pixel-7","teste":"axe aquarios","tipo":"axe:moderate","texto":"aquarios: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"pixel-7","teste":"axe detalhe","tipo":"axe:serious","texto":"detalhe: color-contrast (3) .inline-flex"}
+{"projeto":"pixel-7","teste":"axe detalhe","tipo":"axe:moderate","texto":"detalhe: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"pixel-7","teste":"axe definicoes","tipo":"axe:moderate","texto":"definicoes: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"pixel-7","teste":"axe historico","tipo":"axe:serious","texto":"historico: color-contrast (10) section:nth-child(1) > .rounded-\\[14px\\].bg-surface.\\[\\&\\>div\\:last-child_button\\]\\:after\\:hidden > .colapsar:nth-child(1) > div > .pressable-row.items-start.gap-3 > .min-w-0.flex-1 > .text-accent.block.truncate"}
+{"projeto":"pixel-7","teste":"axe historico","tipo":"axe:moderate","texto":"historico: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"pixel-7","teste":"axe fontes","tipo":"axe:serious","texto":"fontes: color-contrast (5) .text-warning.font-semibold"}
+{"projeto":"pixel-7","teste":"axe fontes","tipo":"axe:moderate","texto":"fontes: meta-viewport (1) meta[name=\"viewport\"]"}
+{"projeto":"pixel-7","teste":"transições e sheets com CPU 4×","tipo":"perf","texto":"navegação: {\"fps\":31,\"longos\":4,\"pior\":217} · sheet: {\"fps\":47,\"longos\":1,\"pior\":167}"}

@@ -40,6 +40,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-PT" suppressHydrationWarning>
+      <head>
+        {/* Android: o teclado encolhe o layout (interactive-widget=resizes-content).
+            No iOS o WebKit não reconhece a chave (e avisa na consola): lá compensamos
+            com visualViewport (lib/teclado.ts). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){if(/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent))return;function f(){var m=document.querySelector('meta[name=viewport]');if(m&&m.content.indexOf('interactive-widget')<0)m.content+=', interactive-widget=resizes-content';}f();document.addEventListener('DOMContentLoaded',f);})();`,
+          }}
+        />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>

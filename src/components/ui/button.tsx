@@ -24,7 +24,7 @@ export function Button({
         "disabled:opacity-45 disabled:active:scale-100",
         block && "w-full",
         variant === "primary" && "bg-accent text-accent-contrast",
-        variant === "secondary" && "bg-accent-soft text-accent",
+        variant === "secondary" && "bg-accent-soft text-accent-forte",
         variant === "ghost" && "bg-transparent text-accent",
         variant === "danger" && "bg-danger-soft text-danger",
         className,

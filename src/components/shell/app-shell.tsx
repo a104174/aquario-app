@@ -25,7 +25,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Envolve a app para o vaul escalar o fundo quando abre uma sheet */}
-      <div data-vaul-drawer-wrapper="" className="fixed inset-0 overflow-hidden bg-bg">
+      <div data-vaul-drawer-wrapper="" className="altura-app overflow-hidden bg-bg">
         {children}
         <TabBar />
       </div>

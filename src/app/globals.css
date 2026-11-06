@@ -16,14 +16,15 @@
   --surface-3: #e6edf1;
   --text: #0c1a24;
   --text-2: #5b6b78;
-  --text-3: #8b9aa5;
+  --text-3: #6a7884;
   --separator: rgb(12 26 36 / 0.1);
-  --accent: #0b8aa3;
+  --accent: #07758b; /* 5,35:1 em branco (WCAG AA) */
   --accent-soft: rgb(11 138 163 / 0.12);
+  --accent-forte: #066577; /* texto sobre accent-soft (≥ 4,5:1) */
   --accent-contrast: #ffffff;
-  --danger: #d6453d;
+  --danger: #c0352e;
   --danger-soft: rgb(214 69 61 / 0.12);
-  --warning: #c77c0a;
+  --warning: #9a5b00;
   --warning-soft: rgb(199 124 10 / 0.14);
   --ok: #1f9d55;
   --ok-soft: rgb(31 157 85 / 0.12);
@@ -74,10 +75,11 @@
     --surface-3: #1b313f;
     --text: #e6f1f6;
     --text-2: #8fa6b3;
-    --text-3: #5f7685;
+    --text-3: #7e94a2;
     --separator: rgb(230 241 246 / 0.1);
     --accent: #3cc6dc;
     --accent-soft: rgb(60 198 220 / 0.14);
+    --accent-forte: #3cc6dc;
     --accent-contrast: #04121a;
     --danger: #ff6b5f;
     --danger-soft: rgb(255 107 95 / 0.14);
@@ -110,6 +112,7 @@
   --color-separator: var(--separator);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-forte: var(--accent-forte);
   --color-accent-contrast: var(--accent-contrast);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
@@ -576,4 +579,66 @@ html.no-vt[data-nav="tab"] .screen-enter {
   ::view-transition-new(*) {
     animation-direction: reverse !important;
   }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Teclado virtual (lib/teclado.ts define --vv-h, --kb e
+ *  html[data-teclado="aberto"]).
+ *  Motion: a tab bar sai a acelerar (200ms ease-in) e volta a
+ *  desacelerar (280ms ease-out); a sheet sobe com `translate`
+ *  (só transform, compõe com o transform do vaul).
+ * ------------------------------------------------------------------ */
+.altura-app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--vv-h, 100dvh);
+}
+
+.tabbar {
+  transition:
+    transform var(--dur-std) var(--ease-out),
+    opacity var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .tabbar {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: var(--dur-exit);
+  transition-timing-function: var(--ease-in);
+}
+/* Sem tab bar, o conteúdo não precisa da margem dela */
+html[data-teclado] .conteudo-ecra {
+  padding-bottom: 24px;
+}
+
+.toasts {
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 12px);
+  transition: bottom var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .toasts {
+  bottom: calc(var(--kb, 0px) + 12px);
+}
+
+.sheet-conteudo {
+  translate: 0 calc(-1 * var(--kb, 0px));
+  max-height: calc(var(--vv-h, 100dvh) - var(--safe-top) - 10px);
+  transition: translate var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .rodape-sheet {
+  padding-bottom: 12px;
+}
+
+/* Login: o hero encolhe para o formulário ficar acima do teclado */
+.hero-login-icone {
+  transition:
+    transform var(--dur-std) var(--ease-out),
+    opacity var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .hero-login-icone {
+  transform: scale(0.6);
+  opacity: 0;
+  height: 0;
+  margin: 0;
 }

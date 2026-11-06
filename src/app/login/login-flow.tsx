@@ -75,10 +75,10 @@ export function LoginFlow() {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col">
+    <div className="altura-app flex flex-col">
       {/* Hero: zona por trás da status bar sempre escura (texto branco) */}
-      <div className="header-ambient relative flex flex-1 flex-col items-center justify-end px-6 pb-10 pt-[calc(var(--safe-top)+24px)] text-white">
-        <svg viewBox="0 0 520 300" className="enter-up mb-5 w-24" aria-hidden>
+      <div className="header-ambient relative flex min-h-0 flex-1 flex-col items-center justify-end overflow-hidden px-6 pb-10 pt-[calc(var(--safe-top)+24px)] text-white">
+        <svg viewBox="0 0 520 300" className="hero-login-icone enter-up mb-5 w-24" aria-hidden>
           <path
             d="M20 150 C 100 0, 320 -20, 420 110 L 500 40 C 488 110, 488 190, 500 260 L 420 190 C 320 320, 100 300, 20 150 Z"
             fill="#5fd6e6"
@@ -104,6 +104,7 @@ export function LoginFlow() {
               type="email"
               inputMode="email"
               autoComplete="email"
+              enterKeyHint="send"
               autoCapitalize="none"
               autoCorrect="off"
               spellCheck={false}
@@ -131,7 +132,7 @@ export function LoginFlow() {
                 setErro(null);
                 setPasso("email");
               }}
-              className="pressable -ml-2 mb-3 flex items-center gap-1 rounded-lg px-2 py-1 text-[15px] text-accent"
+              className="pressable -ml-2 mb-2 flex min-h-11 items-center gap-1 rounded-lg px-2 text-[15px] text-accent"
             >
               <IconChevronEsquerda size={18} /> Alterar email
             </button>

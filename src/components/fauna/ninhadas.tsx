@@ -31,7 +31,7 @@ export function Ninhadas({ aquarioId }: { aquarioId: string }) {
     <Seccao
       titulo="Ninhadas"
       acao={
-        <button type="button" onClick={() => abrirRegistar({ tipo: "ninhada", aquarioId })} className="pressable text-[15px] font-medium text-accent">
+        <button type="button" onClick={() => abrirRegistar({ tipo: "ninhada", aquarioId })} className="pressable -my-3 flex min-h-11 items-center px-1 text-[15px] font-medium text-accent">
           Registar parto
         </button>
       }

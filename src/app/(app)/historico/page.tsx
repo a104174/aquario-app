@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useEffect, useMemo, useState } from "react";
 import { Chips } from "@/components/forms/campos";
 import { Timeline } from "@/components/eventos/timeline";
@@ -65,7 +66,9 @@ export default function HistoricoPage() {
         )
       }
     >
-      {tpas.isPending || aquarios.isPending ? (
+      {tpas.isError && !tpas.data ? (
+        <EstadoErro onRetry={() => void tpas.refetch()} aTentar={tpas.isFetching} />
+      ) : tpas.isPending || aquarios.isPending ? (
         <div className="skeleton-delay">
           <SkeletonLista linhas={7} />
         </div>

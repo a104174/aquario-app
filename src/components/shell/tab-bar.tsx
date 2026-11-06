@@ -21,7 +21,7 @@ export function TabBar() {
   return (
     <nav
       style={{ viewTransitionName: "app-tabbar" }}
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-separator bg-[var(--tabbar)] pb-[var(--safe-bottom)] backdrop-blur-xl backdrop-saturate-150"
+      className="tabbar fixed inset-x-0 bottom-0 z-30 border-t border-separator bg-[var(--tabbar)] pb-[var(--safe-bottom)] backdrop-blur-xl backdrop-saturate-150"
     >
       <div className="mx-auto grid h-[var(--tabbar-h)] max-w-lg grid-cols-4">
         <Tab tab={aquarios} ativo={aquarios.ativo(pathname)} pathname={pathname} />

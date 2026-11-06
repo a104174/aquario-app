@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { CartaoAquario } from "@/components/aquarios/cartao-aquario";
@@ -46,7 +47,9 @@ export default function AquariosPage() {
         </>
       }
     >
-      {aquarios.isPending ? (
+      {aquarios.isError && !aquarios.data ? (
+        <EstadoErro onRetry={() => void aquarios.refetch()} aTentar={aquarios.isFetching} />
+      ) : aquarios.isPending ? (
         <div className="skeleton-delay space-y-3">
           <SkeletonCartao />
           <SkeletonCartao />

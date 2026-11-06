@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useMemo } from "react";
 import { IconeAlerta } from "@/components/alertas/icone-alerta";
 import { IconVisto } from "@/components/icons";
@@ -47,7 +48,9 @@ export default function AlertasPage() {
         )
       }
     >
-      {alertas.isPending ? (
+      {alertas.isError && !alertas.data ? (
+        <EstadoErro onRetry={() => void alertas.refetch()} aTentar={alertas.isFetching} />
+      ) : alertas.isPending ? (
         <div className="skeleton-delay">
           <SkeletonLista linhas={5} />
         </div>

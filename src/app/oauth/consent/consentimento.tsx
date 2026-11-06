@@ -66,7 +66,7 @@ export function Consentimento() {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col">
+    <div className="altura-app flex flex-col">
       <div className="header-ambient flex flex-1 flex-col items-center justify-end px-6 pb-8 pt-[calc(var(--safe-top)+24px)] text-center text-white">
         <h1 className="text-[28px] font-bold">Autorizar acesso</h1>
         <p className="mt-1 text-white/70">Aquário · leitura dos teus dados</p>

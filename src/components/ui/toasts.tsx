@@ -6,7 +6,7 @@ import { cx } from "@/lib/cx";
 export function Toasts() {
   const toasts = useToasts();
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--tabbar-h)+var(--safe-bottom)+12px)] z-[80] flex flex-col-reverse items-center gap-2 px-4">
+    <div className="toasts pointer-events-none fixed inset-x-0 z-[80] flex flex-col-reverse items-center gap-2 px-4">
       {toasts.map((t) => (
         <div
           key={t.id}
@@ -30,7 +30,7 @@ export function Toasts() {
                 t.acao!.onClick();
                 fecharToast(t.id);
               }}
-              className="pressable rounded-full bg-accent-soft px-3 py-1 text-[15px] font-semibold text-accent"
+              className="pressable -my-1.5 flex min-h-11 items-center rounded-full bg-accent-soft px-4 text-[15px] font-semibold text-accent"
             >
               {t.acao.texto}
             </button>

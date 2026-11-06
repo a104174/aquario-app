@@ -39,7 +39,7 @@ export function Sheet({
       onOpenChange={onOpenChange}
       shouldScaleBackground={!nested}
       noBodyStyles
-      repositionInputs
+      repositionInputs={false}
       onAnimationEnd={onAnimationEnd}
     >
       <Drawer.Portal>
@@ -47,7 +47,7 @@ export function Sheet({
         <Drawer.Content
           aria-describedby={undefined}
           className={cx(
-            "fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[calc(100dvh-var(--safe-top)-10px)] max-w-lg flex-col",
+            "sheet-conteudo fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-lg flex-col",
             "rounded-t-[20px] bg-bg outline-none",
             className,
           )}
@@ -62,7 +62,7 @@ export function Sheet({
             {children}
           </div>
           {rodape && (
-            <div className="shrink-0 border-t border-separator bg-bg px-4 pb-[calc(var(--safe-bottom)+12px)] pt-3">
+            <div className="rodape-sheet shrink-0 border-t border-separator bg-bg px-4 pb-[calc(var(--safe-bottom)+12px)] pt-3">
               {rodape}
             </div>
           )}
@@ -95,7 +95,7 @@ export function BotaoSheet({
       onClick={onClick}
       disabled={disabled}
       className={cx(
-        "pressable rounded-lg px-2 py-2 text-[17px] text-accent disabled:opacity-40",
+        "pressable flex min-h-11 items-center rounded-lg px-2 text-[17px] text-accent disabled:opacity-40",
         forte && "font-semibold",
       )}
     >

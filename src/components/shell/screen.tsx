@@ -109,7 +109,7 @@ export function Screen({
             {subtitulo && <div className="mt-0.5 text-[15px] text-white/70">{subtitulo}</div>}
             {hero}
           </div>
-          <main className="relative -mt-5 min-h-[calc(100%-var(--safe-top)-60px)] rounded-t-[22px] bg-bg px-4 pb-[calc(var(--tabbar-h)+var(--safe-bottom)+32px)] pt-5">
+          <main className="conteudo-ecra relative -mt-5 min-h-[calc(100%-var(--safe-top)-60px)] rounded-t-[22px] bg-bg px-4 pb-[calc(var(--tabbar-h)+var(--safe-bottom)+32px)] pt-5">
             {children}
           </main>
         </div>

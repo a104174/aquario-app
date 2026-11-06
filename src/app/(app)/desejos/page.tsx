@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useState } from "react";
 import { DesejoSheet } from "@/components/desejos/desejo-sheet";
 import { FotoImg } from "@/components/eventos/foto-img";
@@ -52,7 +53,9 @@ export default function DesejosPage() {
         valor={vista}
         onValor={setVista}
       />
-      {desejos.isPending ? (
+      {desejos.isError && !desejos.data ? (
+        <EstadoErro onRetry={() => void desejos.refetch()} aTentar={desejos.isFetching} />
+      ) : desejos.isPending ? (
         <div className="skeleton-delay">
           <SkeletonLista linhas={3} />
         </div>
