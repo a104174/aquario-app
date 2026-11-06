@@ -32,6 +32,8 @@
   --header-to: #0a3247;
   --header-text: #ffffff;
   --tabbar: rgb(255 255 255 / 0.82);
+  /* cor opaca equivalente à tab bar: fundo da página atrás de tudo */
+  --tabbar-solido: color-mix(in srgb, #fff 82%, var(--bg));
   --overlay: rgb(5 20 29 / 0.4);
   --shadow-card: 0 1px 2px rgb(12 26 36 / 0.05), 0 4px 16px rgb(12 26 36 / 0.05);
   --skeleton: rgb(12 26 36 / 0.07);
@@ -90,6 +92,7 @@
     --header-from: #0b2533;
     --header-to: #071219;
     --tabbar: rgb(15 30 40 / 0.82);
+    --tabbar-solido: color-mix(in srgb, rgb(15 30 40) 82%, var(--bg));
     --overlay: rgb(0 0 0 / 0.55);
     --shadow-card: 0 0 0 1px rgb(230 241 246 / 0.05);
     --skeleton: rgb(230 241 246 / 0.07);
@@ -604,7 +607,14 @@ html.no-vt[data-nav="tab"] .screen-enter {
   left: 0;
   right: 0;
   /* até ao fundo físico do ecrã (por baixo do home indicator) */
-  bottom: 0;
+  bottom: calc(-1 * var(--fundo-extra, 0px));
+}
+.tabbar {
+  bottom: calc(-1 * var(--fundo-extra, 0px));
+}
+/* Se mesmo assim sobrar algo no fundo, tem a cor da tab bar (sem bloco partido) */
+html {
+  background-color: var(--tabbar-solido);
 }
 html[data-teclado] .altura-app {
   bottom: auto;

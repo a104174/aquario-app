@@ -47,6 +47,19 @@ export function mostrarCampo(el: HTMLElement, visivel: number) {
   if (window.scrollY !== 0) window.scrollTo(0, 0);
 }
 
+function standalone() {
+  return matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+}
+
+function faltaAoFundo() {
+  if (!standalone()) return 0;
+  const paisagem = matchMedia("(orientation: landscape)").matches;
+  const alto = paisagem ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
+  const falta = Math.round(alto - window.innerHeight);
+  // só corrige o bug (≈ altura da status bar); nunca valores absurdos
+  return falta > 0 && falta <= 100 ? falta : 0;
+}
+
 export function iniciarTeclado() {
   const vv = window.visualViewport;
   const raiz = document.documentElement;
@@ -71,6 +84,10 @@ export function iniciarTeclado() {
       if (agora) raiz.style.setProperty("--vv-h", `${Math.round(visivel)}px`);
       else raiz.style.removeProperty("--vv-h");
       raiz.style.setProperty("--kb", `${sobreposto}px`);
+      // iOS (web app instalada): o viewport às vezes fica mais curto do que o
+      // ecrã e sobra uma faixa no fundo. Medimos a diferença e a app e a tab
+      // bar estendem-se até ao fundo físico.
+      raiz.style.setProperty("--fundo-extra", `${agora ? 0 : faltaAoFundo()}px`);
       if (agora !== aberto) {
         aberto = agora;
         if (agora) raiz.dataset.teclado = "aberto";
