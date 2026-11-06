@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { CartaoAquario } from "@/components/aquarios/cartao-aquario";
 import { Exterior } from "@/components/fontes/exterior";
+import { HomeDashboard } from "@/components/home/home-dashboard";
 import { IconAquario, IconMais, IconSino } from "@/components/icons";
 import { NavLink } from "@/components/shell/nav";
 import { BotaoHeader, Screen } from "@/components/shell/screen";
@@ -56,6 +57,7 @@ export default function AquariosPage() {
         <Vazio onNovo={() => setNovo(true)} />
       ) : (
         <div className="space-y-3">
+          <HomeDashboard />
           <Exterior compacto />
           {aquarios.data!.map((a, i) => (
             <CartaoAquario key={a.id} aquario={a} tpas={tpas} medicoes={medicoes} fauna={fauna} intervalo={intervalo} indice={i} />
