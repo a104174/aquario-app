@@ -102,7 +102,17 @@ Em **Authentication**:
 4. **URL Configuration → Site URL**: o URL da Vercel (por exemplo `https://aquario.vercel.app`).
 5. Depois de entrares pela primeira vez, desliga **Allow new users to sign up**. A app é só tua.
 
-> O email por defeito do Supabase tem limites baixos. Para uso diário, configura SMTP próprio em **Authentication → Emails → SMTP Settings** (o da Resend serve).
+> **Obrigatório no plano gratuito:** sem SMTP próprio, a Supabase **não deixa alterar os templates** e o email por defeito só traz o link, sem código. Configura a Resend em **Authentication → Emails → SMTP Settings**:
+>
+> | Campo | Valor |
+> |---|---|
+> | Sender email | `onboarding@resend.dev` (ou um endereço de um domínio teu verificado na Resend) |
+> | Host / Port | `smtp.resend.com` / `465` |
+> | Username / Password | `resend` / a API key da Resend |
+>
+> Sem domínio verificado, a Resend só entrega emails ao email da própria conta Resend. Por isso, cria a conta Resend com o mesmo email com que entras na app.
+>
+> Atenção também ao **Email OTP Length**: em projetos novos vem a `8` e a app espera `6`.
 
 A sessão é persistente: o refresh token fica no `localStorage` da app instalada, que no iOS está separado do Safari e não é apagado ao fim de 7 dias.
 
