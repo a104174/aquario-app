@@ -77,13 +77,13 @@ export function LoginFlow() {
   return (
     <div className="altura-app flex flex-col">
       {/* Hero: zona por trás da status bar sempre escura (texto branco) */}
-      <div className="header-ambient relative flex min-h-0 flex-1 flex-col items-center justify-end overflow-hidden px-6 pb-10 pt-[calc(var(--safe-top)+24px)] text-white">
+      <div className="header-ambient relative flex min-h-0 flex-1 flex-col items-center justify-end overflow-hidden px-6 pb-10 pt-[calc(var(--safe-top)+24px)] text-text">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/icons/logo-256.png" alt="" width={96} height={96} className="hero-login-icone enter-up mb-5 h-24 w-24 rounded-[22px] shadow-lg" />
         <h1 className="enter-up text-[34px] font-bold tracking-tight" style={{ ["--i" as string]: 1 }}>
           Aquário
         </h1>
-        <p className="enter-up mt-1 text-[15px] text-white/70" style={{ ["--i" as string]: 2 }}>
+        <p className="enter-up mt-1 text-[15px] text-text-2" style={{ ["--i" as string]: 2 }}>
           O diário dos teus aquários
         </p>
       </div>

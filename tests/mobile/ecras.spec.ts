@@ -21,19 +21,31 @@ async function verificarFixos(page: import("@playwright/test").Page, ecra: strin
     tab: document.querySelector("nav")?.getBoundingClientRect().bottom ?? null,
     corpo: document.scrollingElement?.scrollTop ?? 0,
   }));
-  await page.evaluate(() => {
-    const s = document.querySelector(".scroll-area");
-    s?.scrollTo({ top: s.scrollHeight });
-  });
-  await page.waitForTimeout(700);
+  // até ao fim real (listas paginadas carregam mais ao chegar ao fim)
+  for (let i = 0; i < 8; i++) {
+    const antesH = await page.evaluate(() => {
+      const s = document.querySelector(".scroll-area");
+      s?.scrollTo({ top: s.scrollHeight });
+      return s?.scrollHeight ?? 0;
+    });
+    await page.waitForTimeout(450);
+    if ((await page.evaluate(() => document.querySelector(".scroll-area")?.scrollHeight ?? 0)) === antesH) break;
+  }
+  await page.waitForTimeout(400);
   const depois = await page.evaluate(() => ({
     header: document.querySelector("header")?.getBoundingClientRect().top ?? null,
     tab: document.querySelector("nav")?.getBoundingClientRect().bottom ?? null,
+    tabTopo: document.querySelector(".tabbar-capsula")?.getBoundingClientRect().top ?? null,
     corpo: document.scrollingElement?.scrollTop ?? 0,
     h: innerHeight,
+    // fundo do último conteúdo do ecrã, já no fim do scroll
+    ultimo: Math.max(0, ...[...document.querySelectorAll("main.conteudo-ecra *")].filter((e) => !e.closest("[aria-roledescription=carrossel]")).map((e) => e.getBoundingClientRect()).filter((r) => r.height > 0 && r.width > 0).map((r) => r.bottom)),
   }));
   expect.soft(depois.header, `${ecra}: header mexeu`).toBe(antes.header);
-  expect.soft(depois.tab, `${ecra}: tab bar não está colada ao fundo`).toBe(depois.h);
+  // navegação flutuante: destacada do fundo, sem tapar o último conteúdo
+  expect.soft(depois.tab, `${ecra}: navegação fora do ecrã`).toBeLessThanOrEqual(depois.h - 8);
+  expect.soft(depois.tab, `${ecra}: navegação demasiado alta`).toBeGreaterThan(depois.h - 70);
+  expect.soft(depois.ultimo, `${ecra}: último conteúdo tapado pela navegação`).toBeLessThanOrEqual((depois.tabTopo ?? depois.h) + 1);
   expect.soft(depois.corpo, `${ecra}: a página inteira fez scroll`).toBe(0);
 }
 

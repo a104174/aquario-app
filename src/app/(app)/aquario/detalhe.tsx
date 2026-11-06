@@ -157,10 +157,12 @@ export function DetalheAquario() {
               type="button"
               onClick={() => abrirRegistar({ tipo: t.tipo, aquarioId: id })}
               style={{ ["--i" as string]: i }}
-              className="pressable enter-up flex flex-col items-center gap-1.5 rounded-[14px] bg-surface py-3 text-[13px] font-medium"
+              className="pressable enter-up flex flex-col items-start gap-3 rounded-[var(--r-bloco)] bg-surface px-3 pb-2.5 pt-3 text-[13px] font-semibold shadow-[var(--shadow-card)]"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-accent">
-                <Icon size={20} />
+              {/* ícone limpo (sem círculo) + "+" discreto: é uma ação de registo */}
+              <span className="flex w-full items-start justify-between text-text">
+                <Icon size={22} />
+                <span aria-hidden className="text-[15px] leading-none text-text-3">+</span>
               </span>
               {t.titulo}
             </button>
@@ -205,12 +207,20 @@ export function DetalheAquario() {
 
 function Estatistica({ rotulo, valor, alerta }: { rotulo: string; valor: string; alerta?: boolean }) {
   return (
-    <div className={cx("min-w-0 rounded-[12px] border px-2.5 py-2", alerta ? "border-[#ff9b8d]/40 bg-[#49282b]/85" : "border-white/15 bg-[#10232f]/80")}>
-      <p className="text-[12px] text-white/70">
+    // Sobre a fotografia: vidro escuro com texto branco. Sem fotografia
+    // (grupo "claro"): bloco branco elevado com texto carvão.
+    <div
+      className={cx(
+        "min-w-0 rounded-[16px] px-3 py-2.5 backdrop-blur-md",
+        alerta ? "bg-[#5a1e1a]/70 group-data-[claro]/ind:bg-danger-soft" : "bg-black/35 group-data-[claro]/ind:bg-surface group-data-[claro]/ind:shadow-[var(--shadow-card)]",
+        "group-data-[claro]/ind:backdrop-blur-none",
+      )}
+    >
+      <p className="text-[12px] text-white/75 group-data-[claro]/ind:text-text-2">
         {alerta && <span aria-hidden>⚠︎ </span>}
         {rotulo}
       </p>
-      <p className="truncate text-[17px] font-semibold">{valor}</p>
+      <p className={cx("truncate text-[17px] font-semibold text-white", alerta ? "group-data-[claro]/ind:text-danger" : "group-data-[claro]/ind:text-text")}>{valor}</p>
     </div>
   );
 }

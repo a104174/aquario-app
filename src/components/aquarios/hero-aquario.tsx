@@ -25,11 +25,8 @@ export function HeroAquario({ aquario, fotos, indicadores, ...screen }: Props) {
 
   if (!slides.length) return (
     <Screen {...screen} hero={
-      <div className="relative mt-4 overflow-hidden rounded-[18px] border border-white/15 bg-white/5 p-2">
-        <svg viewBox="0 0 180 72" className="pointer-events-none absolute -right-1 top-0 h-full w-[55%] text-[#78d9e4]/20" fill="none" aria-hidden="true">
-          <path d="M-10 30c36 4 50-22 91-22 43 0 55 30 99 30M-10 45c36 4 50-22 91-22 43 0 55 30 99 30M-10 60c36 4 50-22 91-22 43 0 55 30 99 30" stroke="currentColor" />
-        </svg>
-        <div className="relative grid grid-cols-3 gap-1">{indicadores}</div>
+      <div data-claro="" className="group/ind relative mt-4">
+        <div className="relative grid grid-cols-3 gap-2">{indicadores}</div>
       </div>
     } />
   );
@@ -64,7 +61,7 @@ export function HeroAquario({ aquario, fotos, indicadores, ...screen }: Props) {
       }
       hero={
         <div className="mt-3">
-          <div className="grid grid-cols-3 gap-2">{indicadores}</div>
+          <div className="group/ind grid grid-cols-3 gap-2">{indicadores}</div>
           {slides.length > 1 && (
             <div className="flex items-center justify-center" role="group" aria-label="Paginação das fotografias">
               {slides.map((foto, i) => (

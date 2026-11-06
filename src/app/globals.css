@@ -1,43 +1,56 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ *
- *  Tokens de design
- *  Modo claro/escuro automático (prefers-color-scheme).
- *  O header é sempre "oceano" escuro: com statusBarStyle
- *  black-translucent o texto da status bar é branco, por isso a zona
- *  por trás dele tem de ser escura nos dois modos.
+ *  Tokens de design — identidade clara "premium"
+ *  Fundo off-white quente, superfícies brancas, texto carvão e ações
+ *  carvão. A cor aquática (--agua) é usada só onde comunica: dados,
+ *  estados e gráficos. Uma só aparência (clara), como uma app editorial.
  * ------------------------------------------------------------------ */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  --bg: #eef3f6;
+  --bg: #f2f2ef;
   --surface: #ffffff;
-  --surface-2: #f4f7f9;
-  --surface-3: #e6edf1;
-  --text: #0c1a24;
-  --text-2: #5b6b78;
-  --text-3: #6a7884;
-  --separator: rgb(12 26 36 / 0.1);
-  --accent: #07758b; /* 5,35:1 em branco (WCAG AA) */
-  --accent-soft: rgb(11 138 163 / 0.12);
-  --accent-forte: #066577; /* texto sobre accent-soft (≥ 4,5:1) */
+  --surface-2: #f7f7f5;
+  --surface-3: #e9e9e5;
+  --text: #141517;
+  --text-2: #5a5d62;
+  --text-3: #6a6d72; /* ≥ 4,5:1 em --bg e --surface */
+  --separator: rgb(20 21 23 / 0.08);
+  /* ações: carvão */
+  --accent: #1b1c1f;
+  --accent-soft: #ebebe7;
+  --accent-forte: #1b1c1f;
   --accent-contrast: #ffffff;
+  /* cor aquática: dados e estados, com parcimónia */
+  --agua: #0b7f90;
+  --agua-soft: rgb(11 127 144 / 0.1);
   --danger: #c0352e;
-  --danger-soft: rgb(214 69 61 / 0.12);
+  --danger-soft: rgb(214 69 61 / 0.1);
   --warning: #9a5b00;
-  --warning-soft: rgb(199 124 10 / 0.14);
-  --ok: #1f9d55;
-  --ok-soft: rgb(31 157 85 / 0.12);
-  --header-from: #0d4a66;
-  --header-to: #0a3247;
-  --header-text: #ffffff;
-  --tabbar: rgb(255 255 255 / 0.82);
-  /* cor opaca equivalente à tab bar: fundo da página atrás de tudo */
-  --tabbar-solido: color-mix(in srgb, #fff 82%, var(--bg));
-  --overlay: rgb(5 20 29 / 0.4);
-  --shadow-card: 0 1px 2px rgb(12 26 36 / 0.05), 0 4px 16px rgb(12 26 36 / 0.05);
-  --skeleton: rgb(12 26 36 / 0.07);
-  --skeleton-shine: rgb(255 255 255 / 0.6);
+  --warning-soft: rgb(199 124 10 / 0.12);
+  --ok: #1d8a4c;
+  --ok-soft: rgb(31 157 85 / 0.11);
+  /* (compatibilidade) o header deixou de ser "oceano": acompanha o fundo */
+  --header-from: var(--bg);
+  --header-to: var(--bg);
+  --header-text: var(--text);
+  /* navegação flutuante */
+  --nav: #1b1c1f;
+  --nav-texto: rgb(255 255 255 / 0.62);
+  --tabbar: rgb(242 242 239 / 0.86);
+  --tabbar-solido: var(--bg);
+  --overlay: rgb(20 21 23 / 0.32);
+  /* elevação: duas camadas, curtas e suaves */
+  --shadow-card: 0 1px 2px rgb(20 21 23 / 0.04), 0 8px 24px -6px rgb(20 21 23 / 0.08);
+  --shadow-flutuante: 0 2px 6px rgb(20 21 23 / 0.08), 0 14px 34px -8px rgb(20 21 23 / 0.28);
+  --shadow-botao: 0 1px 2px rgb(20 21 23 / 0.06), 0 4px 12px -2px rgb(20 21 23 / 0.1);
+  --skeleton: rgb(20 21 23 / 0.06);
+  --skeleton-shine: rgb(255 255 255 / 0.7);
+  /* raios */
+  --r-cartao: 26px;
+  --r-bloco: 18px;
+  --r-controlo: 14px;
 
   /* ----- Identidade de motion (skill motion-design) -----
    * Arquétipo: Corporate/iOS — limpo, decidido, sem overshoot em UI pesada.
@@ -59,49 +72,14 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  --tabbar-h: 64px;
+  /* altura reservada no fundo para a navegação flutuante (cápsula + folga) */
+  --tabbar-h: 72px;
 
-  /* Série dos gráficos (validada com o validador dataviz: banda de
-   * luminosidade, croma e contraste >= 3:1 contra --surface) */
-  --chart-series: #0b8aa3;
-  --chart-wash: rgb(11 138 163 / 0.1);
-  --chart-grid: rgb(12 26 36 / 0.08);
-  --chart-band: rgb(12 26 36 / 0.045);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #071219;
-    --surface: #0f1e28;
-    --surface-2: #142632;
-    --surface-3: #1b313f;
-    --text: #e6f1f6;
-    --text-2: #8fa6b3;
-    --text-3: #7e94a2;
-    --separator: rgb(230 241 246 / 0.1);
-    --accent: #3cc6dc;
-    --accent-soft: rgb(60 198 220 / 0.14);
-    --accent-forte: #3cc6dc;
-    --accent-contrast: #04121a;
-    --danger: #ff6b5f;
-    --danger-soft: rgb(255 107 95 / 0.14);
-    --warning: #f2b33d;
-    --warning-soft: rgb(242 179 61 / 0.14);
-    --ok: #4cd98a;
-    --ok-soft: rgb(76 217 138 / 0.14);
-    --header-from: #0b2533;
-    --header-to: #071219;
-    --tabbar: rgb(15 30 40 / 0.82);
-    --tabbar-solido: color-mix(in srgb, rgb(15 30 40) 82%, var(--bg));
-    --overlay: rgb(0 0 0 / 0.55);
-    --shadow-card: 0 0 0 1px rgb(230 241 246 / 0.05);
-    --skeleton: rgb(230 241 246 / 0.07);
-    --skeleton-shine: rgb(230 241 246 / 0.08);
-    --chart-series: #22a6bc;
-    --chart-wash: rgb(34 166 188 / 0.1);
-    --chart-grid: rgb(230 241 246 / 0.08);
-    --chart-band: rgb(230 241 246 / 0.05);
-  }
+  /* Série dos gráficos (contraste >= 3:1 contra --surface) */
+  --chart-series: #0b7f90;
+  --chart-wash: rgb(11 127 144 / 0.1);
+  --chart-grid: rgb(20 21 23 / 0.07);
+  --chart-band: rgb(20 21 23 / 0.04);
 }
 
 @theme inline {
@@ -123,6 +101,9 @@
   --color-warning-soft: var(--warning-soft);
   --color-ok: var(--ok);
   --color-ok-soft: var(--ok-soft);
+  --color-agua: var(--agua);
+  --color-agua-soft: var(--agua-soft);
+  --color-nav: var(--nav);
   --font-sans: -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
   --font-display: -apple-system-headline, -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Display", sans-serif;
   --ease-out: var(--ease-out);
@@ -407,22 +388,6 @@
   .header-ambient {
     position: relative;
     isolation: isolate;
-    overflow: hidden;
-    background: linear-gradient(180deg, var(--header-from), var(--header-to));
-  }
-  .header-ambient::before {
-    content: "";
-    position: absolute;
-    inset: -30% -60% auto -60%;
-    height: 160%;
-    z-index: -1;
-    background: radial-gradient(60% 50% at 30% 20%, rgb(127 230 242 / 0.16), transparent 70%);
-    animation: caustics 14s var(--ease-in-out) infinite alternate;
-    will-change: transform;
-    /* o brilho nasce a 0 na borda de cima do header: ao puxar para baixo
-       (bounce do iOS) não há linha entre o fundo revelado e o header */
-    mask-image: linear-gradient(to bottom, transparent 19%, #000 42%);
-    pointer-events: none;
   }
   @keyframes caustics {
     from {
@@ -621,10 +586,101 @@ html[data-teclado] .altura-app {
   height: var(--vv-h, 100dvh);
 }
 
+/* ------------------------------------------------------------------ *
+ *  Navegação flutuante: cápsula carvão destacada da página.
+ *  Disco branco do destino ativo desliza entre posições (só transform,
+ *  curva de assinatura, 280 ms). Toque: o ícone encolhe 0,88 (120 ms).
+ * ------------------------------------------------------------------ */
 .tabbar {
+  position: fixed;
+  z-index: 30;
+  left: max(16px, calc(var(--safe-left) + 8px));
+  right: max(16px, calc(var(--safe-right) + 8px));
+  bottom: max(14px, calc(var(--safe-bottom) - 6px));
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
   transition:
     transform var(--dur-std) var(--ease-out),
     opacity var(--dur-std) var(--ease-out);
+}
+.tabbar-capsula {
+  --slot-w: 20%;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  max-width: 420px;
+  height: 64px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--nav);
+  box-shadow: var(--shadow-flutuante), inset 0 1px 0 rgb(255 255 255 / 0.07);
+  pointer-events: auto;
+}
+.tabbar-disco {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  width: calc((100% - 12px) / 5);
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(calc(var(--slot) * 100%));
+  transition:
+    transform var(--dur-std) var(--ease-out),
+    opacity var(--dur-quick) var(--ease-out);
+  pointer-events: none;
+}
+.tabbar-disco::before {
+  content: "";
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+}
+.tabbar-disco[data-visivel] {
+  opacity: 1;
+}
+.tabbar .tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nav-texto);
+  transition: color var(--dur-std) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.tabbar .tab[data-ativo] {
+  color: var(--nav);
+}
+.tabbar .tab:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -6px;
+  border-radius: 999px;
+}
+.tabbar .tab-icone,
+.tab-registar-anel {
+  transition: transform var(--dur-std) var(--ease-out);
+}
+.tabbar .tab:active .tab-icone,
+.tabbar .tab:active .tab-registar-anel {
+  transform: scale(0.88);
+  transition-duration: var(--dur-quick);
+}
+.tab-registar-anel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgb(255 255 255 / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14);
 }
 html[data-teclado] .tabbar {
   transform: translateY(110%);
@@ -745,10 +801,6 @@ html {
   padding-left: max(8px, var(--safe-left));
   padding-right: max(8px, var(--safe-right));
 }
-.tabbar {
-  padding-left: var(--safe-left);
-  padding-right: var(--safe-right);
-}
 .toasts {
   padding-left: max(16px, var(--safe-left));
   padding-right: max(16px, var(--safe-right));
@@ -758,24 +810,83 @@ html {
   .header-ambient {
     padding-bottom: 28px;
   }
-  /* tab bar compacta do iOS em paisagem: ícone ao lado do rótulo */
+  /* cápsula mais baixa em paisagem */
   :root {
-    --tabbar-h: 44px;
+    --tabbar-h: 64px;
   }
-  .tabbar-grelha {
-    max-width: 640px;
+  .tabbar-capsula {
+    height: 52px;
   }
-  .tabbar .tab {
-    flex-direction: row;
-    gap: 6px;
-    font-size: 13px;
+  .tabbar-disco {
+    top: 6px;
+    height: 40px;
   }
-  .tabbar .tab > span {
-    transform: scale(0.85);
+  .tabbar-disco::before {
+    width: 40px;
+    height: 40px;
   }
   .conteudo-ecra > * {
     max-width: 680px;
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Primitivas da identidade clara
+ * ------------------------------------------------------------------ */
+/* Botão circular independente (voltar, ações do header, sobre fotos) */
+.botao-circular {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-botao);
+}
+/* Botão escuro circular com seta (ação dentro de cartões) */
+.botao-seta {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--nav);
+  box-shadow: var(--shadow-botao);
+}
+/* Superfície elevada base (widgets) */
+.superficie {
+  background: var(--surface);
+  border-radius: var(--r-cartao);
+  box-shadow: var(--shadow-card);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tabbar-disco,
+  .tabbar .tab,
+  .tabbar .tab-icone,
+  .tab-registar-anel {
+    transition-duration: 1ms !important;
+  }
+}
+/* véu por baixo da navegação flutuante: o conteúdo desvanece ao passar */
+.tabbar::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--safe-bottom) + 96px);
+  background: linear-gradient(to bottom, rgb(242 242 239 / 0), rgb(242 242 239 / 0.92) 62%);
+  pointer-events: none;
+  z-index: -1;
+}
+html[data-teclado] .tabbar::before {
+  display: none;
 }

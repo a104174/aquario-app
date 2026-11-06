@@ -15,52 +15,54 @@ const TABS = [
   { href: "/definicoes", label: "Definições", icon: IconDefinicoes, ativo: (p: string) => ["/definicoes", "/produtos", "/desejos", "/ferias", "/fontes"].some((r) => p.startsWith(r)) },
 ];
 
+/** Posição de cada destino na cápsula (o "+" ocupa o centro). */
+const SLOT = [0, 1, 3, 4];
+
+/**
+ * Navegação flutuante: cápsula carvão destacada da página, com um disco
+ * branco que desliza para o destino ativo (só transform). O "+" central
+ * abre o registo rápido e tem um anel próprio, para não parecer um destino.
+ */
 export function TabBar() {
   const pathname = usePathname();
-
-  const [inicio, aquarios, historico, definicoes] = TABS;
+  const ativo = TABS.findIndex((t) => t.ativo(pathname));
 
   return (
-    <nav
-      aria-label="Navegação principal"
-      style={{ viewTransitionName: "app-tabbar" }}
-      className="tabbar fixed inset-x-0 bottom-0 z-30 border-t border-separator bg-[var(--tabbar)] pb-[var(--safe-bottom)] backdrop-blur-xl backdrop-saturate-150"
-    >
-      <div className="tabbar-grelha mx-auto grid h-[var(--tabbar-h)] max-w-lg grid-cols-5">
-        <Tab tab={inicio} ativo={inicio.ativo(pathname)} pathname={pathname} />
-        <Tab tab={aquarios} ativo={aquarios.ativo(pathname)} pathname={pathname} />
+    <nav aria-label="Navegação principal" style={{ viewTransitionName: "app-tabbar" }} className="tabbar">
+      <div className="tabbar-capsula">
+        {/* disco do destino ativo: desliza entre posições */}
+        <span
+          aria-hidden
+          className="tabbar-disco"
+          data-visivel={ativo >= 0 ? "1" : undefined}
+          style={{ ["--slot" as string]: SLOT[Math.max(0, ativo)] }}
+        />
+        <Tab tab={TABS[0]} ativo={ativo === 0} pathname={pathname} />
+        <Tab tab={TABS[1]} ativo={ativo === 1} pathname={pathname} />
         <button
           type="button"
+          aria-label="Registar"
           onClick={() => {
             // No detalhe de um aquário, o registo já vem com ele escolhido
-            const id = pathname === "/aquario"
+            const id = pathname.startsWith("/aquario")
               ? new URLSearchParams(window.location.search).get("id") ?? undefined
               : undefined;
             abrirRegistar({ aquarioId: id });
           }}
-          className="tab group flex flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-accent"
+          className="tab tab-registar group"
         >
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent text-accent-contrast shadow-[var(--shadow-card)] transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:scale-[0.85] group-active:duration-[var(--dur-quick)]">
-            <IconMais size={25} strokeWidth={2.4} />
+          <span className="tab-registar-anel">
+            <IconMais size={22} strokeWidth={2.2} />
           </span>
-          Registar
         </button>
-        <Tab tab={historico} ativo={historico.ativo(pathname)} pathname={pathname} />
-        <Tab tab={definicoes} ativo={definicoes.ativo(pathname)} pathname={pathname} />
+        <Tab tab={TABS[2]} ativo={ativo === 2} pathname={pathname} />
+        <Tab tab={TABS[3]} ativo={ativo === 3} pathname={pathname} />
       </div>
     </nav>
   );
 }
 
-function Tab({
-  tab,
-  ativo,
-  pathname,
-}: {
-  tab: (typeof TABS)[number];
-  ativo: boolean;
-  pathname: string;
-}): ReactNode {
+function Tab({ tab, ativo, pathname }: { tab: (typeof TABS)[number]; ativo: boolean; pathname: string }): ReactNode {
   const Icon = tab.icon;
   // Tocar na tab ativa noutro nível (ex.: detalhe) volta à raiz
   const mesmaRota = pathname === tab.href;
@@ -68,27 +70,18 @@ function Tab({
     <NavLink
       href={tab.href}
       tipo={ativo && pathname !== tab.href ? "back" : "tab"}
+      aria-label={tab.label}
       aria-current={mesmaRota ? "page" : ativo ? "location" : undefined}
+      data-ativo={ativo ? "1" : undefined}
       onClick={(e) => {
         if (mesmaRota) {
           e.preventDefault();
           irAoTopo();
         }
       }}
-      className={cx(
-        "tab group flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium",
-        "transition-colors duration-[var(--dur-quick)] ease-[var(--ease-out)]",
-        ativo ? "text-accent" : "text-text-3",
-      )}
+      className={cx("tab group")}
     >
-      <span className="flex h-[30px] items-center justify-center">
-        <Icon
-          size={26}
-          strokeWidth={ativo ? 2 : 1.7}
-          className="transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:scale-[0.85] group-active:duration-[var(--dur-quick)]"
-        />
-      </span>
-      {tab.label}
+      <Icon size={24} strokeWidth={ativo ? 2.1 : 1.8} className="tab-icone" />
     </NavLink>
   );
 }
