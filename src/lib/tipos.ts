@@ -144,3 +144,26 @@ export type Evento =
   | { tipo: "medicao"; id: UUID; aquario_id: UUID; data: string; item: Medicao }
   | { tipo: "fauna"; id: UUID; aquario_id: UUID; data: string; item: FaunaEvento }
   | { tipo: "foto"; id: UUID; aquario_id: UUID; data: string; item: Foto };
+
+export type TipoFonte = "meteo" | "eredes" | "agere_avisos" | "agere_qualidade" | "loja";
+export interface FonteExterna {
+  id: UUID;
+  tipo: TipoFonte;
+  nome: string;
+  url: string | null;
+  configuracao: Record<string, unknown>;
+  ativo: boolean;
+  ultima_verificacao: string | null;
+  ultimo_erro: string | null;
+  resultado: Record<string, unknown> | null;
+  criado_em: string;
+}
+
+export interface NovidadeExterna {
+  id: UUID;
+  fonte_id: UUID;
+  titulo: string;
+  url: string | null;
+  resumo: string | null;
+  detectado_em: string;
+}

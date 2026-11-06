@@ -9,7 +9,7 @@ import {
 import { useUserId } from "@/lib/auth/session";
 import { supabase } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
-import type { Alerta, Aquario, Definicoes, Desejo, FaunaEvento, Ferias, Foto, Medicao, Ninhada, Produto, Tpa } from "@/lib/tipos";
+import type { Alerta, Aquario, Definicoes, Desejo, FaunaEvento, Ferias, FonteExterna, Foto, Medicao, Ninhada, NovidadeExterna, Produto, Tpa } from "@/lib/tipos";
 import { apagarFotoPendente, chaveThumb, lerFotoPendente, semearCacheFoto } from "./fotos-locais";
 import { qk, TABELAS, type Colecao } from "./keys";
 
@@ -20,6 +20,8 @@ export type Linhas = {
   ferias: Ferias;
   desejos: Desejo;
   alertas: Alerta;
+  fontes: FonteExterna;
+  novidades: NovidadeExterna;
   tpas: Tpa;
   medicoes: Medicao;
   fauna: FaunaEvento;
@@ -29,7 +31,7 @@ export type Linhas = {
 type Acao = "guardar" | "apagar";
 type VarsApagar = { id: string };
 
-const COLECOES: Colecao[] = ["aquarios", "produtos", "tpas", "medicoes", "fauna", "fotos", "ninhadas", "ferias", "desejos", "alertas"];
+const COLECOES: Colecao[] = ["aquarios", "produtos", "tpas", "medicoes", "fauna", "fotos", "ninhadas", "ferias", "desejos", "alertas", "fontes", "novidades"];
 
 const ordenar: { [C in Colecao]: (a: Linhas[C], b: Linhas[C]) => number } = {
   aquarios: (a, b) => a.criado_em.localeCompare(b.criado_em),
@@ -38,6 +40,8 @@ const ordenar: { [C in Colecao]: (a: Linhas[C], b: Linhas[C]) => number } = {
   ferias: (a, b) => b.ida.localeCompare(a.ida),
   desejos: (a, b) => b.criado_em.localeCompare(a.criado_em),
   alertas: (a, b) => b.criado_em.localeCompare(a.criado_em),
+  fontes: (a, b) => a.criado_em.localeCompare(b.criado_em),
+  novidades: (a, b) => b.detectado_em.localeCompare(a.detectado_em),
   tpas: porDataDesc,
   medicoes: porDataDesc,
   fauna: porDataDesc,
@@ -64,10 +68,12 @@ async function buscar<C extends Colecao>(c: C): Promise<Linhas[C][]> {
     ferias: ["ida", false],
     desejos: ["criado_em", false],
     alertas: ["criado_em", false],
+    fontes: ["criado_em", true],
+    novidades: ["detectado_em", false],
   };
   const [ordem, asc] = ORDEM[c];
   let query = supabase().from(tabela).select("*").order(ordem, { ascending: asc });
-  if (c === "alertas") query = query.limit(200);
+  if (c === "alertas" || c === "novidades") query = query.limit(200);
   const { data, error } = await query;
   if (error) throw error;
   return (data ?? []) as Linhas[C][];
@@ -138,6 +144,18 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
     const a = linha as Alerta;
     const { error } = await supabase().from("alertas").update({ lido: a.lido }).eq("id", a.id);
     if (error) throw error;
+    return;
+  }
+  if (c === "fontes") {
+    // Só as colunas que o utilizador pode alterar (o resto é do servidor)
+    const f = linha as FonteExterna;
+    const editavel = { tipo: f.tipo, nome: f.nome, url: f.url, configuracao: f.configuracao, ativo: f.ativo };
+    const { data, error } = await supabase().from("fontes_externas").update(editavel).eq("id", f.id).select("id");
+    if (error) throw error;
+    if (!data?.length) {
+      const { error: e2 } = await supabase().from("fontes_externas").insert({ id: f.id, ...editavel });
+      if (e2) throw e2;
+    }
     return;
   }
   if (c === "desejos") {

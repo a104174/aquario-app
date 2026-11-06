@@ -70,3 +70,13 @@ export async function enviarTeste() {
   if (error) throw error;
   return data?.enviados ?? 0;
 }
+
+/** Botão "Verificar agora": corre já as fontes externas deste utilizador. */
+export async function verificarFontesAgora() {
+  const { data, error } = await supabase().functions.invoke<{ fontes: { fonte: string; novidades?: number; erro?: string }[] }>(
+    "automacoes",
+    { body: { tarefa: "fontes_agora" } },
+  );
+  if (error) throw error;
+  return data?.fontes ?? [];
+}

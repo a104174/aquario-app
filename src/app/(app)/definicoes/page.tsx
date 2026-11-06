@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
 import { Lembretes } from "@/components/definicoes/lembretes";
 import { Grupo, Interruptor, Stepper } from "@/components/forms/campos";
-import { IconCaixa, IconEstrela, IconMala, IconSair, IconSino } from "@/components/icons";
+import { IconCaixa, IconEstrela, IconGlobo, IconMala, IconSair, IconSino } from "@/components/icons";
 import { LinhaNav } from "@/components/shell/linha-nav";
 import { Screen } from "@/components/shell/screen";
 import { confirmar } from "@/components/ui/action-sheet";
@@ -28,6 +28,10 @@ export default function DefinicoesPage() {
   const { data: alertas } = useColecao("alertas");
   const { data: desejos } = useColecao("desejos");
   const { data: ferias } = useColecao("ferias");
+  const { data: fontes } = useColecao("fontes");
+  const fontesComAviso = (fontes ?? []).filter(
+    (f) => f.ativo && (f.ultimo_erro || (f.resultado as { sem_codigo_postal?: boolean; sem_termos?: boolean } | null)?.sem_codigo_postal || (f.resultado as { sem_termos?: boolean } | null)?.sem_termos),
+  ).length;
   const d = { ...DEFINICOES_PADRAO, ...definicoes.data };
 
   const produtosBaixos = (produtos ?? []).filter((p) => p.ativo && ["baixo", "vazio"].includes(estadoStock(p, tpas).nivel)).length;
@@ -77,6 +81,13 @@ export default function DefinicoesPage() {
           icone={<IconMala size={22} />}
           texto="Modo férias"
           detalhe={proximas ? `${proximas.ida.split("-").reverse().slice(0, 2).join("/")} → ${proximas.regresso.split("-").reverse().slice(0, 2).join("/")}` : "Checklist e regresso"}
+        />
+        <LinhaNav
+          href="/fontes"
+          icone={<IconGlobo size={22} />}
+          texto="Fontes externas"
+          detalhe={fontesComAviso ? `${fontesComAviso} a precisar de atenção` : "Tempo, cortes de luz e água, lojas"}
+          badge={fontesComAviso}
         />
       </Grupo>
 

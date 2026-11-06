@@ -4,6 +4,7 @@
 //                                  férias, foto da semana) + envio
 //  POST { "tarefa": "fontes" }  → fontes externas (ver _shared/fontes.ts)
 //  POST { "tarefa": "teste" }   → notificação de teste (JWT do utilizador)
+//  POST { "tarefa": "fontes_agora" } → verifica já as fontes do utilizador (JWT)
 //
 // O cron autentica-se com o header x-cron-secret (= secret CRON_SECRET).
 
@@ -24,10 +25,16 @@ Deno.serve(async (req) => {
 
   const cron = env("CRON_SECRET") && req.headers.get("x-cron-secret") === env("CRON_SECRET");
   if (!cron) {
-    if (tarefa !== "teste") return json({ erro: "Não autorizado" }, 401);
+    if (tarefa !== "teste" && tarefa !== "fontes_agora") return json({ erro: "Não autorizado" }, 401);
     const token = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
     const { data } = token ? await admin.auth.getUser(token) : { data: { user: null } };
     if (!data.user) return json({ erro: "Não autorizado" }, 401);
+    if (tarefa === "fontes_agora") {
+      // botão "Verificar agora" nas definições (só as fontes deste utilizador)
+      const { verificarFontes } = await import("../_shared/fontes.ts");
+      const fontes = await verificarFontes({ userId: data.user.id, forcar: true });
+      return json({ tarefa, fontes, envio: await despachar() });
+    }
     const r = await enviarPush(data.user.id, { title: "Aquário", body: "Notificações a funcionar 🐟", url: "/definicoes", tag: "teste" });
     return json({ teste: true, ...r });
   }
