@@ -12,12 +12,13 @@ export type EstadoUI = {
     tipo: TipoRegisto | null;
     aquarioId: string | null;
     editarId: string | null;
+    faunaContexto: { especie: string; grupoId?: string; detalhar?: boolean } | null;
     /** Para fotos: ligar logo a um evento (TPA, medição, fauna) */
     evento: { tipo: "tpa" | "medicao" | "fauna"; id: string } | null;
   };
 };
 
-let estado: EstadoUI = { registar: { aberto: false, tipo: null, aquarioId: null, editarId: null, evento: null } };
+let estado: EstadoUI = { registar: { aberto: false, tipo: null, aquarioId: null, editarId: null, faunaContexto: null, evento: null } };
 const ouvintes = new Set<() => void>();
 
 function definir(f: (e: EstadoUI) => EstadoUI) {
@@ -26,7 +27,7 @@ function definir(f: (e: EstadoUI) => EstadoUI) {
 }
 
 export function abrirRegistar(
-  opts: { tipo?: TipoRegisto; aquarioId?: string; editarId?: string; evento?: EstadoUI["registar"]["evento"] } = {},
+  opts: { tipo?: TipoRegisto; aquarioId?: string; editarId?: string; faunaContexto?: NonNullable<EstadoUI["registar"]["faunaContexto"]>; evento?: EstadoUI["registar"]["evento"] } = {},
 ) {
   definir((e) => ({
     ...e,
@@ -35,6 +36,7 @@ export function abrirRegistar(
       tipo: opts.tipo ?? null,
       aquarioId: opts.aquarioId ?? null,
       editarId: opts.editarId ?? null,
+      faunaContexto: opts.faunaContexto ?? null,
       evento: opts.evento ?? null,
     },
   }));

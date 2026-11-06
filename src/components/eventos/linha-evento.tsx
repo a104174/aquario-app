@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { IconGota, IconPeixe, IconTubo } from "@/components/icons";
-import { escolher } from "@/components/ui/action-sheet";
+import { confirmar, escolher } from "@/components/ui/action-sheet";
 import { cx } from "@/lib/cx";
 import { hora, num } from "@/lib/formato";
 import { INFO_PARAMETROS } from "@/lib/parametros";
@@ -20,6 +20,7 @@ const COLECAO: Record<Evento["tipo"], Colecao> = { tpa: "tpas", medicao: "medico
 const NOME: Record<Evento["tipo"], string> = { tpa: "TPA", medicao: "medição", fauna: "evento de fauna", foto: "foto" };
 
 const TEXTO_FAUNA = {
+  detalhe: "Identificação · sem alterar a população",
   entrada: "Entrada",
   nascimento: "Nascimento",
   morte: "Morte",
@@ -61,9 +62,10 @@ export function LinhaEvento({
   /** Toque longo: menu de ações (como o menu de contexto do iOS). */
   async function opcoes() {
     const foto = evento.tipo === "foto";
+    const identificacao = evento.tipo === "fauna" && evento.item.tipo === "detalhe";
     const i = await escolher({
       titulo: `${NOME[evento.tipo].charAt(0).toUpperCase()}${NOME[evento.tipo].slice(1)} · ${hora(evento.data)}`,
-      opcoes: [{ texto: "Editar" }, { texto: foto ? "Ver foto" : "Adicionar foto" }, { texto: `Apagar ${NOME[evento.tipo]}`, destrutivo: true }],
+      opcoes: [{ texto: "Editar" }, { texto: foto ? "Ver foto" : "Adicionar foto" }, { texto: identificacao ? "Remover identificação" : `Apagar ${NOME[evento.tipo]}`, destrutivo: true }],
     });
     if (i === 0) abrirRegistar({ tipo: evento.tipo as TipoRegisto, editarId: evento.id, aquarioId: evento.aquario_id });
     if (i === 1 && foto) {
@@ -72,10 +74,16 @@ export function LinhaEvento({
     }
     if (i === 1 && !foto) abrirRegistar({ tipo: "foto", aquarioId: evento.aquario_id, evento: { tipo: evento.tipo as "tpa" | "medicao" | "fauna", id: evento.id } });
     if (i === 2) {
+      if (identificacao && !(await confirmar({
+        titulo: "Remover identificação do grupo?",
+        mensagem: "Os animais voltam a contar no grupo genérico. O total não muda e a fotografia fica na galeria.",
+        acao: "Remover identificação",
+        destrutivo: true,
+      }))) return;
       vibrar("medio");
       setSaindo(true);
       // deixa a animação de saída correr antes de remover da cache
-      setTimeout(() => apagar.mutate({ id: evento.id }), 260);
+      setTimeout(() => apagar.mutate({ id: evento.id }, { onError: () => setSaindo(false) }), 260);
     }
   }
 
@@ -134,7 +142,7 @@ export function LinhaEvento({
     );
     titulo = (
       <>
-        <span className="tabular-nums">{positivo ? "+" : "−"}{f.quantidade}</span> {f.especie}
+        <span className="tabular-nums">{f.tipo === "detalhe" ? "×" : positivo ? "+" : "−"}{f.quantidade}</span> {[f.especie, f.variedade, f.nome_personalizado ? `“${f.nome_personalizado}”` : null].filter(Boolean).join(" ")}
       </>
     );
     const destino = aquarios?.find((a) => a.id === f.aquario_destino_id)?.nome;

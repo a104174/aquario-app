@@ -97,7 +97,7 @@ export async function faunaENinhadas(sb: SupabaseClient, aquario?: string) {
       populacao_total: pop.total,
       especies: pop.lista,
       eventos_recentes: fauna
-        .filter((e) => (e.aquario_id === a.id || e.aquario_destino_id === a.id) && diasDesde(e.data) <= 60)
+        .filter((e) => e.tipo !== "detalhe" && (e.aquario_id === a.id || e.aquario_destino_id === a.id) && diasDesde(e.data) <= 60)
         .map((e) => ({ data: e.data, tipo: e.tipo, especie: e.especie, quantidade: e.quantidade, origem: nome(e.aquario_id), destino: e.aquario_destino_id ? nome(e.aquario_destino_id) : null, notas: e.notas })),
       ninhadas: ninhadas
         .filter((n) => n.aquario_id === a.id)
