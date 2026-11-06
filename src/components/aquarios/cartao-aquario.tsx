@@ -1,21 +1,41 @@
 "use client";
 
-import { IconChevronDireita, IconPeixe } from "@/components/icons";
+import { IconChevronDireita } from "@/components/icons";
 import { NavLink } from "@/components/shell/nav";
-import { useFizTpa } from "@/lib/fiz-tpa";
 import { cx } from "@/lib/cx";
-import { estadoTpa, faunaAtual, ultimaTpa, ultimosValores } from "@/lib/derivados";
-import { diasDesde, num, plural, textoHaDias } from "@/lib/formato";
-import { INFO_PARAMETROS } from "@/lib/parametros";
-import type { Aquario, FaunaEvento, Medicao, Parametro, Tpa } from "@/lib/tipos";
+import { estadoTpa, faunaAtual, serie, ultimaTpa, ultimosValores } from "@/lib/derivados";
+import { useFizTpa } from "@/lib/fiz-tpa";
+import { num, plural } from "@/lib/formato";
+import type { Aquario, FaunaEvento, Foto, Medicao, Parametro, Tpa } from "@/lib/tipos";
+import { Agua, type DadosParametro } from "./widget/agua";
+import { FotosAquario } from "./widget/fotos-aquario";
+import { GlifoAquario, GlifoPeixe, GlifoTpa } from "./widget/glifos";
+import { AnelTpa } from "./widget/manutencao";
+import "./widget/widget.css";
 
 const PRIORIDADE: Parametro[] = ["no3", "ph", "temperatura_c", "no2", "nh3_nh4", "kh", "gh"];
+const MAX_FOTOS = 6;
 
+/** Tom próprio de cada aquário (estável, derivado do id): turquesa, azul ou verde-água. */
+const TONS = ["#2bb8cf", "#4d8ff0", "#2fb889", "#7b8cf2"];
+function tom(id: string) {
+  let h = 0;
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return TONS[h % TONS.length];
+}
+
+/**
+ * Widget de aquário: identidade (nome, volume e glifo com o nível de água),
+ * fotografias opcionais, ciclo de TPA + água, e fauna com a ação "Fiz TPA".
+ * O cartão inteiro navega para o detalhe através de um link esticado; o
+ * carrossel e o botão ficam por cima e nunca disparam a navegação.
+ */
 export function CartaoAquario({
   aquario,
   tpas,
   medicoes,
   fauna,
+  fotos,
   intervalo,
   indice,
 }: {
@@ -23,118 +43,115 @@ export function CartaoAquario({
   tpas?: Tpa[];
   medicoes?: Medicao[];
   fauna?: FaunaEvento[];
+  fotos?: Foto[];
   intervalo: number;
   indice: number;
 }) {
   const fizTpa = useFizTpa();
   const sugestao = fizTpa.sugestao(aquario.id);
-  const tpa = ultimaTpa(tpas, aquario.id);
-  const { estado, dias } = estadoTpa(tpa, intervalo);
+  const { estado, dias } = estadoTpa(ultimaTpa(tpas, aquario.id), intervalo);
   const valores = ultimosValores(medicoes, aquario.id);
-  const params = PRIORIDADE.filter((p) => valores[p]).slice(0, 4);
-  const ultimaMedicao = params.length ? Math.max(...params.map((p) => new Date(valores[p]!.data).getTime())) : null;
+  const agua: DadosParametro[] = PRIORIDADE.filter((p) => valores[p])
+    .slice(0, 4)
+    .map((p) => ({ p, ...valores[p]!, serie: serie(medicoes, aquario.id, p).slice(-8).map((x) => x.v) }));
   const { lista, total } = faunaAtual(fauna, aquario.id);
-  const progresso = dias === null ? 0 : Math.min(1, dias / intervalo);
+  // a capa escolhida no detalhe (foto_capa_id) vem primeiro, como no hero
+  const doAquario = (fotos ?? []).filter((f) => f.aquario_id === aquario.id);
+  const capa = doAquario.find((f) => f.id === aquario.foto_capa_id);
+  const minhas = (capa ? [capa, ...doAquario.filter((f) => f.id !== capa.id)] : doAquario).slice(0, MAX_FOTOS);
 
-  const textoTpa =
-    estado === "nunca"
-      ? "Ainda sem TPAs"
-      : estado === "atrasada"
-        ? `TPA em atraso · última ${textoHaDias(dias!)}`
-        : `Última TPA ${textoHaDias(dias!)}`;
+  const util = aquario.volume_util_l;
+  const bruto = aquario.volume_bruto_l;
+  const nivel = util != null && bruto ? util / bruto : null;
 
   return (
-    <div className="relative">
-    <NavLink
-      href={`/aquario?id=${aquario.id}`}
-      tipo="forward"
-      style={{ ["--i" as string]: indice }}
-      className="pressable enter-up block rounded-[18px] bg-surface p-4 pb-3.5 shadow-[var(--shadow-card)]"
+    <article
+      className={cx("aw-cartao", "enter-up")}
+      style={{ ["--i" as string]: indice, ["--tom" as string]: tom(aquario.id) }}
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <h2 className="truncate text-[19px] font-semibold leading-snug">{aquario.nome}</h2>
-          <p className="text-[14px] text-text-2">
-            {[
-              aquario.volume_util_l != null && `${num(aquario.volume_util_l, 1)} L úteis`,
-              aquario.volume_bruto_l != null && `${num(aquario.volume_bruto_l, 1)} L brutos`,
-            ]
-              .filter(Boolean)
-              .join(" · ") || "Volume por definir"}
-          </p>
-        </div>
-        <IconChevronDireita size={20} className="mt-1 shrink-0 text-text-3" />
-      </div>
+      <NavLink href={`/aquario?id=${aquario.id}`} tipo="forward" className={"aw-link"} aria-label={`Abrir ${aquario.nome}`} />
 
-      {/* Ciclo de TPA: medidor cuja cor acompanha a urgência */}
-      <div className="mt-3">
-        <div className="flex items-center justify-between text-[14px]">
-          <span className={cx("font-medium", estado === "atrasada" ? "text-danger" : "text-text")}>
-            {estado === "atrasada" && <span aria-hidden>⚠︎ </span>}
-            {textoTpa}
-          </span>
-          {estado !== "nunca" && <span className="tabular-nums text-text-3">{Math.min(dias!, 99)}/{intervalo} d</span>}
-        </div>
-        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-surface-3">
-          <div
-            className={cx(
-              "h-full origin-left rounded-full transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)]",
-              estado === "atrasada" ? "bg-danger" : estado === "quase" ? "bg-warning" : "bg-accent",
-            )}
-            style={{ transform: `scaleX(${estado === "nunca" ? 0 : Math.max(0.04, progresso)})` }}
-          />
-        </div>
-      </div>
-
-      {params.length > 0 && (
-        <div className="mt-3">
-          <div className="grid grid-cols-4 gap-1.5">
-            {params.map((p) => {
-              const info = INFO_PARAMETROS[p];
-              const v = valores[p]!.valor;
-              const f = info.faixa(v);
-              return (
-                <div
-                  key={p}
-                  className={cx(
-                    "rounded-[10px] px-2 py-1.5",
-                    f === "ok" ? "bg-surface-2" : f === "atencao" ? "bg-warning-soft" : "bg-danger-soft",
-                  )}
-                >
-                  <p className="text-[11px] text-text-2">
-                    {info.curto}
-                    {f !== "ok" && <span aria-label="fora da referência"> !</span>}
-                  </p>
-                  <p className="text-[16px] font-semibold tabular-nums leading-tight">{num(v, info.decimais)}</p>
-                </div>
-              );
-            })}
+      <div className={cx("aw-conteudo", "p-4 pb-3")}>
+        {/* Identidade */}
+        <header className="flex items-start gap-3">
+          <GlifoAquario nivel={nivel} className="mt-0.5 h-10 w-11 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <h2 className="line-clamp-2 text-[19px] font-semibold leading-tight tracking-tight">{aquario.nome}</h2>
+            <p className="mt-0.5 text-[13px] text-text-2 tabular-nums">
+              {util != null ? (
+                <>
+                  <span className="font-semibold text-text">{num(util, 1)} L</span> úteis
+                  {bruto != null && <span className="text-text-3"> · {num(bruto, 1)} L brutos</span>}
+                </>
+              ) : bruto != null ? (
+                `${num(bruto, 1)} L brutos`
+              ) : (
+                "Volume por definir"
+              )}
+            </p>
           </div>
-          {ultimaMedicao && (
-            <p className="mt-1.5 text-[12px] text-text-3">Medido {textoHaDias(diasDesde(new Date(ultimaMedicao).toISOString()))}</p>
-          )}
-        </div>
-      )}
+          <IconChevronDireita size={18} className="mt-1 shrink-0 text-text-3" />
+        </header>
 
-      <div className="mt-3 flex items-center gap-2 border-t border-separator pt-3 text-[14px] text-text-2">
-        <IconPeixe size={18} className="text-text-3" />
-        {total > 0 ? (
-          <span className="truncate">
-            {plural(total, "animal", "animais")} · {plural(lista.length, "espécie", "espécies")}
-          </span>
-        ) : (
-          <span>Sem fauna registada</span>
-        )}
+        {minhas.length > 0 && <FotosAquario fotos={minhas} nome={aquario.nome} />}
+
+        {/* Manutenção + água */}
+        <div className="mt-3.5 flex items-start gap-3 border-t border-separator pt-3.5">
+          <AnelTpa estado={estado} dias={dias} intervalo={intervalo} />
+          <Agua dados={agua} />
+        </div>
+
+        {/* Fauna + ação */}
+        <div className="mt-3 flex min-h-11 items-center gap-3 border-t border-separator pt-3">
+          <Fauna especies={lista} total={total} />
+          <button
+            type="button"
+            onClick={() => fizTpa.registar(aquario.id)}
+            className={cx(
+              "aw-interativo",
+              "aw-fiz-tpa",
+              "ml-auto flex h-11 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[14px] font-semibold",
+              estado === "atrasada" ? "bg-danger-soft text-danger" : "bg-accent-soft text-accent-forte",
+            )}
+          >
+            <GlifoTpa className="h-4 w-4" />
+            {sugestao ? `Fiz TPA · ${num(sugestao.litros, 1)} L` : "Fiz TPA"}
+          </button>
+        </div>
       </div>
-    </NavLink>
-      {/* 1 toque: fora do link (botão dentro de <a> não é válido) */}
-      <button
-        type="button"
-        onClick={() => fizTpa.registar(aquario.id)}
-        className="pressable absolute bottom-1.5 right-2 h-11 rounded-full bg-accent-soft px-4 text-[14px] font-semibold text-accent"
-      >
-        {sugestao ? `Fiz TPA · ${num(sugestao.litros, 1)} L` : "Fiz TPA"}
-      </button>
+    </article>
+  );
+}
+
+/** Cardume: um peixe por espécie (até 4), maior para a mais numerosa. */
+function Fauna({ especies, total }: { especies: { especie: string; quantidade: number }[]; total: number }) {
+  if (total === 0) {
+    return (
+      <div className="flex min-w-0 items-center gap-2 text-[13px] text-text-3">
+        <GlifoPeixe cheio={false} className="h-3.5 w-6 shrink-0" />
+        Sem fauna registada
+      </div>
+    );
+  }
+  const max = especies[0].quantidade;
+  return (
+    <div role="group" className="flex min-w-0 items-center gap-2.5" aria-label={`${plural(total, "animal", "animais")}, ${plural(especies.length, "espécie", "espécies")}`}>
+      <div className="flex shrink-0 items-end -space-x-1 text-[var(--tom)]" aria-hidden>
+        {especies.slice(0, 4).map((e, i) => {
+          const k = 0.62 + 0.38 * (e.quantidade / max);
+          return (
+            <span key={e.especie} style={{ width: 22 * k, opacity: 1 - i * 0.18 }} className="block">
+              <GlifoPeixe className="h-auto w-full" />
+            </span>
+          );
+        })}
+      </div>
+      <p className="min-w-0 text-[13px] leading-tight text-text-2" aria-hidden>
+        <span className="text-[17px] font-semibold tabular-nums text-text">{total}</span> {total === 1 ? "animal" : "animais"}
+        <span className="block truncate text-[12px] text-text-3">
+          {especies.length === 1 ? especies[0].especie : `${especies.length} espécies · ${especies[0].especie}`}
+        </span>
+      </p>
     </div>
   );
 }

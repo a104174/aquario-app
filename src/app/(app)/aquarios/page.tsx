@@ -4,10 +4,10 @@ import { EstadoErro } from "@/components/ui/estado-erro";
 import { useDeferredValue, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { CartaoAquario } from "@/components/aquarios/cartao-aquario";
+import { SkeletonWidget } from "@/components/aquarios/widget/skeleton-widget";
 import { IconAquario, IconMais } from "@/components/icons";
 import { BotaoHeader, Screen } from "@/components/shell/screen";
 import { Button } from "@/components/ui/button";
-import { SkeletonCartao } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import { useColecao, useDefinicoes, DEFINICOES_PADRAO } from "@/lib/query/dados";
 import { supabase } from "@/lib/supabase/client";
@@ -19,6 +19,7 @@ export default function AquariosPage() {
   const tpas = useColecao("tpas").data;
   const medicoes = useColecao("medicoes").data;
   const fauna = useColecao("fauna").data;
+  const fotos = useColecao("fotos").data;
   const intervalo = useDefinicoes().data?.intervalo_tpa_dias ?? DEFINICOES_PADRAO.intervalo_tpa_dias;
   const [novo, setNovo] = useState(false);
   const lista = useDeferredValue(aquarios.data);
@@ -38,17 +39,17 @@ export default function AquariosPage() {
       {aquarios.isError && !aquarios.data ? (
         <EstadoErro onRetry={() => void aquarios.refetch()} aTentar={aquarios.isFetching} />
       ) : aquarios.isPending ? (
-        <div className="skeleton-delay space-y-3">
-          <SkeletonCartao />
-          <SkeletonCartao />
-          <SkeletonCartao />
+        <div className="skeleton-delay space-y-4">
+          <SkeletonWidget foto />
+          <SkeletonWidget />
+          <SkeletonWidget />
         </div>
       ) : n === 0 ? (
         <Vazio onNovo={() => setNovo(true)} />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {(lista ?? aquarios.data!).map((a, i) => (
-            <CartaoAquario key={a.id} aquario={a} tpas={tpas} medicoes={medicoes} fauna={fauna} intervalo={intervalo} indice={i} />
+            <CartaoAquario key={a.id} aquario={a} tpas={tpas} medicoes={medicoes} fauna={fauna} fotos={fotos} intervalo={intervalo} indice={i} />
           ))}
         </div>
       )}

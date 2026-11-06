@@ -169,7 +169,8 @@ for (const [ecra, url] of [
     await verificarLayout(app, info, `paisagem-${ecra}`);
     const r = await app.evaluate(() => {
       const main = document.querySelector("main.conteudo-ecra")!;
-      const conteudo = [...main.querySelectorAll("a, button, h2, p")].map((e) => e.getBoundingClientRect()).filter((b) => b.width > 0);
+      // slides fora de vista num carrossel não contam (estão escondidos de propósito)
+      const conteudo = [...main.querySelectorAll("a, button, h2, p")].filter((e) => !e.closest("[aria-roledescription=carrossel]")).map((e) => e.getBoundingClientRect()).filter((b) => b.width > 0);
       const titulo = document.querySelector(".header-ambient h1")!.getBoundingClientRect();
       const tab = document.querySelector("nav.tabbar")!.getBoundingClientRect();
       return {
@@ -245,7 +246,7 @@ test("reduzir movimento: só fades", async ({ app, erros }, info) => {
   await app.emulateMedia({ reducedMotion: "reduce" });
   await app.goto("/aquarios");
   await assentar(app, 1200);
-  const nav = await amostrarMovimento(app, () => app.getByRole("link", { name: /Principal/ }).first().click());
+  const nav = await amostrarMovimento(app, () => app.getByRole("link", { name: /^Abrir Principal/ }).click({ position: { x: 140, y: 34 } }));
   await assentar(app);
   const tabs = await amostrarMovimento(app, () => app.getByRole("tab", { name: "Gráficos" }).click());
   const voltar = await amostrarMovimento(app, () => app.getByRole("button", { name: "Aquários" }).first().click());
