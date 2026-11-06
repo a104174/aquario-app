@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 import { ActionSheetHost } from "@/components/ui/action-sheet";
 import { Toasts } from "@/components/ui/toasts";
+import { VisualizadorHost } from "@/components/fotos/visualizador";
 import { RegistarSheet } from "@/components/registar/registar-sheet";
 import { useSession } from "@/lib/auth/session";
 import { TabBar } from "./tab-bar";
@@ -29,6 +30,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <TabBar />
       </div>
       <RegistarSheet />
+      <VisualizadorHost />
       <ActionSheetHost />
       <Toasts />
     </>

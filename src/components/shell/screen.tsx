@@ -69,14 +69,14 @@ export function Screen({
                   className="pressable flex h-11 items-center gap-0.5 rounded-lg pr-2 text-[17px]"
                 >
                   <IconChevronEsquerda size={26} strokeWidth={2.2} />
-                  <span className="max-w-[110px] truncate">{voltar.texto}</span>
+                  <span className="max-w-[96px] truncate">{voltar.texto}</span>
                 </button>
               )}
             </div>
             <h2
               aria-hidden={!compacto}
               className={cx(
-                "pointer-events-none absolute inset-x-[96px] truncate text-center text-[17px] font-semibold",
+                "pointer-events-none absolute inset-x-[124px] truncate text-center text-[17px] font-semibold",
                 "transition-[opacity,transform] duration-[var(--dur-std)] ease-[var(--ease-out)]",
                 compacto ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0",
               )}

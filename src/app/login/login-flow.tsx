@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/components/ui/otp-input";
@@ -14,6 +14,9 @@ const EMAIL_KEY = "aquario-ultimo-email";
 
 export function LoginFlow() {
   const router = useRouter();
+  const voltarParam = useSearchParams().get("voltar");
+  // Só caminhos internos (evita redirecionamentos abertos)
+  const destino = voltarParam && voltarParam.startsWith("/") && !voltarParam.startsWith("//") ? voltarParam : "/";
   const { session, pronto } = useSession();
   const [passo, setPasso] = useState<Passo>("email");
   const [direcao, setDirecao] = useState<"forward" | "back">("forward");
@@ -32,8 +35,8 @@ export function LoginFlow() {
   }, []);
 
   useEffect(() => {
-    if (pronto && session && passo !== "ok") router.replace("/");
-  }, [pronto, session, passo, router]);
+    if (pronto && session && passo !== "ok") router.replace(destino);
+  }, [pronto, session, passo, router, destino]);
 
   function falhar(msg: string) {
     setErro(msg);
@@ -68,7 +71,7 @@ export function LoginFlow() {
     }
     setPasso("ok");
     // Deixa o "visto" assentar (pop 280ms) antes de entrar na app.
-    setTimeout(() => router.replace("/", { transitionTypes: ["nav-forward"] }), 520);
+    setTimeout(() => router.replace(destino, { transitionTypes: ["nav-forward"] }), 520);
   }
 
   return (

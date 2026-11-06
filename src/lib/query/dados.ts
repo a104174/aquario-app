@@ -9,13 +9,19 @@ import {
 import { useUserId } from "@/lib/auth/session";
 import { supabase } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
-import type { Aquario, Condicionador, Definicoes, FaunaEvento, Foto, Medicao, Tpa } from "@/lib/tipos";
-import { apagarFotoPendente, lerFotoPendente, semearCacheFoto } from "./fotos-locais";
+import type { Alerta, Aquario, Definicoes, Desejo, FaunaEvento, Ferias, FonteExterna, Foto, Medicao, Ninhada, NovidadeExterna, Produto, Tpa } from "@/lib/tipos";
+import { apagarFotoPendente, chaveThumb, lerFotoPendente, semearCacheFoto } from "./fotos-locais";
 import { qk, TABELAS, type Colecao } from "./keys";
 
 export type Linhas = {
   aquarios: Aquario;
-  condicionadores: Condicionador;
+  produtos: Produto;
+  ninhadas: Ninhada;
+  ferias: Ferias;
+  desejos: Desejo;
+  alertas: Alerta;
+  fontes: FonteExterna;
+  novidades: NovidadeExterna;
   tpas: Tpa;
   medicoes: Medicao;
   fauna: FaunaEvento;
@@ -25,11 +31,17 @@ export type Linhas = {
 type Acao = "guardar" | "apagar";
 type VarsApagar = { id: string };
 
-const COLECOES: Colecao[] = ["aquarios", "condicionadores", "tpas", "medicoes", "fauna", "fotos"];
+const COLECOES: Colecao[] = ["aquarios", "produtos", "tpas", "medicoes", "fauna", "fotos", "ninhadas", "ferias", "desejos", "alertas", "fontes", "novidades"];
 
 const ordenar: { [C in Colecao]: (a: Linhas[C], b: Linhas[C]) => number } = {
   aquarios: (a, b) => a.criado_em.localeCompare(b.criado_em),
-  condicionadores: (a, b) => a.criado_em.localeCompare(b.criado_em),
+  produtos: (a, b) => a.criado_em.localeCompare(b.criado_em),
+  ninhadas: (a, b) => b.data_parto.localeCompare(a.data_parto),
+  ferias: (a, b) => b.ida.localeCompare(a.ida),
+  desejos: (a, b) => b.criado_em.localeCompare(a.criado_em),
+  alertas: (a, b) => b.criado_em.localeCompare(a.criado_em),
+  fontes: (a, b) => a.criado_em.localeCompare(b.criado_em),
+  novidades: (a, b) => b.detectado_em.localeCompare(a.detectado_em),
   tpas: porDataDesc,
   medicoes: porDataDesc,
   fauna: porDataDesc,
@@ -45,11 +57,24 @@ function porDataDesc(a: { data: string }, b: { data: string }) {
 // ---------------------------------------------------------------------
 async function buscar<C extends Colecao>(c: C): Promise<Linhas[C][]> {
   const tabela = TABELAS[c];
-  const ordem = c === "aquarios" || c === "condicionadores" ? "criado_em" : "data";
-  const { data, error } = await supabase()
-    .from(tabela)
-    .select("*")
-    .order(ordem, { ascending: ordem === "criado_em" });
+  const ORDEM: Record<Colecao, [string, boolean]> = {
+    aquarios: ["criado_em", true],
+    produtos: ["criado_em", true],
+    tpas: ["data", false],
+    medicoes: ["data", false],
+    fauna: ["data", false],
+    fotos: ["data", false],
+    ninhadas: ["data_parto", false],
+    ferias: ["ida", false],
+    desejos: ["criado_em", false],
+    alertas: ["criado_em", false],
+    fontes: ["criado_em", true],
+    novidades: ["detectado_em", false],
+  };
+  const [ordem, asc] = ORDEM[c];
+  let query = supabase().from(tabela).select("*").order(ordem, { ascending: asc });
+  if (c === "alertas" || c === "novidades") query = query.limit(200);
+  const { data, error } = await query;
   if (error) throw error;
   return (data ?? []) as Linhas[C][];
 }
@@ -98,33 +123,78 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
   if (c === "fotos") {
     const foto = linha as Foto;
     const blob = await lerFotoPendente(foto.id);
-    if (blob) {
-      const { error: errUpload } = await supabase()
+    const thumb = foto.thumb_path ? await lerFotoPendente(chaveThumb(foto.id)) : undefined;
+    const enviar = async (path: string, b: Blob) => {
+      const { error } = await supabase()
         .storage.from("fotos")
-        .upload(foto.storage_path, blob, { upsert: true, contentType: blob.type || "image/jpeg" });
-      if (errUpload) throw errUpload;
-    }
+        .upload(path, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
+      if (error) throw error;
+    };
+    if (blob) await enviar(foto.storage_path, blob);
+    if (thumb && foto.thumb_path) await enviar(foto.thumb_path, thumb);
     const { error } = await supabase().from("fotos").upsert(semCamposLocais(foto));
     if (error) throw error;
-    if (blob) {
-      await semearCacheFoto(foto.storage_path, blob);
-      await apagarFotoPendente(foto.id);
+    if (blob) await semearCacheFoto(foto.storage_path, blob);
+    if (thumb && foto.thumb_path) await semearCacheFoto(foto.thumb_path, thumb);
+    if (blob || thumb) await apagarFotoPendente(foto.id);
+    return;
+  }
+  if (c === "alertas") {
+    // o utilizador só pode marcar como lido (os alertas são criados pelo servidor)
+    const a = linha as Alerta;
+    const { error } = await supabase().from("alertas").update({ lido: a.lido }).eq("id", a.id);
+    if (error) throw error;
+    return;
+  }
+  if (c === "fontes") {
+    // Só as colunas que o utilizador pode alterar (o resto é do servidor)
+    const f = linha as FonteExterna;
+    const editavel = { tipo: f.tipo, nome: f.nome, url: f.url, configuracao: f.configuracao, ativo: f.ativo };
+    const { data, error } = await supabase().from("fontes_externas").update(editavel).eq("id", f.id).select("id");
+    if (error) throw error;
+    if (!data?.length) {
+      const { error: e2 } = await supabase().from("fontes_externas").insert({ id: f.id, ...editavel });
+      if (e2) throw e2;
     }
     return;
   }
+  if (c === "desejos") {
+    const d = linha as Desejo;
+    await enviarPendentes(d.id, d.foto_path, d.thumb_path);
+  }
   const { error } = await supabase().from(TABELAS[c]).upsert(semCamposLocais(linha));
   if (error) throw error;
+}
+
+/** Envia imagem + miniatura pendentes (IndexedDB) de um registo, se existirem. */
+async function enviarPendentes(id: string, path: string | null, thumbPath: string | null) {
+  const blob = path ? await lerFotoPendente(id) : undefined;
+  const thumb = thumbPath ? await lerFotoPendente(chaveThumb(id)) : undefined;
+  for (const [p, b] of [[path, blob], [thumbPath, thumb]] as const) {
+    if (!p || !b) continue;
+    const { error } = await supabase().storage.from("fotos").upload(p, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
+    if (error) throw error;
+    await semearCacheFoto(p, b);
+  }
+  if (blob || thumb) await apagarFotoPendente(id);
 }
 
 async function apagarNoServidor(c: Colecao, { id }: VarsApagar, qc: QueryClient) {
   if (c === "fotos") {
     const foto = qc.getQueryData<Foto[]>([c])?.find((f) => f.id === id);
     await apagarFotoPendente(id);
-    const { data, error } = await supabase().from("fotos").delete().eq("id", id).select("storage_path");
+    const { data, error } = await supabase().from("fotos").delete().eq("id", id).select("storage_path, thumb_path");
     if (error) throw error;
-    const path = data?.[0]?.storage_path ?? foto?.storage_path;
-    if (path) await supabase().storage.from("fotos").remove([path]);
+    const linha = data?.[0] ?? foto;
+    const paths = [linha?.storage_path, linha?.thumb_path].filter(Boolean) as string[];
+    if (paths.length) await supabase().storage.from("fotos").remove(paths);
     return;
+  }
+  if (c === "desejos") {
+    const d = qc.getQueryData<Desejo[]>([c])?.find((x) => x.id === id);
+    await apagarFotoPendente(id);
+    const paths = [d?.foto_path, d?.thumb_path].filter(Boolean) as string[];
+    if (paths.length) await supabase().storage.from("fotos").remove(paths);
   }
   const { error } = await supabase().from(TABELAS[c]).delete().eq("id", id);
   if (error) throw error;
@@ -236,6 +306,9 @@ export const DEFINICOES_PADRAO: Omit<Definicoes, "user_id"> = {
   intervalo_tpa_dias: 7,
   lembretes_push: false,
   lembretes_email: false,
+  lembrete_foto_semanal: true,
+  aviso_tpa_urgente_dias: 10,
+  lembrete_esponja: true,
 };
 
 // ---------------------------------------------------------------------
@@ -268,21 +341,30 @@ export function useGuardarDefinicoes() {
   };
 }
 
-/** URL assinado de uma foto (ou object URL do Blob ainda por enviar). */
-export function useFotoUrl(foto: Pick<Foto, "id" | "storage_path"> | undefined) {
+/**
+ * URL assinado de uma foto (ou object URL do Blob ainda por enviar).
+ * `thumb` usa a miniatura quando existe (galeria); `ativo` permite adiar o
+ * pedido até a imagem estar perto do ecrã (lazy loading).
+ */
+export function useFotoUrl(
+  foto: Pick<Foto, "id" | "storage_path"> & { thumb_path?: string | null } | undefined,
+  opts: { thumb?: boolean; ativo?: boolean } = {},
+) {
+  const usarThumb = !!opts.thumb && !!foto?.thumb_path;
+  const path = foto ? (usarThumb ? foto.thumb_path! : foto.storage_path) : "";
   return useQuery({
-    queryKey: qk.fotoUrl(foto?.storage_path ?? ""),
-    enabled: !!foto,
+    queryKey: qk.fotoUrl(path),
+    enabled: !!foto && opts.ativo !== false,
     staleTime: 1000 * 60 * 50,
     gcTime: 1000 * 60 * 60 * 24,
     networkMode: "always",
     queryFn: async () => {
-      const blob = await lerFotoPendente(foto!.id);
+      const blob = await lerFotoPendente(usarThumb ? chaveThumb(foto!.id) : foto!.id);
       if (blob) return URL.createObjectURL(blob);
-      const { data, error } = await supabase().storage.from("fotos").createSignedUrl(foto!.storage_path, 60 * 60);
+      const { data, error } = await supabase().storage.from("fotos").createSignedUrl(path, 60 * 60);
       if (error) {
         // Offline: o SW tem a imagem em cache com a chave sem token
-        if (eErroDeRede(error)) return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/sign/fotos/${foto!.storage_path}`;
+        if (eErroDeRede(error)) return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/sign/fotos/${path}`;
         throw error;
       }
       return data.signedUrl;

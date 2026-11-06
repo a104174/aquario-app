@@ -5,7 +5,8 @@ import { FaunaForm } from "@/components/forms/fauna-form";
 import { FotoForm } from "@/components/forms/foto-form";
 import { MedicaoForm } from "@/components/forms/medicao-form";
 import { TpaForm } from "@/components/forms/tpa-form";
-import { IconCamara, IconChevronEsquerda, IconGota, IconPeixe, IconTubo } from "@/components/icons";
+import { IconBebe, IconCamara, IconChevronEsquerda, IconGota, IconPeixe, IconTubo } from "@/components/icons";
+import { NinhadaForm } from "@/components/forms/ninhada-form";
 import { Button } from "@/components/ui/button";
 import { BotaoSheet, Sheet } from "@/components/ui/sheet";
 import { useColecao } from "@/lib/query/dados";
@@ -22,18 +23,20 @@ export const TIPOS_REGISTO: {
   { tipo: "tpa", titulo: "TPA", descricao: "Troca parcial de água", icon: IconGota },
   { tipo: "medicao", titulo: "Medição", descricao: "Parâmetros da água", icon: IconTubo },
   { tipo: "fauna", titulo: "Fauna", descricao: "Entradas, nascimentos, mortes…", icon: IconPeixe },
-  { tipo: "foto", titulo: "Foto", descricao: "Tirar ou escolher foto", icon: IconCamara },
+  { tipo: "foto", titulo: "Foto", descricao: "Tirar, escolher ou colar", icon: IconCamara },
+  { tipo: "ninhada", titulo: "Ninhada", descricao: "Parto de uma fêmea", icon: IconBebe },
 ];
 
 const FORM_ID = "form-registo";
 
 export function RegistarSheet() {
-  const { aberto, tipo, aquarioId, editarId } = useUI((e) => e.registar);
+  const { aberto, tipo, aquarioId, editarId, evento } = useUI((e) => e.registar);
   const { data: aquarios } = useColecao("aquarios");
   const tpas = useColecao("tpas").data;
   const medicoes = useColecao("medicoes").data;
   const fauna = useColecao("fauna").data;
   const fotos = useColecao("fotos").data;
+  const ninhadas = useColecao("ninhadas").data;
   const [direcao, setDirecao] = useState<"forward" | "back">("forward");
   const [sessao, setSessao] = useState(0);
 
@@ -53,7 +56,8 @@ export function RegistarSheet() {
     form = <MedicaoForm {...props} inicial={medicoes?.find((x) => x.id === editarId) as Medicao | undefined} />;
   if (tipo === "fauna")
     form = <FaunaForm {...props} inicial={fauna?.find((x) => x.id === editarId) as FaunaEvento | undefined} />;
-  if (tipo === "foto") form = <FotoForm {...props} inicial={fotos?.find((x) => x.id === editarId) as Foto | undefined} />;
+  if (tipo === "ninhada") form = <NinhadaForm {...props} inicial={ninhadas?.find((x) => x.id === editarId)} />;
+  if (tipo === "foto") form = <FotoForm {...props} evento={evento} inicial={fotos?.find((x) => x.id === editarId) as Foto | undefined} />;
 
   return (
     <Sheet
@@ -113,7 +117,7 @@ export function RegistarSheet() {
                     escolherTipoRegisto(t.tipo);
                   }}
                   style={{ ["--i" as string]: i }}
-                  className={`pressable ${direcao === "back" ? "" : "enter-up"} flex flex-col items-start gap-3 rounded-[18px] bg-surface p-4 text-left`}
+                  className={`pressable ${direcao === "back" ? "" : "enter-up"} ${i === 4 ? "col-span-2 !flex-row items-center" : ""} flex flex-col items-start gap-3 rounded-[18px] bg-surface p-4 text-left`}
                 >
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-soft text-accent">
                     <Icon size={24} />

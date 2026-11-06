@@ -64,9 +64,19 @@ export async function desativarPush() {
 }
 
 export async function enviarTeste() {
-  const { data, error } = await supabase().functions.invoke<{ enviados: number }>("lembrete-tpa", {
+  const { data, error } = await supabase().functions.invoke<{ enviados: number }>("automacoes", {
     body: { teste: true },
   });
   if (error) throw error;
   return data?.enviados ?? 0;
+}
+
+/** Botão "Verificar agora": corre já as fontes externas deste utilizador. */
+export async function verificarFontesAgora() {
+  const { data, error } = await supabase().functions.invoke<{ fontes: { fonte: string; novidades?: number; erro?: string }[] }>(
+    "automacoes",
+    { body: { tarefa: "fontes_agora" } },
+  );
+  if (error) throw error;
+  return data?.fontes ?? [];
 }

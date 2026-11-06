@@ -1,6 +1,12 @@
 export const TABELAS = {
   aquarios: "aquarios",
-  condicionadores: "condicionadores",
+  produtos: "produtos",
+  ninhadas: "ninhadas",
+  ferias: "ferias",
+  desejos: "desejos",
+  alertas: "alertas",
+  fontes: "fontes_externas",
+  novidades: "novidades_externas",
   tpas: "tpas",
   medicoes: "medicoes",
   fauna: "fauna_eventos",

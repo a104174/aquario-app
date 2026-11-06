@@ -38,5 +38,5 @@ content_path = "./supabase/templates/codigo.html"
 [storage]
 file_size_limit = "10MiB"
 
-[functions.lembrete-tpa]
+[functions.automacoes]
 verify_jwt = false

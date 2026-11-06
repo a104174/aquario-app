@@ -1,134 +1,138 @@
 # Aquário 🐟
 
-Diário pessoal dos meus aquários, em PWA *mobile-first* pensada para o iPhone. Instalada no ecrã principal, abre em ecrã inteiro, arranca instantaneamente a partir da cache e funciona offline.
+Diário pessoal dos meus aquários, em PWA *mobile-first* pensada para o iPhone. Instalada no ecrã principal, abre em ecrã inteiro, arranca instantaneamente a partir da cache e funciona offline. Tudo corre nos planos gratuitos da **Vercel (Hobby)** e da **Supabase (Free)**.
 
-- **TPAs**: introduzes os litros e a dose de condicionador aparece logo, assim como a % do volume útil.
-- **Medições**: NH₃/NH₄, NO₂, NO₃, pH, GH, KH e temperatura, com teste de gotas ou tira. Todos os parâmetros são opcionais.
-- **Fauna**: entradas, nascimentos, mortes, transferências entre aquários e saídas, com a população atual calculada.
-- **Fotos**: tiradas com a câmara ou escolhidas da galeria, comprimidas no iPhone e enviadas mesmo se as tirares offline.
-- **Histórico e gráficos**: tudo por ordem cronológica, com filtro por aquário e um gráfico por parâmetro.
-- **Lembretes de TPA**: Web Push, com email (Resend) como alternativa.
+- **TPAs:** "Fiz TPA" com **1 toque** (repete os litros da última TPA desse aquário). A dose de condicionador é calculada e descontada do stock.
+- **Medições:** NH₃/NH₄, NO₂, NO₃, pH, GH, KH e temperatura, com teste de gotas ou tira, e gráficos por parâmetro.
+- **Fauna e ninhadas:** população por espécie e transferências; ninhadas por mãe, com avisos de novo parto (+25 dias) e de separação dos machos (4 e 6 semanas).
+- **Fotografias:**
+  - câmara, galeria ou print colado; comprimidas no iPhone (WebP 0,8, máx. 1600 px);
+  - etiquetas, ligação a um registo, galeria por aquário com visualizador em ecrã inteiro;
+  - lembrete de foto ao domingo.
+- **Produtos:** condicionador (stock por TPA, aviso quando restam ~3 TPAs), comida e bactérias (fim estimado).
+- **Modo férias:** checklist, quem alimenta; os avisos de TPA ficam em pausa e há um lembrete no regresso.
+- **Lista de desejos:** com print, link, loja e preço.
+- **Alertas:**
+  - histórico de tudo o que foi avisado;
+  - Web Push com email como alternativa;
+  - se está tudo bem, não notifica.
+- **Fontes externas:**
+  - meteorologia de Braga (calor/frio);
+  - cortes de luz (E-REDES) e de água (AGERE);
+  - qualidade da água da torneira (dureza, pH, cloro);
+  - lojas: produtos novos, regresso de stock e mudanças de preço.
+- **Servidor MCP:** o Claude (claude.ai ou Claude Code) lê os dados, só em leitura e com OAuth.
 
 ## Stack
 
 | | |
 |---|---|
 | App | Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS 4 |
-| Dados | Supabase (Auth com código OTP, Postgres com RLS, Storage) |
+| Dados | Supabase: Auth com código OTP e servidor OAuth 2.1, Postgres com RLS, Storage |
 | Local-first | TanStack Query persistido em IndexedDB, updates otimistas e mutações offline |
 | PWA | Serwist (`@serwist/turbopack`): precache, cache de fotos e Web Push |
 | UI nativa | vaul (bottom sheets), View Transitions API, safe areas |
-| Lembretes | Supabase Edge Function + pg_cron + Web Push (VAPID) + Resend |
-| Deploy | Vercel |
+| Automações | Edge Function `automacoes` + pg_cron + Web Push (VAPID) + Resend |
+| MCP | `mcp-handler` (Streamable HTTP) em `/api/mcp` |
+| Deploy | Vercel (Git: cada merge no `main` publica) |
 
 ## Estrutura
 
 ```
 supabase/
-  migrations/            esquema + RLS, bucket de fotos, lembretes, pg_cron
-  functions/lembrete-tpa Edge Function (Web Push + fallback por email)
-  templates/codigo.html  email com o código de 6 dígitos
-  config.toml            configuração do CLI (OTP de 6 dígitos, etc.)
-  seed.sql
-scripts/gerar-assets.mjs ícones + splash screens iOS (pwa-asset-generator)
-assets/                  SVG de origem do ícone e da splash
-public/icons, public/splash
+  migrations/                 esquema + RLS (ver lista abaixo)
+  functions/automacoes/       Edge Function (regras diárias + fontes externas)
+  functions/_shared/          notificar.ts (push/email), fontes.ts, verificadores.ts
+  templates/codigo.html       email com o código de 6 dígitos
+  config.toml, seed.sql
 src/
   app/
-    layout.tsx           metadata appleWebApp, viewport-fit=cover, splash screens
-    manifest.ts          standalone, portrait, ícones maskable
-    sw.ts                service worker (Serwist)
-    serwist/[path]/      route handler que gera /serwist/sw.js
-    login/               email → código OTP
-    (app)/               shell com tab bar: Aquários, /aquario, /historico, /definicoes
-  components/
-    shell/               AppShell, TabBar, Screen (header + large title), navegação
-    ui/                  Sheet (vaul), ActionSheet, Button, Toasts, Skeleton, OTP
-    forms/               TPA, medição, fauna, foto e campos estilo iOS
-    eventos/             timeline e linhas de evento
-    charts/              gráfico SVG por parâmetro
+    (app)/                    ecrãs com tab bar: Aquários, /aquario, /historico,
+                              /definicoes, /alertas, /produtos, /desejos, /ferias, /fontes
+    login/                    email → código OTP (aceita ?voltar=)
+    oauth/consent/            consentimento OAuth (conector MCP)
+    api/mcp/                  servidor MCP
+    .well-known/              metadados OAuth (RFC 9728 / RFC 8414)
+    sw.ts, serwist/[path]/    service worker
+  components/                 shell, ui, forms, fotos, fauna, produtos, fontes, …
   lib/
-    query/               QueryClient, persistência IndexedDB, mutações otimistas
-    supabase/, auth/     cliente e sessão
-    derivados.ts         última TPA, população, séries, timeline
-    formato.ts           datas e números em pt-PT
+    query/                    QueryClient, IndexedDB, mutações otimistas
+    mcp/dados.ts              consultas do MCP (com o token do utilizador → RLS)
+    derivados.ts, produtos.ts, ninhadas.ts, imagem.ts, formato.ts
 ```
+
+### Migrations
+
+| Ficheiro | O quê |
+|---|---|
+| `…0001_schema` | aquários, TPAs, medições, fauna, fotos, definições; RLS; dose por trigger; seed dos 3 aquários |
+| `…0002_storage_fotos` | bucket privado `fotos` |
+| `…0003_lembretes` | `push_subscricoes`, fuso horário |
+| `…0004_cron_lembretes` | primeiro agendamento (substituído pela 0007) |
+| `…0005_fotos_v2` | etiquetas, ligação a eventos, miniaturas, caminho `{aquario_id}/AAAA/MM/{uuid}.webp`, lembrete semanal |
+| `…0006_parte2` | `produtos` (substitui `condicionadores`, com view de compatibilidade), `ninhadas`, `ferias`, `desejos`, `alertas`, função `gerar_alertas()` |
+| `…0007_cron_automacoes` | `chamar_automacoes()` + job diário |
+| `…0008_fontes_externas` | `fontes_externas`, `novidades_externas`, fontes predefinidas de Braga, job de 3 em 3 h |
 
 ---
 
 ## 1. Supabase
 
-### 1.1 Criar o projeto
+### 1.1 Projeto e migrations
 
-1. Cria um projeto em [supabase.com](https://supabase.com) (região Europa, por exemplo `eu-west-3`, Paris).
-2. Em **Project Settings → API**, copia o **Project URL** e a **anon public key**.
-
-### 1.2 Aplicar as migrations
-
-Com o [Supabase CLI](https://supabase.com/docs/guides/cli):
+1. Cria um projeto (região Europa) e copia, em **Project Settings → API**, o URL e a chave *publishable*/*anon*.
+2. Aplica as migrations:
 
 ```bash
 npx supabase login
 ```
 
 ```bash
-npx supabase link --project-ref <o-teu-project-ref>
+npx supabase link --project-ref <ref>
 ```
 
 ```bash
 npx supabase db push
 ```
 
-Sem o CLI, também podes colar os ficheiros de `supabase/migrations/` por ordem no **SQL Editor**. A migration `…000004_cron_lembretes.sql` pode ficar para o fim (ver secção 4).
+### 1.2 Login por código (OTP de 6 dígitos)
 
-As migrations criam:
+A app usa email + código de 6 dígitos, e **não** magic link, porque no iOS o link abriria no Safari e não na app instalada. Em **Authentication**:
 
-- as tabelas `aquarios`, `condicionadores`, `tpas`, `medicoes`, `fauna_eventos`, `fotos`, `definicoes` e `push_subscricoes`, todas com **RLS por `user_id`**;
-- um trigger que, quando crias a conta, cria as definições por defeito e o condicionador **AMTRA Care (0,25 ml/L)**;
-- um trigger que calcula `tpas.dose_ml` (litros × dose/L) e a guarda como fotografia do momento;
-- a função `criar_aquarios_iniciais()`, que cria os três aquários (Principal (Aquatlantis Vienna) 42/30 L, AQUARIUS 20 L 20/17 L, Betta 5/5 L). A app mostra-a como botão quando ainda não há aquários;
-- o bucket privado **`fotos`**, em que cada utilizador só acede à sua pasta `{user_id}/…`.
+1. **SMTP próprio (obrigatório no plano gratuito):** sem ele não se podem mudar os templates, e o email padrão só traz o link. Em **Emails → SMTP Settings**, configura a Resend:
 
-### 1.3 Autenticação por código (OTP de 6 dígitos)
+   | Campo | Valor |
+   |---|---|
+   | Sender | `onboarding@resend.dev` (ou um domínio teu verificado) |
+   | Host / Port | `smtp.resend.com` / `465` |
+   | Username / Password | `resend` / API key da Resend |
 
-A app usa **email + código de 6 dígitos**, e **não** magic link: no iOS o link abriria no Safari e não na app instalada.
+   Sem domínio verificado, a Resend só envia para o email da própria conta Resend. Usa esse email para entrares na app.
+2. **Email OTP Length:** `6` (em projetos novos vem a 8). Expiração: 900 s.
+3. **Templates Magic Link e Confirm signup:** conteúdo de `supabase/templates/codigo.html` (usa `{{ .Token }}`).
+4. **URL Configuration → Site URL:** o URL da Vercel.
+5. Depois de criares a tua conta, desliga **Allow new users to sign up**. A app (e o conector MCP) fica só para ti.
 
-Em **Authentication**:
+### 1.3 Servidor OAuth (para o conector MCP)
 
-1. **Sign In / Providers → Email**: ativo, com *Confirm email* desligado.
-2. **Email OTP Length**: `6`. Expiração recomendada: 900 s.
-3. **Emails → Templates → Magic Link**: troca o corpo pelo conteúdo de `supabase/templates/codigo.html`, que mostra `{{ .Token }}` em vez do link. Faz o mesmo no template **Confirm signup**.
-   - Assunto sugerido: `O teu código do Aquário`.
-4. **URL Configuration → Site URL**: o URL da Vercel (por exemplo `https://aquario.vercel.app`).
-5. Depois de entrares pela primeira vez, desliga **Allow new users to sign up**. A app é só tua.
+Em **Authentication → OAuth Server**:
 
-> **Obrigatório no plano gratuito:** sem SMTP próprio, a Supabase **não deixa alterar os templates** e o email por defeito só traz o link, sem código. Configura a Resend em **Authentication → Emails → SMTP Settings**:
->
-> | Campo | Valor |
-> |---|---|
-> | Sender email | `onboarding@resend.dev` (ou um endereço de um domínio teu verificado na Resend) |
-> | Host / Port | `smtp.resend.com` / `465` |
-> | Username / Password | `resend` / a API key da Resend |
->
-> Sem domínio verificado, a Resend só entrega emails ao email da própria conta Resend. Por isso, cria a conta Resend com o mesmo email com que entras na app.
->
-> Atenção também ao **Email OTP Length**: em projetos novos vem a `8` e a app espera `6`.
+- **Enable OAuth server:** ligado
+- **Allow dynamic client registration:** ligado (o claude.ai regista-se sozinho)
+- **Authorization path:** `/oauth/consent`
 
-A sessão é persistente: o refresh token fica no `localStorage` da app instalada, que no iOS está separado do Safari e não é apagado ao fim de 7 dias.
+Confirma em `https://<ref>.supabase.co/.well-known/oauth-authorization-server/auth/v1`.
 
 ---
 
-## 2. Variáveis de ambiente
-
-Copia `.env.example` para `.env.local`:
+## 2. Variáveis de ambiente (Vercel e `.env.local`)
 
 | Variável | Onde obter |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Project Settings → API → Project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Project Settings → API → anon public |
-| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | `npx web-push generate-vapid-keys` (ver secção 4) |
-
-Na Vercel, define as mesmas três em **Settings → Environment Variables**.
+| `NEXT_PUBLIC_SUPABASE_URL` | Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | chave *publishable* (ou *anon*) |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | `npx web-push generate-vapid-keys` |
+| `MCP_EMAILS_PERMITIDOS` | opcional: emails (separados por vírgulas) que podem usar o MCP |
 
 ## 3. Desenvolvimento e deploy
 
@@ -140,116 +144,128 @@ npm install
 npm run dev
 ```
 
-Em `dev` o service worker está desativado. Para testar a PWA (precache, offline, push), usa um build de produção:
+O service worker está desligado em `dev`. Para testar a PWA (offline, push), usa `npm run build && npm start`. Outros comandos: `npm run lint`, `npm run typecheck` e `npm run assets` (ícones e splash screens com o pwa-asset-generator).
 
-```bash
-npm run build && npm start
-```
-
-Outros scripts:
-
-- `npm run lint`
-- `npm run typecheck`
-- `npm run assets`: regenera os ícones e as splash screens iOS (claras e escuras) a partir de `assets/*.svg` com o **pwa-asset-generator**, e reescreve `src/app/splash-screens.ts`.
-
-**Deploy:** importa o repositório na Vercel (preset Next.js), define as variáveis de ambiente e faz deploy. O service worker é servido em `/serwist/sw.js`, com scope `/`.
+A Vercel está ligada ao GitHub: cada merge no `main` publica em produção e cada pull request gera um link de pré-visualização.
 
 ---
 
-## 4. Lembretes de TPA (Web Push + email)
+## 4. Automações, cron e notificações
 
-Todos os dias às 18:00 UTC, o pg_cron chama a Edge Function `lembrete-tpa`. Esta procura aquários cuja última TPA (ou, se nunca houve nenhuma, a data de criação) passou o intervalo definido (7 dias por defeito) e que ainda não foram lembrados nas últimas 20 h. Depois:
+### 4.1 Como funciona
 
-1. envia **Web Push** para todos os dispositivos subscritos e remove subscrições expiradas (404/410);
-2. se nenhum push chegou e os lembretes por email estão ativos, envia **email pela Resend**;
-3. marca `aquarios.ultimo_lembrete_em`.
+| Job (pg_cron) | Quando | O quê |
+|---|---|---|
+| `automacoes-diaria` | 18:00 UTC | `gerar_alertas()` + envio |
+| `automacoes-fontes` | de 3 em 3 h, ao minuto 15 | verifica as fontes externas "vencidas" (meteorologia 1×/dia, restantes de 6 em 6 h) + envio |
 
-### 4.1 Chaves VAPID
+O job diário (`gerar_alertas()`, em SQL e idempotente por chave) cria alertas para:
+- **TPA:** aviso aos 7 dias e urgente aos 10 (configurável); em pausa durante as férias;
+- **esponja do filtro:** 1× por mês;
+- **produtos a acabar;**
+- **ninhadas:** +25 dias, 4 e 6 semanas;
+- **férias:** checklist incompleta 2 dias antes; verificação no regresso;
+- **foto da semana:** ao domingo.
 
-```bash
-npx web-push generate-vapid-keys
-```
+**Envio** (`_shared/notificar.ts`):
+- Web Push para todos os dispositivos (até 3 alertas: um push cada; mais do que isso: um resumo);
+- se o push não chegar a nenhum dispositivo e o email estiver ativo: um email pela Resend;
+- fica registado em `alertas.canal` e em `notificado_em`.
 
-A **public key** vai para `NEXT_PUBLIC_VAPID_PUBLIC_KEY` (Vercel e `.env.local`) e para o segredo `VAPID_PUBLIC_KEY`. A **private key** fica **só** no segredo da função.
+O cron da Vercel Hobby não é usado: só corre 1× por dia.
 
-### 4.2 Segredos e deploy da função
-
-Gera um segredo aleatório para o cron (por exemplo com `openssl rand -hex 32`) e define os segredos da função:
-
-```bash
-npx supabase secrets set CRON_SECRET=<segredo> VAPID_PUBLIC_KEY=<pública> VAPID_PRIVATE_KEY=<privada> VAPID_SUBJECT=mailto:<o-teu-email> APP_URL=https://<a-tua-app>.vercel.app
-```
-
-```bash
-npx supabase secrets set RESEND_API_KEY=<chave-resend> "RESEND_FROM=Aquário <lembretes@o-teu-dominio.pt>"
-```
+### 4.2 Segredos da Edge Function
 
 ```bash
-npx supabase functions deploy lembrete-tpa --no-verify-jwt
+npx supabase secrets set CRON_SECRET=<aleatório> VAPID_PUBLIC_KEY=<pública> VAPID_PRIVATE_KEY=<privada> VAPID_SUBJECT=mailto:<email> APP_URL=https://<app>.vercel.app
 ```
 
-A função valida ela própria quem a chama: o cron usa o header `x-cron-secret`; a app, o JWT do utilizador para enviar a notificação de teste.
+```bash
+npx supabase secrets set RESEND_API_KEY=<chave> "RESEND_FROM=Aquário <onboarding@resend.dev>"
+```
 
-### 4.3 Agendamento (pg_cron)
+```bash
+npx supabase functions deploy automacoes --no-verify-jwt
+```
 
-1. Em **Database → Extensions**, ativa `pg_cron` e `pg_net`.
-2. No **SQL Editor**, guarda no Vault o URL do projeto e o mesmo segredo do cron:
-
-   ```sql
-   select vault.create_secret('https://<ref>.supabase.co', 'project_url');
-   select vault.create_secret('<segredo>', 'lembrete_cron_secret');
-   ```
-
-3. Aplica `supabase/migrations/20261105000004_cron_lembretes.sql`. Se usaste `db push`, já está aplicada.
-
-Para testar já, sem esperar pelas 18h:
+No **SQL Editor**, guarda no Vault o URL do projeto e o mesmo `CRON_SECRET`:
 
 ```sql
-select net.http_post(
-  url := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url') || '/functions/v1/lembrete-tpa',
-  headers := jsonb_build_object('Content-Type','application/json','x-cron-secret',(select decrypted_secret from vault.decrypted_secrets where name='lembrete_cron_secret')),
-  body := '{}'::jsonb
-);
+select vault.create_secret('https://<ref>.supabase.co', 'project_url');
+select vault.create_secret('<o mesmo CRON_SECRET>', 'lembrete_cron_secret');
 ```
 
-### 4.4 Ativar no iPhone
+Para testar sem esperar pelo cron: `select public.chamar_automacoes('diaria');` ou `('fontes')`. A resposta fica em `net._http_response`.
 
-Em **Definições → Notificações**, toca em **Ativar**. A permissão tem de ser pedida a partir de um toque, como o iOS exige, e só existe com a app instalada (iOS 16.4+). Depois usa **Enviar notificação de teste** para confirmares que chega.
+### 4.3 Push no iPhone
 
----
-
-## 5. Instalar no iPhone
-
-1. Abre o URL da app no **Safari**. Tem de ser o Safari, ou outro browser no iOS 16.4+ que tenha a opção.
-2. Toca em **Partilhar** (o quadrado com a seta) e depois em **Adicionar ao ecrã principal** → **Adicionar**.
-3. Abre a app **pelo ícone**. Passa a correr em ecrã inteiro, com splash screen, e com sessão e dados próprios, separados do Safari.
-4. Entra com o teu email e o código de 6 dígitos. No iOS 17+, o teclado sugere o código diretamente a partir do Mail.
-5. Em **Definições → Notificações**, ativa os lembretes.
-
-> Se mudares os ícones ou a splash, apaga o ícone do ecrã principal e volta a adicioná-lo: o iOS só os lê na instalação.
+Em **Definições → Notificações → Ativar** (o iOS só pede permissão a partir de um toque, e só com a app instalada, iOS 16.4+). Depois usa **Enviar notificação de teste**.
 
 ---
 
-## Como funciona o "feeling" nativo
+## 5. Fontes externas (Definições → Fontes externas)
 
-- **Ecrã:** `display: standalone`, `viewport-fit=cover`, `statusBarStyle: black-translucent` e safe areas com `env(safe-area-inset-*)`. O header é sempre "oceano" escuro, porque o texto da status bar é branco nos dois modos.
-- **Layout:** `body` fixo a `100dvh` com `overscroll-behavior: none`; só o conteúdo de cada ecrã faz scroll. O header e a tab bar ficam fixos, com large title que colapsa no scroll.
-- **Interação:** `-webkit-tap-highlight-color: transparent`, `user-select` e `touch-callout` desligados na UI, inputs com ≥ 16 px (o iOS não faz zoom), feedback de toque com `:active { scale(.97) }` e sem estados de hover.
-- **Componentes:** formulários em bottom sheets (vaul, com o fundo a escalar como no iOS) e action sheets próprias, nunca `alert`/`confirm`.
-- **Arranque e carregamento:** os dados vêm logo da cache em IndexedDB e o HTML de cada ecrã está pré-cacheado. Os skeletons só aparecem se a cache demorar mais de 150 ms.
-- **Offline:** as alterações aplicam-se de imediato (otimistas), ficam em fila e são enviadas quando houver rede, mesmo que a app seja fechada entretanto. As fotos pendentes ficam como Blob no IndexedDB.
+| Fonte | Como | Configurar |
+|---|---|---|
+| Meteorologia Braga | Open-Meteo (sem chave), 1×/dia. Alerta se a máx. for ≥ 30 °C (tampa aberta, ventoinha, luz mais cedo) ou a mín. ≤ 5 °C (confirmar o aquecedor) | coordenadas e limites |
+| Cortes de luz | Dados abertos da E-REDES (`network-scheduling-work`), filtrados por concelho e **código postal** | **o teu código postal** (ex.: `4710-057` ou só `4710`) |
+| Cortes de água | Página "Avisos e Informações" da AGERE; avisa se o aviso mencionar a tua freguesia/rua, com o conselho "não faças TPA nesse período" | **freguesia e/ou rua** |
+| Qualidade da água | Deteta um relatório trimestral novo da AGERE (rede de distribuição) e extrai dureza (mg/L CaCO₃ e °dGH), pH, cloro e condutividade | — |
+| Aquaralândia | Store API do WooCommerce (pesquisa por palavra-chave); plano B: sitemap de produtos. Deteta produtos novos, regresso de stock e mudanças de preço | palavras-chave |
+| ExoticLand | Sem loja online: entrada desativada | — |
+| Outras lojas (+) | WooCommerce, ou **página + seletores CSS** | URL, seletores, palavras |
 
-### Motion (skill `motion-design`)
+Cada verificação compara com a anterior. Só cria uma novidade (e um alerta) quando algo muda: há um `hash` único por fonte. A primeira verificação de lojas e da qualidade da água é só linha de base, sem alertas. O botão **Verificar agora** corre já as tuas fontes. Facebook, Instagram e WhatsApp não são suportados.
 
-Arquétipo **Corporate/iOS**, aplicado em todo o lado:
+---
 
-| | |
-|---|---|
-| Curva de assinatura | `cubic-bezier(0.2, 0, 0, 1)`: entradas desaceleram |
-| Saídas | `cubic-bezier(0.3, 0, 1, 1)`, a ~70% da duração da entrada |
-| Durações (mobile 0,8×) | 120 ms (toque) · 280 ms (cartões, controlos) · 420 ms (ecrãs) |
-| Navegação | View Transitions: para a frente entra da direita (com parallax de 25% no ecrã que sai), para trás o inverso, e crossfade entre tabs. O header faz crossfade e a tab bar fica ancorada. Sem suporte, o fallback é a mesma animação em CSS. |
-| Sheets | curva iOS do vaul (500 ms, `cubic-bezier(.32,.72,0,1)`) |
-| Micro-interações | polegar do controlo segmentado e do interruptor desliza, dose da TPA faz *pop* a cada mudança, linhas apagadas desvanecem e colapsam, erros abanam (360 ms, sem overshoot), stagger de 30 ms (< 200 ms no total) |
-| Ambient | luz da água a derivar devagar no header (14 s) |
-| `prefers-reduced-motion` | sem movimento espacial: só fades e durações reduzidas a metade |
+## 6. Conector MCP (Claude)
+
+O endpoint `https://<app>.vercel.app/api/mcp` é Streamable HTTP, com autenticação OAuth 2.1 obrigatória. O servidor de autorização é o Supabase Auth, com registo dinâmico de clientes, e o consentimento fica em `/oauth/consent`. As consultas correm com o teu token, por isso a RLS garante que só os teus dados são lidos.
+
+Ferramentas, todas só de leitura:
+- `resumo_aquarios`
+- `ultimas_tpas(aquario, dias)`
+- `medicoes(aquario, dias)`
+- `fauna_e_ninhadas(aquario)`
+- `fotos_recentes(aquario, dias)`: URLs assinados, válidos 60 min
+- `alertas_recentes(dias)`
+- `lista_desejos`
+- `novidades_externas(dias)`
+- `resumo_semanal`
+
+**claude.ai:**
+1. Em **Definições → Conectores → Adicionar conector personalizado**, usa o nome `Aquário` e o URL `https://aquario-delta.vercel.app/api/mcp`.
+2. Ao ligar, abre-se a página de login da app: entra com o código e carrega em **Autorizar**.
+
+**Claude Code:**
+
+```bash
+claude mcp add --transport http aquario https://aquario-delta.vercel.app/api/mcp
+```
+
+Depois corre `/mcp` dentro do Claude Code para autenticar no browser.
+
+Para revogar o acesso, desliga o conector no Claude ou remove o cliente em **Authentication → OAuth Server** na Supabase.
+
+---
+
+## 7. Instalar no iPhone
+
+1. Abre o URL da app no **Safari** → **Partilhar** → **Adicionar ao ecrã principal**.
+2. Abre a app pelo ícone e entra com o email e o código de 6 dígitos (o iOS 17+ sugere o código do Mail).
+3. Em **Definições → Notificações**, toca em **Ativar**.
+
+---
+
+## Feeling nativo e motion
+
+- **Ecrã:** `standalone`, `viewport-fit=cover`, status bar `black-translucent`, safe areas, `body` fixo a `100dvh`; só o conteúdo de cada ecrã faz scroll.
+- **Componentes:** bottom sheets (vaul) e action sheets próprias, nunca `alert`/`confirm`.
+- **Toque:** `:active` com `scale(.97)` e sem hover; inputs com 16 px ou mais.
+- **Carregamento:** skeletons em vez de spinners; arranque a partir da cache.
+- **Motion** (skill `motion-design`, arquétipo Corporate/iOS):
+  - curva de assinatura `cubic-bezier(0.2,0,0,1)`; durações 120/280/420 ms; saídas a ~70% da duração da entrada;
+  - View Transitions com deslize lateral e fallback em CSS;
+  - visualizador de fotos: escala com fade e arrastar para baixo para fechar;
+  - toasts sobem de baixo; `prefers-reduced-motion` passa a só fades.

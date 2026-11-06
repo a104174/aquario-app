@@ -10,7 +10,7 @@ const revision =
   crypto.randomUUID();
 
 // Ecrãs pré-cacheados: a app arranca a partir da cache mesmo offline.
-const ROTAS = ["/", "/aquario", "/historico", "/definicoes", "/login"];
+const ROTAS = ["/", "/aquario", "/historico", "/definicoes", "/login", "/alertas", "/produtos", "/desejos", "/ferias", "/fontes"];
 
 export const { dynamic, dynamicParams, revalidate, generateStaticParams, GET } = createSerwistRoute({
   swSrc: "src/app/sw.ts",

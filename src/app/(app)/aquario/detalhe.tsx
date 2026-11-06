@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { GraficoParametro } from "@/components/charts/grafico-parametro";
+import { Galeria } from "@/components/fotos/galeria";
+import { Ninhadas } from "@/components/fauna/ninhadas";
 import { Chips, Segmentado } from "@/components/forms/campos";
 import { Timeline } from "@/components/eventos/timeline";
 import { IconMaisOpcoes, IconPeixe } from "@/components/icons";
@@ -18,12 +20,13 @@ import { dataCurta, hora, num, plural, textoHaDias } from "@/lib/formato";
 import { INFO_PARAMETROS } from "@/lib/parametros";
 import { DEFINICOES_PADRAO, useApagar, useColecao, useDefinicoes } from "@/lib/query/dados";
 import { abrirRegistar } from "@/lib/ui-store";
+import { useFizTpa } from "@/lib/fiz-tpa";
 import type { Parametro } from "@/lib/tipos";
 
 const ORDEM_GRAFICOS: Parametro[] = ["no3", "ph", "temperatura_c", "no2", "nh3_nh4", "kh", "gh"];
 import { cx } from "@/lib/cx";
 
-type Vista = "registos" | "graficos" | "fauna";
+type Vista = "registos" | "graficos" | "fauna" | "fotos";
 
 export function DetalheSkeleton() {
   return (
@@ -43,17 +46,19 @@ export function DetalheAquario() {
   const medicoes = useColecao("medicoes").data;
   const fauna = useColecao("fauna").data;
   const fotos = useColecao("fotos").data;
-  const condicionadores = useColecao("condicionadores").data;
+  const condicionadores = useColecao("produtos").data;
   const intervalo = useDefinicoes().data?.intervalo_tpa_dias ?? DEFINICOES_PADRAO.intervalo_tpa_dias;
   const apagar = useApagar("aquarios");
   const [vista, setVista] = useState<Vista>("registos");
   const [editar, setEditar] = useState(false);
+  const fizTpa = useFizTpa();
 
   const aquario = aquarios.data?.find((a) => a.id === id);
   const eventos = useMemo(
     () => juntarEventos({ tpas, medicoes, fauna, fotos }, (aq, e) => aq === id || (e as { aquario_destino_id?: string }).aquario_destino_id === id),
     [tpas, medicoes, fauna, fotos, id],
   );
+  const sugestaoTpa = fizTpa.sugestao(id);
 
   if (aquarios.isPending) return <DetalheSkeleton />;
   if (!aquario) {
@@ -112,9 +117,14 @@ export function DetalheAquario() {
         </div>
       }
     >
+      {/* 1 toque: repete a última TPA */}
+      <Button block className="mb-3" onClick={() => fizTpa.registar(id)}>
+        {sugestaoTpa ? `Fiz TPA · ${num(sugestaoTpa.litros, 1)} L${sugestaoTpa.dose != null ? ` · ${num(sugestaoTpa.dose, 2)} ml` : ""}` : "Registar primeira TPA"}
+      </Button>
+
       {/* Ações rápidas: abrem a sheet de registo já com este aquário */}
       <div className="mb-5 grid grid-cols-4 gap-2">
-        {TIPOS_REGISTO.map((t, i) => {
+        {TIPOS_REGISTO.filter((t) => t.tipo !== "ninhada").map((t, i) => {
           const Icon = t.icon;
           return (
             <button
@@ -139,6 +149,7 @@ export function DetalheAquario() {
           { valor: "registos", texto: "Registos" },
           { valor: "graficos", texto: "Gráficos" },
           { valor: "fauna", texto: "Fauna" },
+          { valor: "fotos", texto: "Fotos" },
         ]}
         valor={vista}
         onValor={setVista}
@@ -152,6 +163,8 @@ export function DetalheAquario() {
             <Vazio texto="Ainda não há registos neste aquário." />
           ))}
         {vista === "graficos" && <Graficos aquarioId={id} />}
+        {vista === "fotos" && <Galeria aquarioId={id} />}
+        {vista === "fauna" && <Ninhadas aquarioId={id} />}
         {vista === "fauna" && (
           <Seccao titulo={populacao.lista.length ? plural(populacao.lista.length, "espécie", "espécies") : undefined}>
             {populacao.lista.length ? (

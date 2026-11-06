@@ -8,9 +8,9 @@ import { abrirRegistar } from "@/lib/ui-store";
 import { NavLink } from "./nav";
 
 const TABS = [
-  { href: "/", label: "Aquários", icon: IconAquario, ativo: (p: string) => p === "/" || p.startsWith("/aquario") },
+  { href: "/", label: "Aquários", icon: IconAquario, ativo: (p: string) => p === "/" || p.startsWith("/aquario") || p.startsWith("/alertas") },
   { href: "/historico", label: "Histórico", icon: IconHistorico, ativo: (p: string) => p.startsWith("/historico") },
-  { href: "/definicoes", label: "Definições", icon: IconDefinicoes, ativo: (p: string) => p.startsWith("/definicoes") },
+  { href: "/definicoes", label: "Definições", icon: IconDefinicoes, ativo: (p: string) => ["/definicoes", "/produtos", "/desejos", "/ferias", "/fontes"].some((r) => p.startsWith(r)) },
 ];
 
 export function TabBar() {
@@ -63,7 +63,7 @@ function Tab({
   return (
     <NavLink
       href={tab.href}
-      tipo={pathname.startsWith("/aquario") && tab.href === "/" ? "back" : "tab"}
+      tipo={ativo && pathname !== tab.href ? "back" : "tab"}
       aria-current={ativo ? "page" : undefined}
       onClick={(e) => {
         if (mesmaRota) e.preventDefault();

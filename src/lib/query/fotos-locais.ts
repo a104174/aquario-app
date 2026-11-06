@@ -6,9 +6,14 @@ import { createStore, del, get, set, clear } from "idb-keyval";
 
 const store = typeof window !== "undefined" ? createStore("aquario-fotos", "pendentes") : undefined;
 
+// Chaves: "<id>" para a foto e "<id>:thumb" para a miniatura.
+export const chaveThumb = (id: string) => `${id}:thumb`;
 export const guardarFotoPendente = (id: string, blob: Blob) => set(id, blob, store);
 export const lerFotoPendente = (id: string) => get<Blob>(id, store);
-export const apagarFotoPendente = (id: string) => del(id, store);
+export const apagarFotoPendente = async (id: string) => {
+  await del(id, store);
+  await del(chaveThumb(id), store);
+};
 export const limparFotosPendentes = () => clear(store);
 
 /** URL canónico usado como chave na cache "fotos" do service worker. */

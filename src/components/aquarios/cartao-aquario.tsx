@@ -2,6 +2,7 @@
 
 import { IconChevronDireita, IconPeixe } from "@/components/icons";
 import { NavLink } from "@/components/shell/nav";
+import { useFizTpa } from "@/lib/fiz-tpa";
 import { cx } from "@/lib/cx";
 import { estadoTpa, faunaAtual, ultimaTpa, ultimosValores } from "@/lib/derivados";
 import { diasDesde, num, plural, textoHaDias } from "@/lib/formato";
@@ -25,6 +26,8 @@ export function CartaoAquario({
   intervalo: number;
   indice: number;
 }) {
+  const fizTpa = useFizTpa();
+  const sugestao = fizTpa.sugestao(aquario.id);
   const tpa = ultimaTpa(tpas, aquario.id);
   const { estado, dias } = estadoTpa(tpa, intervalo);
   const valores = ultimosValores(medicoes, aquario.id);
@@ -41,11 +44,12 @@ export function CartaoAquario({
         : `Última TPA ${textoHaDias(dias!)}`;
 
   return (
+    <div className="relative">
     <NavLink
       href={`/aquario?id=${aquario.id}`}
       tipo="forward"
       style={{ ["--i" as string]: indice }}
-      className="pressable enter-up block rounded-[18px] bg-surface p-4 shadow-[var(--shadow-card)]"
+      className="pressable enter-up block rounded-[18px] bg-surface p-4 pb-3.5 shadow-[var(--shadow-card)]"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
@@ -123,5 +127,14 @@ export function CartaoAquario({
         )}
       </div>
     </NavLink>
+      {/* 1 toque: fora do link (botão dentro de <a> não é válido) */}
+      <button
+        type="button"
+        onClick={() => fizTpa.registar(aquario.id)}
+        className="pressable absolute bottom-2.5 right-3 h-8 rounded-full bg-accent-soft px-3 text-[14px] font-semibold text-accent"
+      >
+        {sugestao ? `Fiz TPA · ${num(sugestao.litros, 1)} L` : "Fiz TPA"}
+      </button>
+    </div>
   );
 }

@@ -6,11 +6,13 @@ import { escolher } from "@/components/ui/action-sheet";
 import { cx } from "@/lib/cx";
 import { hora, num } from "@/lib/formato";
 import { INFO_PARAMETROS } from "@/lib/parametros";
-import { useApagar } from "@/lib/query/dados";
+import { useApagar, useColecao } from "@/lib/query/dados";
+import { abrirVisualizador } from "@/lib/visualizador-store";
 import type { Colecao } from "@/lib/query/keys";
 import { abrirRegistar, type TipoRegisto } from "@/lib/ui-store";
 import { PARAMETROS, type Aquario, type Condicionador, type Evento } from "@/lib/tipos";
 import { FotoImg } from "./foto-img";
+import { NOME_ETIQUETA } from "@/lib/fotos";
 
 const COLECAO: Record<Evento["tipo"], Colecao> = { tpa: "tpas", medicao: "medicoes", fauna: "fauna", foto: "fotos" };
 const NOME: Record<Evento["tipo"], string> = { tpa: "TPA", medicao: "medição", fauna: "evento de fauna", foto: "foto" };
@@ -38,16 +40,22 @@ export function LinhaEvento({
   aquarioContexto?: string;
 }) {
   const apagar = useApagar(COLECAO[evento.tipo]);
+  const { data: fotosTodas } = useColecao("fotos");
   const [saindo, setSaindo] = useState(false);
   const nomeAquario = aquarios?.find((a) => a.id === evento.aquario_id)?.nome;
 
   async function opcoes() {
+    if (evento.tipo === "foto") {
+      const doAquario = (fotosTodas ?? []).filter((f) => f.aquario_id === evento.aquario_id).map((f) => f.id);
+      return abrirVisualizador(doAquario, Math.max(0, doAquario.indexOf(evento.id)));
+    }
     const i = await escolher({
       titulo: `${NOME[evento.tipo].charAt(0).toUpperCase()}${NOME[evento.tipo].slice(1)} · ${hora(evento.data)}`,
-      opcoes: [{ texto: "Editar" }, { texto: `Apagar ${NOME[evento.tipo]}`, destrutivo: true }],
+      opcoes: [{ texto: "Editar" }, { texto: "Adicionar foto" }, { texto: `Apagar ${NOME[evento.tipo]}`, destrutivo: true }],
     });
     if (i === 0) abrirRegistar({ tipo: evento.tipo as TipoRegisto, editarId: evento.id, aquarioId: evento.aquario_id });
-    if (i === 1) {
+    if (i === 1) abrirRegistar({ tipo: "foto", aquarioId: evento.aquario_id, evento: { tipo: evento.tipo, id: evento.id } });
+    if (i === 2) {
       setSaindo(true);
       // deixa a animação de saída correr antes de remover da cache
       setTimeout(() => apagar.mutate({ id: evento.id }), 260);
@@ -121,8 +129,8 @@ export function LinhaEvento({
         : TEXTO_FAUNA[f.tipo];
   } else {
     const p = evento.item;
-    icone = <FotoImg foto={p} className="h-10 w-10 shrink-0 rounded-[10px]" />;
-    titulo = "Foto";
+    icone = <FotoImg foto={p} thumb className="h-10 w-10 shrink-0 rounded-[10px]" />;
+    titulo = `Foto · ${NOME_ETIQUETA[p.etiqueta] ?? "Outro"}`;
     detalhe = p.legenda;
   }
 
