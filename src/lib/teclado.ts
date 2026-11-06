@@ -66,7 +66,10 @@ export function iniciarTeclado() {
       // --kb: quanto o teclado tapa o layout viewport. No iOS = altura do
       // teclado; no Android (resizes-content) = 0, porque o layout já encolheu.
       const sobreposto = agora ? Math.max(0, Math.round(window.innerHeight - visivel - (vv?.offsetTop ?? 0))) : 0;
-      raiz.style.setProperty("--vv-h", `${Math.round(agora ? visivel : window.innerHeight)}px`);
+      // Sem teclado não fixamos altura em px: no iOS (standalone) o innerHeight
+      // pode ser menor do que o ecrã e deixava uma faixa vazia no fundo.
+      if (agora) raiz.style.setProperty("--vv-h", `${Math.round(visivel)}px`);
+      else raiz.style.removeProperty("--vv-h");
       raiz.style.setProperty("--kb", `${sobreposto}px`);
       if (agora !== aberto) {
         aberto = agora;

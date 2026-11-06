@@ -603,6 +603,11 @@ html.no-vt[data-nav="tab"] .screen-enter {
   top: 0;
   left: 0;
   right: 0;
+  /* até ao fundo físico do ecrã (por baixo do home indicator) */
+  bottom: 0;
+}
+html[data-teclado] .altura-app {
+  bottom: auto;
   height: var(--vv-h, 100dvh);
 }
 
