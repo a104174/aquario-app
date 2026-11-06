@@ -10,6 +10,16 @@ const posicoes = new Map<string, number>();
 const chaveAtual = () => (typeof window === "undefined" ? "" : location.pathname + location.search);
 
 /**
+ * Há uma posição de scroll guardada para este ecrã (vai ser restaurada)?
+ * Recebe o pathname do router: durante o render da nova rota o `location`
+ * ainda aponta para a anterior (o Next só o atualiza depois do commit).
+ */
+export function temScrollGuardado(pathname: string) {
+  for (const [k, v] of posicoes) if (v > 0 && (k === pathname || k.startsWith(`${pathname}?`))) return true;
+  return false;
+}
+
+/**
  * Restaura a posição de scroll ao voltar a um ecrã/tab e guarda-a ao sair.
  * Se o conteúdo ainda não tiver altura suficiente (dados a chegar), tenta
  * durante 1,5 s à medida que cresce.

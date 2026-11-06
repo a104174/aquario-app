@@ -30,22 +30,34 @@ await ctx.close();
 
 const paginas = { aquarios: "/", detalhe: "/aquario?id=a1", historico: "/historico", definicoes: "/definicoes" };
 const notas = {};
+// Mediana de N corridas por ecrã (recomendação do Lighthouse: uma corrida
+// isolada varia vários pontos com a carga da máquina).
+const CORRIDAS = Number(process.env.LH_CORRIDAS ?? 3);
 try {
   for (const [nome, rota] of Object.entries(paginas)) {
-    const base = path.join(saida, nome);
-    execFileSync(
-      "npx",
-      [
-        "--yes", "lighthouse@13.6.0", `http://localhost:${APP}${rota}`,
-        "--form-factor=mobile", "--disable-storage-reset", "--quiet",
-        "--only-categories=performance,accessibility,best-practices,seo",
-        `--chrome-flags=--headless=new --no-sandbox --user-data-dir=${perfil}`,
-        "--output=json", "--output=html", `--output-path=${base}`,
-      ],
-      { env: { ...process.env, CHROME_PATH: process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium" }, stdio: "ignore" },
-    );
-    const r = JSON.parse(fs.readFileSync(`${base}.report.json`, "utf8"));
+    const corridas = [];
+    for (let n = 0; n < CORRIDAS; n++) {
+      const base = path.join(saida, CORRIDAS > 1 ? `${nome}-${n + 1}` : nome);
+      execFileSync(
+        "npx",
+        [
+          "--yes", "lighthouse@13.6.0", `http://localhost:${APP}${rota}`,
+          "--form-factor=mobile", "--disable-storage-reset", "--quiet",
+          "--only-categories=performance,accessibility,best-practices,seo",
+          `--chrome-flags=--headless=new --no-sandbox --user-data-dir=${perfil}`,
+          "--output=json", "--output=html", `--output-path=${base}`,
+        ],
+        { env: { ...process.env, CHROME_PATH: process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium" }, stdio: "ignore" },
+      );
+      corridas.push({ base, r: JSON.parse(fs.readFileSync(`${base}.report.json`, "utf8")) });
+    }
+    // corrida mediana pelo desempenho (as outras categorias são estáveis)
+    corridas.sort((a, b) => a.r.categories.performance.score - b.r.categories.performance.score);
+    const { base, r } = corridas[Math.floor(corridas.length / 2)];
+    for (const c of corridas) if (c.base !== base) for (const ext of ["json", "html"]) fs.rmSync(`${c.base}.report.${ext}`, { force: true });
+    if (base !== path.join(saida, nome)) for (const ext of ["json", "html"]) fs.renameSync(`${base}.report.${ext}`, path.join(saida, `${nome}.report.${ext}`));
     notas[nome] = Object.fromEntries(Object.entries(r.categories).map(([k, v]) => [k, Math.round(v.score * 100)]));
+    notas[nome].corridas = corridas.map((c) => Math.round(c.r.categories.performance.score * 100));
     notas[nome].falhas = Object.values(r.audits)
       .filter((a) => a.score !== null && a.score < 0.9 && a.scoreDisplayMode === "binary" || (a.score !== null && a.score < 0.5 && a.scoreDisplayMode === "numeric"))
       .map((a) => a.id);

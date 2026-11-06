@@ -35,13 +35,20 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setEstado({ session: sessaoGuardada(), pronto: true });
     let cancelar: (() => void) | null = null;
     let vivo = true;
-    void supabase().then((sb) => {
-      if (!vivo) return;
-      const { data } = sb.auth.onAuthStateChange((_evt, session) => setEstado({ session, pronto: true }));
-      cancelar = () => data.subscription.unsubscribe();
-    });
+    // O cliente (auth-js, ~170 KB) só é preciso para validar/renovar o token:
+    // com sessão guardada, carrega quando o browser estiver livre (os ecrãs
+    // saem da cache sem ele). Sem sessão, carrega já (login).
+    const ligar = () =>
+      void supabase().then((sb) => {
+        if (!vivo) return;
+        const { data } = sb.auth.onAuthStateChange((_evt, session) => setEstado({ session, pronto: true }));
+        cancelar = () => data.subscription.unsubscribe();
+      });
+    const ric = window.requestIdleCallback;
+    const pedido = sessaoGuardada() && ric ? ric(ligar, { timeout: 2000 }) : (ligar(), 0);
     return () => {
       vivo = false;
+      if (pedido) window.cancelIdleCallback(pedido);
       cancelar?.();
     };
   }, []);

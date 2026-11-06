@@ -3,12 +3,15 @@
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { agruparPorDia } from "@/lib/derivados";
 import { cabecalhoDia } from "@/lib/formato";
+import { usePathname } from "next/navigation";
+import { temScrollGuardado } from "@/lib/gestos";
 import { useColecao } from "@/lib/query/dados";
 import type { Aquario, Condicionador, Evento } from "@/lib/tipos";
 import { LinhaEvento } from "./linha-evento";
 
 const PAGINA = 20;
-const VAZIO: Evento[] = [];
+/** Linhas montadas logo (enchem o ecrã); o resto entra num render diferido. */
+const PRIMEIRAS = 8;
 
 /** Timeline agrupada por dia, com render incremental (infinite scroll). */
 export function Timeline({
@@ -26,9 +29,14 @@ export function Timeline({
 }) {
   // Render concorrente (interrompível): com dados a chegar em várias
   // coleções, a lista não bloqueia o main thread em tarefas longas.
-  // valor inicial [] → até a montagem é concorrente (o 1.º render é vazio
-  // e a lista real entra num render interrompível, sem tarefas longas)
-  const eventos = useDeferredValue(eventosProp, VAZIO);
+  // 1.º render só com as primeiras linhas (o ecrã entra já cheio durante a
+  // transição); a lista completa chega num render interrompível, sem
+  // tarefas longas. O valor inicial só é usado na montagem.
+  // Ao voltar a um ecrã com scroll guardado, monta tudo de uma vez para a
+  // posição ser reposta logo (como no iOS).
+  const pathname = usePathname();
+  const [inicio] = useState(() => (temScrollGuardado(pathname) ? eventosProp : eventosProp.slice(0, PRIMEIRAS)));
+  const eventos = useDeferredValue(eventosProp, inicio);
   const [limite, setLimite] = useState(PAGINA);
   // uma só subscrição às fotos (antes era uma por linha)
   const fotos = useColecao("fotos").data;
