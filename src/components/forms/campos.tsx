@@ -141,11 +141,11 @@ export function Chips<T extends string>({
   opcoes,
   valor,
   onValor,
-  escuro,
 }: {
   opcoes: { valor: T; texto: ReactNode }[];
   valor: T | null;
   onValor: (v: T) => void;
+  /** (compatibilidade: o header já não é escuro; ignorado) */
   escuro?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -166,13 +166,10 @@ export function Chips<T extends string>({
             onClick={() => onValor(o.valor)}
             className={cx(
               "pressable h-11 shrink-0 whitespace-nowrap rounded-full px-4 text-[15px] font-medium",
-              escuro
-                ? ativo
-                  ? "bg-white text-[#0a3247]"
-                  : "bg-white/12 text-white"
-                : ativo
-                  ? "bg-accent text-accent-contrast"
-                  : "bg-surface text-text",
+              // (o header deixou de ser escuro: `escuro` mantém-se só por compatibilidade)
+              ativo
+                ? "bg-accent text-accent-contrast shadow-[var(--shadow-botao)]"
+                : "bg-surface text-text shadow-[0_0_0_1px_var(--separator)]",
             )}
           >
             {o.texto}

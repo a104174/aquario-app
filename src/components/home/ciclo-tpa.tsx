@@ -31,7 +31,7 @@ export function CicloTpa({ aquarios, tpas, intervalo }: { aquarios?: Aquario[]; 
         <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.15em] text-[#b6dce4]">
           <IconGota size={17} /> Ciclo de TPA
         </span>
-        {ciclo && tpas ? <span className={`rounded-full border border-white/15 bg-[#061d29]/65 px-2.5 py-1 text-[11px] font-semibold ${tom}`}>{estado}</span> : null}
+        {ciclo && tpas ? <span className={`rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[11px] font-semibold ${tom}`}>{estado}</span> : null}
       </div>
 
       <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
@@ -41,7 +41,7 @@ export function CicloTpa({ aquarios, tpas, intervalo }: { aquarios?: Aquario[]; 
         </div>
         <div className={`relative grid size-[84px] shrink-0 place-items-center ${tom}`}>
           <svg viewBox="0 0 80 80" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
-            <circle cx="40" cy="40" r="34" fill="#0a2937" fillOpacity=".78" stroke="white" strokeOpacity=".16" strokeWidth="4" />
+            <circle cx="40" cy="40" r="34" fill="#26282b" fillOpacity=".9" stroke="white" strokeOpacity=".16" strokeWidth="4" />
             {progresso > 0 && <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" pathLength="100" strokeDasharray={`${progresso} 100`} />}
           </svg>
           {dias == null ? <IconGota size={26} className="relative" /> : (

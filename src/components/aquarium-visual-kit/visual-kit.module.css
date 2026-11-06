@@ -6,12 +6,16 @@
   --kit-superficie: var(--surface, #fff);
   --kit-suave: var(--surface-2, #f4f7f6);
   --kit-linha: var(--separator, #dce4e2);
-  --kit-traco: var(--accent-forte, var(--accent, #246e65));
+  /* dados em cor aquática (as ações da app são carvão) */
+  --kit-traco: var(--agua, var(--accent-forte, var(--accent, #246e65)));
   box-sizing: border-box;
   min-inline-size: 0;
   margin: 0;
-  border: 1px solid var(--kit-linha);
-  border-radius: 1.375rem;
+  /* identidade clara: elevação suave em vez de contorno; sem os tokens
+     da app mantém o contorno original */
+  border: var(--kit-contorno, 1px solid var(--kit-linha));
+  border-radius: var(--r-bloco, 1.375rem);
+  box-shadow: var(--shadow-card, none);
   padding: clamp(.875rem, 4%, 1.25rem);
   background: var(--kit-superficie);
   color: var(--kit-tinta);
@@ -291,7 +295,8 @@
 .emblemaFauna {
   display: grid;
   place-items: center;
-  inline-size: 40%;
+  /* em miniaturas pequenas (lista de fauna) o emblema não desce de 1,75rem */
+  inline-size: max(40%, 1.75rem);
   max-inline-size: 3.25rem;
   aspect-ratio: 1;
   border: 1px solid var(--separator, #dce4e2);

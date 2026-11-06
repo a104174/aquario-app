@@ -13,12 +13,12 @@ export function Toasts() {
           role="status"
           onClick={() => fecharToast(t.id)}
           className={cx(
-            "pointer-events-auto flex max-w-sm items-center gap-3 rounded-full py-2.5 pl-4 text-[15px] font-medium shadow-lg backdrop-blur-xl",
+            "pointer-events-auto flex max-w-sm items-center gap-3 rounded-full py-2.5 pl-5 text-[15px] font-medium shadow-[var(--shadow-flutuante)]",
             t.acao ? "pr-2" : "pr-4",
             t.saindo ? "toast-exit" : "toast-enter",
             t.tipo === "erro" && "bg-danger text-white",
-            t.tipo === "ok" && "bg-surface/95 text-text",
-            t.tipo === "info" && "bg-surface/95 text-text",
+            t.tipo === "ok" && "bg-nav text-white",
+            t.tipo === "info" && "bg-nav text-white",
           )}
         >
           <span>{t.texto}</span>
@@ -30,7 +30,7 @@ export function Toasts() {
                 t.acao!.onClick();
                 fecharToast(t.id);
               }}
-              className="pressable -my-1.5 flex min-h-11 items-center rounded-full bg-accent-soft px-4 text-[15px] font-semibold text-accent"
+              className="pressable -my-1.5 flex min-h-11 items-center rounded-full bg-white/15 px-4 text-[15px] font-semibold text-white"
             >
               {t.acao.texto}
             </button>

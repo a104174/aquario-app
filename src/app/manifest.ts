@@ -14,8 +14,8 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: "portrait",
     // Iguais ao fundo da app (modo escuro, que é também o do header),
     // para não haver flash entre a splash e o primeiro frame.
-    background_color: "#0e1c24",
-    theme_color: "#0e1c24",
+    background_color: "#f2f2ef",
+    theme_color: "#f2f2ef",
     categories: ["lifestyle", "utilities"],
     icons: [
       { src: "/icons/manifest-icon-192.maskable.png", sizes: "192x192", type: "image/png", purpose: "any" },

@@ -33,10 +33,10 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cx(
-        "pressable inline-flex h-[50px] items-center justify-center gap-2 rounded-[14px] px-5 text-[17px] font-semibold",
+        "pressable inline-flex h-[52px] items-center justify-center gap-2 rounded-full px-6 text-[17px] font-semibold tracking-[-0.01em]",
         "disabled:opacity-45 disabled:active:scale-100",
         block && "w-full",
-        variant === "primary" && "bg-accent text-accent-contrast",
+        variant === "primary" && "bg-accent text-accent-contrast shadow-[var(--shadow-botao)]",
         variant === "secondary" && "bg-accent-soft text-accent-forte",
         variant === "ghost" && "bg-transparent text-accent",
         variant === "danger" && "bg-danger-soft text-danger",

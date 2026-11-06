@@ -11,8 +11,10 @@ import { EstadoSync } from "./estado-sync";
 const DIRECIONAL = { "nav-forward": "nav-forward", "nav-back": "nav-back", "nav-tab": "nav-tab", default: "none" };
 
 /**
- * Ecrã: header fixo (sempre "oceano" por baixo da status bar), large title
- * que colapsa no scroll como no iOS e um único container de scroll.
+ * Ecrã: header fixo, large title que colapsa no scroll como no iOS e um
+ * único container de scroll. Claro por defeito (título carvão sobre o
+ * fundo); com `fundoHero` (fotografia) passa a editorial: texto branco
+ * sobre a foto e o conteúdo sobe numa folha arredondada.
  * O conteúdo entra/sai com View Transitions conforme o tipo de navegação.
  */
 export function Screen({
@@ -85,9 +87,7 @@ export function Screen({
       <div
         ref={ecraRef}
         className="absolute inset-0"
-        // ao puxar para atualizar vê-se o que está por trás: a metade de cima
-        // tem a cor do topo do header, para o "oceano" não partir
-        style={{ background: "linear-gradient(var(--header-from) 50%, var(--bg) 50%)" }}
+        style={{ background: temFundoHero ? "linear-gradient(#141517 50%, var(--bg) 50%)" : "var(--bg)" }}
       >
         {/* Indicador de "puxar para atualizar" */}
         {puxarParaAtualizar && (
@@ -103,9 +103,13 @@ export function Screen({
           ref={headerRef}
           style={{ viewTransitionName: "app-header" }}
           className={cx(
-            "absolute inset-x-0 top-0 z-20 pt-[var(--safe-top)] text-white",
-            "transition-[background-color,box-shadow] duration-[var(--dur-std)] ease-[var(--ease-out)]",
-            compacto ? "bg-[var(--header-to)] shadow-[0_0.5px_0_rgb(255_255_255/0.12)]" : "bg-transparent",
+            "absolute inset-x-0 top-0 z-20 pt-[var(--safe-top)]",
+            "transition-[background-color,box-shadow,color] duration-[var(--dur-std)] ease-[var(--ease-out)]",
+            compacto
+              ? "bg-[var(--tabbar)] text-text shadow-[0_0.5px_0_var(--separator)] backdrop-blur-xl backdrop-saturate-150"
+              : temFundoHero
+                ? "bg-transparent text-white"
+                : "bg-transparent text-text",
           )}
         >
           <div className="barra-header relative flex h-11 items-center justify-between px-2">
@@ -113,25 +117,25 @@ export function Screen({
               {voltar && (
                 <button
                   type="button"
+                  aria-label={voltar.texto}
                   onClick={() => navegar(voltar.href, "back")}
-                  className="pressable flex h-11 items-center gap-0.5 rounded-lg pr-2 text-[17px]"
+                  className="botao-circular pressable"
                 >
-                  <IconChevronEsquerda size={26} strokeWidth={2.2} />
-                  <span className="max-w-[96px] truncate">{voltar.texto}</span>
+                  <IconChevronEsquerda size={22} strokeWidth={2.2} />
                 </button>
               )}
             </div>
             <h2
               aria-hidden={!compacto}
               className={cx(
-                "pointer-events-none absolute inset-x-[124px] truncate text-center text-[17px] font-semibold",
+                "pointer-events-none absolute inset-x-[108px] truncate text-center text-[17px] font-semibold",
                 "transition-[opacity,transform] duration-[var(--dur-std)] ease-[var(--ease-out)]",
                 compacto ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0",
               )}
             >
               {titulo}
             </h2>
-            <div className="flex min-w-[88px] items-center justify-end gap-1">
+            <div className="flex min-w-[88px] items-center justify-end gap-2">
               <EstadoSync />
               {acoes}
             </div>
@@ -142,15 +146,15 @@ export function Screen({
         <div
           ref={scrollRef}
           className="scroll-area screen-enter absolute inset-0"
-          style={{ background: "linear-gradient(var(--header-from) 50%, var(--bg) 50%)" }}
+          style={{ background: temFundoHero ? "linear-gradient(#141517 50%, var(--bg) 50%)" : "var(--bg)" }}
         >
-          <div className="header-ambient px-5 pb-9 pt-[calc(var(--safe-top)+44px)] text-white">
+          <div className={cx("header-ambient px-5 pt-[calc(var(--safe-top)+48px)]", temFundoHero ? "pb-9 text-white" : "pb-5 text-text")}>
             {fundoHero}
             <div className={temFundoHero ? "pointer-events-none relative pt-[clamp(56px,20vw,100px)] [@media(orientation:landscape)_and_(max-height:500px)]:pt-5" : undefined}>
               <h1
                 ref={tituloRef}
                 className={cx(
-                  "origin-left text-[34px] font-bold leading-tight tracking-tight",
+                  "origin-left text-[34px] font-bold leading-[1.1] tracking-[-0.025em]",
                   "transition-[opacity,transform] duration-[var(--dur-std)] ease-[var(--ease-out)]",
                   temFundoHero && "[text-shadow:0_2px_10px_#020a10]",
                   compacto && "opacity-0",
@@ -158,11 +162,16 @@ export function Screen({
               >
                 {titulo}
               </h1>
-              {subtitulo && <div className="mt-0.5 text-[15px] text-white/70">{subtitulo}</div>}
+              {subtitulo && <div className={cx("mt-1 text-[15px]", temFundoHero ? "text-white/75" : "text-text-2")}>{subtitulo}</div>}
               {hero}
             </div>
           </div>
-          <main className="conteudo-ecra relative -mt-5 min-h-[calc(100%-var(--safe-top)-60px)] rounded-t-[22px] bg-bg px-4 pb-[calc(var(--tabbar-h)+var(--safe-bottom)+32px)] pt-5">
+          <main
+            className={cx(
+              "conteudo-ecra relative min-h-[calc(100%-var(--safe-top)-60px)] bg-bg px-4 pb-[calc(var(--tabbar-h)+var(--safe-bottom)+24px)]",
+              temFundoHero ? "-mt-5 rounded-t-[28px] pt-5" : "pt-2",
+            )}
+          >
             {children}
           </main>
         </div>
@@ -186,8 +195,8 @@ export function Seccao({
   return (
     <section className={cx("mb-6", className)}>
       {(titulo || acao) && (
-        <div className="mb-2 flex items-end justify-between px-1">
-          <h2 className="text-[13px] font-semibold uppercase tracking-wide text-text-2">{titulo}</h2>
+        <div className="mb-2.5 flex items-end justify-between px-1">
+          <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-text">{titulo}</h2>
           {acao}
         </div>
       )}
@@ -202,7 +211,7 @@ export function BotaoHeader({ children, onClick, label }: { children: ReactNode;
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="pressable flex h-11 w-11 items-center justify-center rounded-full text-white"
+      className="botao-circular pressable"
     >
       {children}
     </button>

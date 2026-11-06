@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "Aquário",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     startupImage: splashScreens,
   },
   formatDetection: { telephone: false, email: false, address: false, date: false },
@@ -29,10 +29,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfcfd" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e1c24" },
-  ],
+  themeColor: "#f2f2ef",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
