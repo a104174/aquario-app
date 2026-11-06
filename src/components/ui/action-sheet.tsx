@@ -46,3 +46,4 @@ export const subscreverEscolha = (f: () => void) => {
   ouvintes.add(f);
   return () => ouvintes.delete(f);
 };
+

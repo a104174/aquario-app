@@ -40,7 +40,13 @@ export function CartaoAlerta({
             </span>
           )}
         </span>
-        {!alerta.lido && !historico && <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-accent" aria-label="Não lido" />}
+        <span
+          aria-label={alerta.lido || historico ? undefined : "Não lido"}
+          className={cx(
+            "mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-accent transition-[transform,opacity] duration-[var(--dur-std)] ease-[var(--ease-out)] motion-reduce:transition-none",
+            alerta.lido || historico ? "scale-0 opacity-0" : "scale-100 opacity-100",
+          )}
+        />
       </button>
 
       {!historico && (

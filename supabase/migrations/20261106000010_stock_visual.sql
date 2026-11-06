@@ -203,4 +203,3 @@ $$;
 
 revoke execute on function public.gerar_alertas() from public, anon, authenticated;
 grant execute on function public.gerar_alertas() to service_role;
-

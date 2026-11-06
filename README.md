@@ -173,7 +173,7 @@ O job diário (`gerar_alertas()`, em SQL e idempotente por chave) cria alertas p
 - **foto da semana:** ao domingo.
 
 **Envio** (`_shared/notificar.ts`):
-- Web Push para todos os dispositivos (até 3 alertas: um push cada; mais do que isso: um resumo);
+- Web Push para todos os dispositivos (até 2 alertas: um push por alerta; a partir de 3: um resumo);
 - se o push não chegar a nenhum dispositivo e o email estiver ativo: um email pela Resend;
 - fica registado em `alertas.canal` e em `notificado_em`.
 
@@ -192,6 +192,8 @@ npx supabase secrets set RESEND_API_KEY=<chave> "RESEND_FROM=Aquário <onboardin
 ```bash
 npx supabase functions deploy automacoes --no-verify-jwt
 ```
+
+Ao atualizar uma instalação existente para os alertas interativos e o stock visual, aplica as migrações `20261106000009` e `20261106000010` com `npx supabase db push` antes de publicar a nova versão da função e da app.
 
 No **SQL Editor**, guarda no Vault o URL do projeto e o mesmo `CRON_SECRET`:
 

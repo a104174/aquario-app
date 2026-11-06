@@ -8,9 +8,21 @@ import { useNavegar } from "@/components/shell/nav";
 import { BotaoHeader, Screen } from "@/components/shell/screen";
 import { SkeletonLista } from "@/components/ui/skeleton";
 import { amanhaDeManha, estadoAtivo } from "@/lib/alertas";
+import { cabecalhoDia } from "@/lib/formato";
 import { feedbackTatil } from "@/lib/haptics";
 import { useColecao, useGuardar } from "@/lib/query/dados";
 import type { Alerta } from "@/lib/tipos";
+
+function agruparPorDia(alertas: Alerta[]) {
+  const grupos: { dia: string; data: string; itens: Alerta[] }[] = [];
+  for (const alerta of alertas) {
+    const dia = new Date(alerta.criado_em).toDateString();
+    const ultimo = grupos.at(-1);
+    if (ultimo?.dia === dia) ultimo.itens.push(alerta);
+    else grupos.push({ dia, data: alerta.criado_em, itens: [alerta] });
+  }
+  return grupos;
+}
 
 export default function AlertasPage() {
   const alertas = useColecao("alertas");
@@ -21,7 +33,7 @@ export default function AlertasPage() {
   const lista = useMemo(() => alertas.data ?? [], [alertas.data]);
   const naoLidos = lista.filter((a) => !a.lido);
   const ativos = lista.filter((a) => estadoAtivo(a.estado));
-  const historico = lista.filter((a) => !estadoAtivo(a.estado)).slice(0, 20);
+  const historico = lista.filter((a) => !estadoAtivo(a.estado));
 
   function abrir(a: Alerta) {
     if (!a.lido) guardar.mutate({ ...a, lido: true });
@@ -89,6 +101,27 @@ export default function AlertasPage() {
     window.history.replaceState(null, "", "/alertas");
   }, [alertas.data, guardarAlerta]);
 
+  function mostrarPorDia(alertas: Alerta[], tratados = false) {
+    return agruparPorDia(alertas).map((grupo, i) => (
+      <div key={grupo.dia} className="enter-up" style={{ ["--i" as string]: Math.min(i, 6) }}>
+        <h3 className="mb-1.5 px-1 text-[13px] font-medium text-text-2">{cabecalhoDia(grupo.data)}</h3>
+        <div className="space-y-2">
+          {grupo.itens.map((a) => (
+            <CartaoAlerta
+              key={a.id}
+              alerta={a}
+              historico={tratados}
+              onAbrir={() => abrir(a)}
+              onResolver={() => resolver(a)}
+              onAdiar={() => adiar(a)}
+              onIgnorar={() => ignorar(a)}
+            />
+          ))}
+        </div>
+      </div>
+    ));
+  }
+
   return (
     <Screen
       titulo="Alertas"
@@ -118,18 +151,7 @@ export default function AlertasPage() {
           <section className="enter-up mb-6">
             <h2 className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">A fazer</h2>
             {ativos.length ? (
-              <div className="space-y-3">
-                {ativos.map((a) => (
-                  <CartaoAlerta
-                    key={a.id}
-                    alerta={a}
-                    onAbrir={() => abrir(a)}
-                    onResolver={() => resolver(a)}
-                    onAdiar={() => adiar(a)}
-                    onIgnorar={() => ignorar(a)}
-                  />
-                ))}
-              </div>
+              <div className="space-y-4">{mostrarPorDia(ativos)}</div>
             ) : (
               <div className="rounded-[14px] bg-ok-soft px-4 py-4 text-center text-ok">
                 <p className="font-semibold">Tudo tratado 🐟</p>
@@ -141,19 +163,7 @@ export default function AlertasPage() {
           {historico.length > 0 && (
             <section className="enter-up mb-5" style={{ ["--i" as string]: 1 }}>
               <h2 className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">Tratados recentemente</h2>
-              <div className="space-y-2">
-                {historico.map((a) => (
-                  <CartaoAlerta
-                    key={a.id}
-                    alerta={a}
-                    historico
-                    onAbrir={() => abrir(a)}
-                    onResolver={() => resolver(a)}
-                    onAdiar={() => adiar(a)}
-                    onIgnorar={() => ignorar(a)}
-                  />
-                ))}
-              </div>
+              <div className="space-y-4">{mostrarPorDia(historico, true)}</div>
             </section>
           )}
         </>
