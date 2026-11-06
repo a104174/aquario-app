@@ -9,13 +9,17 @@ import {
 import { useUserId } from "@/lib/auth/session";
 import { supabase } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
-import type { Aquario, Condicionador, Definicoes, FaunaEvento, Foto, Medicao, Tpa } from "@/lib/tipos";
+import type { Alerta, Aquario, Definicoes, Desejo, FaunaEvento, Ferias, Foto, Medicao, Ninhada, Produto, Tpa } from "@/lib/tipos";
 import { apagarFotoPendente, chaveThumb, lerFotoPendente, semearCacheFoto } from "./fotos-locais";
 import { qk, TABELAS, type Colecao } from "./keys";
 
 export type Linhas = {
   aquarios: Aquario;
-  condicionadores: Condicionador;
+  produtos: Produto;
+  ninhadas: Ninhada;
+  ferias: Ferias;
+  desejos: Desejo;
+  alertas: Alerta;
   tpas: Tpa;
   medicoes: Medicao;
   fauna: FaunaEvento;
@@ -25,11 +29,15 @@ export type Linhas = {
 type Acao = "guardar" | "apagar";
 type VarsApagar = { id: string };
 
-const COLECOES: Colecao[] = ["aquarios", "condicionadores", "tpas", "medicoes", "fauna", "fotos"];
+const COLECOES: Colecao[] = ["aquarios", "produtos", "tpas", "medicoes", "fauna", "fotos", "ninhadas", "ferias", "desejos", "alertas"];
 
 const ordenar: { [C in Colecao]: (a: Linhas[C], b: Linhas[C]) => number } = {
   aquarios: (a, b) => a.criado_em.localeCompare(b.criado_em),
-  condicionadores: (a, b) => a.criado_em.localeCompare(b.criado_em),
+  produtos: (a, b) => a.criado_em.localeCompare(b.criado_em),
+  ninhadas: (a, b) => b.data_parto.localeCompare(a.data_parto),
+  ferias: (a, b) => b.ida.localeCompare(a.ida),
+  desejos: (a, b) => b.criado_em.localeCompare(a.criado_em),
+  alertas: (a, b) => b.criado_em.localeCompare(a.criado_em),
   tpas: porDataDesc,
   medicoes: porDataDesc,
   fauna: porDataDesc,
@@ -45,11 +53,22 @@ function porDataDesc(a: { data: string }, b: { data: string }) {
 // ---------------------------------------------------------------------
 async function buscar<C extends Colecao>(c: C): Promise<Linhas[C][]> {
   const tabela = TABELAS[c];
-  const ordem = c === "aquarios" || c === "condicionadores" ? "criado_em" : "data";
-  const { data, error } = await supabase()
-    .from(tabela)
-    .select("*")
-    .order(ordem, { ascending: ordem === "criado_em" });
+  const ORDEM: Record<Colecao, [string, boolean]> = {
+    aquarios: ["criado_em", true],
+    produtos: ["criado_em", true],
+    tpas: ["data", false],
+    medicoes: ["data", false],
+    fauna: ["data", false],
+    fotos: ["data", false],
+    ninhadas: ["data_parto", false],
+    ferias: ["ida", false],
+    desejos: ["criado_em", false],
+    alertas: ["criado_em", false],
+  };
+  const [ordem, asc] = ORDEM[c];
+  let query = supabase().from(tabela).select("*").order(ordem, { ascending: asc });
+  if (c === "alertas") query = query.limit(200);
+  const { data, error } = await query;
   if (error) throw error;
   return (data ?? []) as Linhas[C][];
 }
@@ -114,8 +133,32 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
     if (blob || thumb) await apagarFotoPendente(foto.id);
     return;
   }
+  if (c === "alertas") {
+    // o utilizador só pode marcar como lido (os alertas são criados pelo servidor)
+    const a = linha as Alerta;
+    const { error } = await supabase().from("alertas").update({ lido: a.lido }).eq("id", a.id);
+    if (error) throw error;
+    return;
+  }
+  if (c === "desejos") {
+    const d = linha as Desejo;
+    await enviarPendentes(d.id, d.foto_path, d.thumb_path);
+  }
   const { error } = await supabase().from(TABELAS[c]).upsert(semCamposLocais(linha));
   if (error) throw error;
+}
+
+/** Envia imagem + miniatura pendentes (IndexedDB) de um registo, se existirem. */
+async function enviarPendentes(id: string, path: string | null, thumbPath: string | null) {
+  const blob = path ? await lerFotoPendente(id) : undefined;
+  const thumb = thumbPath ? await lerFotoPendente(chaveThumb(id)) : undefined;
+  for (const [p, b] of [[path, blob], [thumbPath, thumb]] as const) {
+    if (!p || !b) continue;
+    const { error } = await supabase().storage.from("fotos").upload(p, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
+    if (error) throw error;
+    await semearCacheFoto(p, b);
+  }
+  if (blob || thumb) await apagarFotoPendente(id);
 }
 
 async function apagarNoServidor(c: Colecao, { id }: VarsApagar, qc: QueryClient) {
@@ -128,6 +171,12 @@ async function apagarNoServidor(c: Colecao, { id }: VarsApagar, qc: QueryClient)
     const paths = [linha?.storage_path, linha?.thumb_path].filter(Boolean) as string[];
     if (paths.length) await supabase().storage.from("fotos").remove(paths);
     return;
+  }
+  if (c === "desejos") {
+    const d = qc.getQueryData<Desejo[]>([c])?.find((x) => x.id === id);
+    await apagarFotoPendente(id);
+    const paths = [d?.foto_path, d?.thumb_path].filter(Boolean) as string[];
+    if (paths.length) await supabase().storage.from("fotos").remove(paths);
   }
   const { error } = await supabase().from(TABELAS[c]).delete().eq("id", id);
   if (error) throw error;
@@ -240,6 +289,8 @@ export const DEFINICOES_PADRAO: Omit<Definicoes, "user_id"> = {
   lembretes_push: false,
   lembretes_email: false,
   lembrete_foto_semanal: true,
+  aviso_tpa_urgente_dias: 10,
+  lembrete_esponja: true,
 };
 
 // ---------------------------------------------------------------------

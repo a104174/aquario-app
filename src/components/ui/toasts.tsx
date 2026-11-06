@@ -8,20 +8,34 @@ export function Toasts() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--tabbar-h)+var(--safe-bottom)+12px)] z-[80] flex flex-col-reverse items-center gap-2 px-4">
       {toasts.map((t) => (
-        <button
+        <div
           key={t.id}
-          type="button"
+          role="status"
           onClick={() => fecharToast(t.id)}
           className={cx(
-            "pointer-events-auto max-w-sm rounded-full px-4 py-2.5 text-[15px] font-medium shadow-lg backdrop-blur-xl",
+            "pointer-events-auto flex max-w-sm items-center gap-3 rounded-full py-2.5 pl-4 text-[15px] font-medium shadow-lg backdrop-blur-xl",
+            t.acao ? "pr-2" : "pr-4",
             t.saindo ? "toast-exit" : "toast-enter",
             t.tipo === "erro" && "bg-danger text-white",
             t.tipo === "ok" && "bg-surface/95 text-text",
             t.tipo === "info" && "bg-surface/95 text-text",
           )}
         >
-          {t.texto}
-        </button>
+          <span>{t.texto}</span>
+          {t.acao && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                t.acao!.onClick();
+                fecharToast(t.id);
+              }}
+              className="pressable rounded-full bg-accent-soft px-3 py-1 text-[15px] font-semibold text-accent"
+            >
+              {t.acao.texto}
+            </button>
+          )}
+        </div>
       ))}
     </div>
   );

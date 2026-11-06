@@ -18,7 +18,7 @@ export default function HistoricoPage() {
   const medicoes = useColecao("medicoes").data;
   const fauna = useColecao("fauna").data;
   const fotos = useColecao("fotos").data;
-  const condicionadores = useColecao("condicionadores").data;
+  const condicionadores = useColecao("produtos").data;
   const [filtro, setFiltro] = useState<string>(TODOS);
 
   useEffect(() => {

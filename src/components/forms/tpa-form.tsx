@@ -13,7 +13,8 @@ const PERCENTAGENS = [10, 20, 25, 30, 50];
 
 export function TpaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Tpa>) {
   const { data: aquarios = [] } = useColecao("aquarios");
-  const { data: condicionadores = [] } = useColecao("condicionadores");
+  const { data: produtos = [] } = useColecao("produtos");
+  const condicionadores = produtos.filter((p) => p.tipo === "condicionador" && p.ativo && p.dose_por_litro != null);
   const guardar = useGuardar("tpas");
 
   const [aqId, setAqId] = useAquarioEscolhido(aquarios, inicial?.aquario_id ?? aquarioId);
@@ -27,7 +28,7 @@ export function TpaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Tpa>)
   const volume = volumeReferencia(aquario);
   const condEscolhido = condId === "" ? null : (condicionadores.find((c) => c.id === condId) ?? (inicial ? null : condicionadores[0]));
   const l = lerNumero(litros);
-  const dose = l && condEscolhido ? Math.round(l * condEscolhido.dose_ml_por_litro * 100) / 100 : null;
+  const dose = l && condEscolhido ? Math.round(l * (condEscolhido.dose_por_litro ?? 0) * 100) / 100 : null;
   const pct = l && volume ? Math.round((l / volume) * 100) : null;
 
   function submeter(e: React.FormEvent) {
@@ -108,7 +109,7 @@ export function TpaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Tpa>)
           <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Condicionador</p>
           <Chips
             opcoes={[
-              ...condicionadores.map((c) => ({ valor: c.id, texto: `${c.nome} · ${num(c.dose_ml_por_litro, 3)} ml/L` })),
+              ...condicionadores.map((c) => ({ valor: c.id, texto: `${c.nome} · ${num(c.dose_por_litro ?? 0, 3)} ml/L` })),
               { valor: "", texto: "Nenhum" },
             ]}
             valor={condEscolhido?.id ?? ""}

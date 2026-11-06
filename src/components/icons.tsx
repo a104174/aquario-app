@@ -144,3 +144,46 @@ export const IconNuvemOff = (p: P) => (
     <path d="m4 4 16 16" />
   </Base>
 );
+
+export const IconCaixa = (p: P) => (
+  <Base {...p}>
+    <path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5z" />
+    <path d="M4 8.5 12 13l8-4.5M12 13v7" />
+  </Base>
+);
+
+export const IconEstrela = (p: P) => (
+  <Base {...p}>
+    <path d="m12 4 2.4 5 5.4.6-4 3.7 1.1 5.3L12 15.9 7.1 18.6l1.1-5.3-4-3.7 5.4-.6z" />
+  </Base>
+);
+
+export const IconMala = (p: P) => (
+  <Base {...p}>
+    <rect x="4" y="7.5" width="16" height="12" rx="2.5" />
+    <path d="M9 7.5V5.5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5.5v2M9 11v5M15 11v5" />
+  </Base>
+);
+
+export const IconGlobo = (p: P) => (
+  <Base {...p}>
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="M3.5 12h17M12 3.5c2.3 2.4 3.4 5.2 3.4 8.5S14.3 18.1 12 20.5C9.7 18.1 8.6 15.3 8.6 12S9.7 5.9 12 3.5Z" />
+  </Base>
+);
+
+export const IconLink = (p: P) => (
+  <Base {...p}>
+    <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" />
+    <path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />
+  </Base>
+);
+
+export const IconBebe = (p: P) => (
+  <Base {...p}>
+    <circle cx="9" cy="10" r="1.2" fill="currentColor" stroke="none" />
+    <circle cx="15" cy="12" r="1" fill="currentColor" stroke="none" />
+    <circle cx="11" cy="15.5" r=".9" fill="currentColor" stroke="none" />
+    <path d="M4 12c2-5 9-7 14-3l2-2v8l-2-2c-5 4-12 2-14-1" />
+  </Base>
+);

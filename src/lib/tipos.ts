@@ -8,6 +8,8 @@ export interface Definicoes {
   lembretes_push: boolean;
   lembretes_email: boolean;
   lembrete_foto_semanal: boolean;
+  aviso_tpa_urgente_dias: number;
+  lembrete_esponja: boolean;
 }
 
 export interface Aquario {
@@ -19,11 +21,70 @@ export interface Aquario {
   criado_em: string;
 }
 
-export interface Condicionador {
+export type TipoProduto = "condicionador" | "comida" | "bacterias" | "outro";
+export type Unidade = "ml" | "g" | "unid";
+
+export interface Produto {
   id: UUID;
   nome: string;
-  dose_ml_por_litro: number;
+  tipo: TipoProduto;
+  /** ml (ou g) por litro de água — usado nos condicionadores */
+  dose_por_litro: number | null;
+  volume_inicial: number | null;
+  unidade: Unidade;
+  data_abertura: string | null; // AAAA-MM-DD
+  duracao_dias: number | null;
+  ativo: boolean;
   criado_em: string;
+}
+
+/** @deprecated usar Produto (tipo "condicionador") */
+export type Condicionador = Produto;
+
+export type EstadoNinhada = "ativa" | "separada" | "encerrada";
+export interface Ninhada {
+  id: UUID;
+  aquario_id: UUID;
+  mae: string;
+  data_parto: string; // AAAA-MM-DD
+  notas: string | null;
+  estado: EstadoNinhada;
+  criado_em: string;
+}
+
+export type ItemChecklist = { texto: string; feito: boolean };
+export interface Ferias {
+  id: UUID;
+  ida: string; // AAAA-MM-DD
+  regresso: string;
+  quem_alimenta: string | null;
+  notas: string | null;
+  checklist: ItemChecklist[];
+  criado_em: string;
+}
+
+export interface Desejo {
+  id: UUID;
+  item: string;
+  foto_path: string | null;
+  thumb_path: string | null;
+  link: string | null;
+  loja: string | null;
+  preco: number | null;
+  notas: string | null;
+  estado: "quero" | "comprado";
+  criado_em: string;
+}
+
+export interface Alerta {
+  id: UUID;
+  tipo: string;
+  titulo: string;
+  mensagem: string;
+  url: string | null;
+  lido: boolean;
+  criado_em: string;
+  canal: "push" | "email" | "app" | null;
 }
 
 export interface Tpa {

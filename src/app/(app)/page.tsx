@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { CartaoAquario } from "@/components/aquarios/cartao-aquario";
-import { IconAquario, IconMais } from "@/components/icons";
+import { IconAquario, IconMais, IconSino } from "@/components/icons";
+import { NavLink } from "@/components/shell/nav";
 import { BotaoHeader, Screen } from "@/components/shell/screen";
 import { Button } from "@/components/ui/button";
 import { SkeletonCartao } from "@/components/ui/skeleton";
@@ -20,6 +21,7 @@ export default function AquariosPage() {
   const fauna = useColecao("fauna").data;
   const intervalo = useDefinicoes().data?.intervalo_tpa_dias ?? DEFINICOES_PADRAO.intervalo_tpa_dias;
   const [novo, setNovo] = useState(false);
+  const naoLidos = (useColecao("alertas").data ?? []).filter((a) => !a.lido).length;
 
   const n = aquarios.data?.length ?? 0;
 
@@ -28,9 +30,19 @@ export default function AquariosPage() {
       titulo="Aquários"
       subtitulo={aquarios.data ? (n === 1 ? "1 aquário" : `${n} aquários`) : " "}
       acoes={
-        <BotaoHeader label="Novo aquário" onClick={() => setNovo(true)}>
-          <IconMais size={24} strokeWidth={2} />
-        </BotaoHeader>
+        <>
+          <NavLink href="/alertas" tipo="forward" aria-label="Alertas" className="pressable relative flex h-11 w-11 items-center justify-center rounded-full text-white">
+            <IconSino size={24} />
+            {naoLidos > 0 && (
+              <span className="pop-in absolute right-1 top-1.5 min-w-[18px] rounded-full bg-danger px-1 text-center text-[11px] font-bold leading-[18px] text-white">
+                {naoLidos}
+              </span>
+            )}
+          </NavLink>
+          <BotaoHeader label="Novo aquário" onClick={() => setNovo(true)}>
+            <IconMais size={24} strokeWidth={2} />
+          </BotaoHeader>
+        </>
       }
     >
       {aquarios.isPending ? (

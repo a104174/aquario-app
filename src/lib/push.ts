@@ -64,7 +64,7 @@ export async function desativarPush() {
 }
 
 export async function enviarTeste() {
-  const { data, error } = await supabase().functions.invoke<{ enviados: number }>("lembrete-tpa", {
+  const { data, error } = await supabase().functions.invoke<{ enviados: number }>("automacoes", {
     body: { teste: true },
   });
   if (error) throw error;

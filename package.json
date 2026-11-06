@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "^2.4.0",
     "@serwist/turbopack": "^9.5.13",
     "@supabase/supabase-js": "^2.119.0",
     "@tanstack/query-async-storage-persister": "^5.106.1",
@@ -18,11 +19,13 @@
     "@tanstack/react-query-persist-client": "^5.106.1",
     "esbuild": "^0.28.2",
     "idb-keyval": "^6.3.0",
+    "mcp-handler": "^2.3.1",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "serwist": "^9.5.13",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

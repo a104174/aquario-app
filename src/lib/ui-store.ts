@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 
 // Estado global de UI fora do React (sheets abertas a partir de qualquer ecrã).
 
-export type TipoRegisto = "tpa" | "medicao" | "fauna" | "foto";
+export type TipoRegisto = "tpa" | "medicao" | "fauna" | "foto" | "ninhada";
 
 export type EstadoUI = {
   registar: {

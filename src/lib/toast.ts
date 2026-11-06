@@ -2,16 +2,17 @@
 
 import { useSyncExternalStore } from "react";
 
-export type Toast = { id: number; texto: string; tipo: "info" | "erro" | "ok"; saindo?: boolean };
+export type AcaoToast = { texto: string; onClick: () => void };
+export type Toast = { id: number; texto: string; tipo: "info" | "erro" | "ok"; saindo?: boolean; acao?: AcaoToast };
 
 let toasts: Toast[] = [];
 let seq = 0;
 const ouvintes = new Set<() => void>();
 const emitir = () => ouvintes.forEach((f) => f());
 
-export function toast(texto: string, tipo: Toast["tipo"] = "info", ms = 3200) {
+export function toast(texto: string, tipo: Toast["tipo"] = "info", ms = 3200, acao?: AcaoToast) {
   const id = ++seq;
-  toasts = [...toasts.filter((t) => t.texto !== texto), { id, texto, tipo }].slice(-3);
+  toasts = [...toasts.filter((t) => t.texto !== texto), { id, texto, tipo, acao }].slice(-3);
   emitir();
   setTimeout(() => fecharToast(id), ms);
 }
