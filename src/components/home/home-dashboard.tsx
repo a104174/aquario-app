@@ -9,12 +9,14 @@ import { useColecao, useDefinicoes, DEFINICOES_PADRAO } from "@/lib/query/dados"
 import { AtalhosRapidos } from "./atalhos-rapidos";
 import { CicloTpa } from "./ciclo-tpa";
 import { FotosEmDestaque } from "./fotos-em-destaque";
+import { UltimaMedicao } from "./ultima-medicao";
 
 export function HomeDashboard() {
   const { data: aquarios } = useColecao("aquarios");
   const { data: tpas } = useColecao("tpas");
   const { data: fotos } = useColecao("fotos");
   const { data: alertas } = useColecao("alertas");
+  const { data: medicoes } = useColecao("medicoes");
   const intervalo = useDefinicoes().data?.intervalo_tpa_dias ?? DEFINICOES_PADRAO.intervalo_tpa_dias;
   const ativos = (alertas ?? []).filter((a) => estadoAtivo(a.estado));
   const primeiro = ativos[0];
@@ -35,6 +37,7 @@ export function HomeDashboard() {
         </NavLink>
       </section>
 
+      <UltimaMedicao aquarios={aquarios} medicoes={medicoes} />
       <AtalhosRapidos />
       <Exterior destaque />
       {fotos && <FotosEmDestaque fotos={fotos} aquarios={aquarios ?? []} />}

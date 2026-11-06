@@ -113,7 +113,7 @@ export function AtalhosRapidos() {
                 </span>
                 <span className="min-w-0">
                   <span className="block text-[16px] font-semibold leading-tight tracking-tight">{opcao.titulo}</span>
-                  <span className="mt-0.5 block text-[12px] leading-tight text-[#b7cbd3]">{opcao.descricao}</span>
+                  <span className="mt-0.5 block text-[12px] leading-tight text-text-2">{opcao.descricao}</span>
                 </span>
               </button>
             );

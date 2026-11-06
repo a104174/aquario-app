@@ -186,7 +186,7 @@ for (const [ecra, url] of [
     expect.soft(r.esquerda, `${ecra}: conteúdo por baixo do notch`).toBeGreaterThanOrEqual(p.lado);
     expect.soft(r.direita, `${ecra}: conteúdo por baixo do notch (direita)`).toBeLessThanOrEqual(r.largura - p.lado);
     expect.soft(r.titulo, `${ecra}: título por baixo do notch`).toBeGreaterThanOrEqual(p.lado);
-    expect.soft(r.tabFundo, `${ecra}: tab bar fora do fundo`).toBe(r.altura);
+    expect.soft(r.tabFundo, `${ecra}: navegação fora do ecrã`).toBeLessThanOrEqual(r.altura - 8);
     expect.soft(r.scrollX, `${ecra}: scroll horizontal`).toBeLessThanOrEqual(0);
     expect(erros).toEqual([]);
   });

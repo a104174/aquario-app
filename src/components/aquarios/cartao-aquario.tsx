@@ -9,7 +9,8 @@ import { num, plural } from "@/lib/formato";
 import type { Aquario, FaunaEvento, Foto, Medicao, Parametro, Tpa } from "@/lib/tipos";
 import { Agua, type DadosParametro } from "./widget/agua";
 import { FotosAquario } from "./widget/fotos-aquario";
-import { GlifoAquario, GlifoPeixe, GlifoTpa } from "./widget/glifos";
+import { IconeAquario } from "@/components/aquarium-visual-kit/icone-aquario";
+import { GlifoAquario, GlifoPeixe } from "./widget/glifos";
 import { AnelTpa } from "./widget/manutencao";
 import "./widget/widget.css";
 
@@ -114,7 +115,7 @@ export function CartaoAquario({
               estado === "atrasada" ? "bg-danger-soft text-danger" : "bg-accent-soft text-accent-forte",
             )}
           >
-            <GlifoTpa className="h-4 w-4" />
+            <IconeAquario tipo="gota" tamanho={17} />
             {sugestao ? `Fiz TPA · ${num(sugestao.litros, 1)} L` : "Fiz TPA"}
           </button>
         </div>

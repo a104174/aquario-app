@@ -11,16 +11,14 @@
   letter-spacing: -.025em;
   line-height: 1.2;
 }
+/* cartão principal: carvão (a mesma matéria da navegação), luz aquática discreta */
 .mare-hero {
-  background: radial-gradient(ellipse at 98% 0%, #195563, transparent 73%),
-    linear-gradient(146deg, #123644, #0a222e 78%);
-  border: 1px solid #83dce538;
-  box-shadow: inset 0 1px #c7fcff15, 0 12px 26px #05192524;
+  background: radial-gradient(ellipse at 100% 0%, rgb(11 127 144 / 0.32), transparent 62%), var(--nav);
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.07), var(--shadow-flutuante);
 }
 .mare-superficie {
-  background: linear-gradient(155deg, var(--surface-2), var(--surface) 66%);
-  border: 1px solid var(--separator);
-  box-shadow: inset 0 1px color-mix(in srgb, var(--text) 4%, transparent);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
 }
 .mare-toque {
   transition: transform var(--dur-quick) var(--ease-out), border-color var(--dur-quick) var(--ease-out);
@@ -46,18 +44,17 @@
 }
 .mare-album::-webkit-scrollbar { display: none; }
 
+/* atalhos: superfícies claras, cada tipo com um tom próprio (só na arte e no sinal) */
 .mare-acao {
-  --acao-tom: #79e6e5;
-  color: #edfafd;
-  background: radial-gradient(ellipse at 90% 4%, color-mix(in srgb, var(--acao-tom) 21%, transparent), transparent 69%),
-    linear-gradient(150deg, #142c38, #101f2a 78%);
-  border: 1px solid color-mix(in srgb, var(--acao-tom) 28%, #172733);
-  box-shadow: inset 0 1px #e9fcff0e, 0 3px 8px #04121a18;
+  --acao-tom: #0b7f90;
+  color: var(--text);
+  background: radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--acao-tom) 11%, transparent), transparent 68%), var(--surface);
+  box-shadow: var(--shadow-card);
 }
-.mare-acao[data-acao="medicao"] { --acao-tom: #a4bbff; }
-.mare-acao[data-acao="foto"] { --acao-tom: #efc4a1; }
-.mare-acao[data-acao="fauna"] { --acao-tom: #a0dfb5; }
-.mare-acao[data-acao="ninhada"] { --acao-tom: #e3bbf0; }
+.mare-acao[data-acao="medicao"] { --acao-tom: #4a63c9; }
+.mare-acao[data-acao="foto"] { --acao-tom: #b4693a; }
+.mare-acao[data-acao="fauna"] { --acao-tom: #2f8a55; }
+.mare-acao[data-acao="ninhada"] { --acao-tom: #9a4fb3; }
 .mare-acao-sinal {
   color: var(--acao-tom);
   border: 1px solid color-mix(in srgb, var(--acao-tom) 33%, transparent);
@@ -77,7 +74,7 @@
   transition: transform var(--dur-std) var(--ease-out);
 }
 .mare-arte-contexto { stroke-opacity: .24; stroke-width: 1; }
-.mare-arte-sujeito { stroke-width: 1.6; fill: color-mix(in srgb, currentColor 10%, #172733); }
+.mare-arte-sujeito { stroke-width: 1.6; fill: color-mix(in srgb, currentColor 9%, var(--surface)); }
 .mare-arte-detalhe { stroke-width: 1.2; stroke-opacity: .82; }
 .mare-acao:active .mare-acao-arte { transform: translate(-2px, 2px) scale(.94); }
 @media (prefers-reduced-motion: reduce) {
@@ -86,7 +83,8 @@
 }
 
 .mare-agua {
-  background: radial-gradient(ellipse at 10% 0%, var(--accent-soft), transparent 67%), var(--surface);
+  background: radial-gradient(ellipse at 10% 0%, var(--agua-soft), transparent 67%), var(--surface);
+  box-shadow: var(--shadow-card);
 }
 .mare-agua-dado {
   background: color-mix(in srgb, var(--surface-2) 85%, transparent);
