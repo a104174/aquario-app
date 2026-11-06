@@ -115,6 +115,18 @@ export function Lembretes() {
         </button>
       )}
 
+      <div className="relative flex min-h-[52px] items-center gap-3 px-4 py-2 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator">
+        <span className="flex-1">
+          <span className="block text-[17px]">Foto da semana</span>
+          <span className="block text-[13px] text-text-2">Ao domingo, se um aquário não tiver fotos dessa semana</span>
+        </span>
+        <Interruptor
+          ligado={definicoes.data?.lembrete_foto_semanal ?? true}
+          label="Lembrete semanal de foto"
+          onMudar={(v) => guardar.mutate({ lembrete_foto_semanal: v })}
+        />
+      </div>
+
       <div className="flex min-h-[52px] items-center gap-3 px-4">
         <span className="flex-1 text-[17px]">Email (alternativa)</span>
         <Interruptor

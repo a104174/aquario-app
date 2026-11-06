@@ -7,6 +7,7 @@ export interface Definicoes {
   intervalo_tpa_dias: number;
   lembretes_push: boolean;
   lembretes_email: boolean;
+  lembrete_foto_semanal: boolean;
 }
 
 export interface Aquario {
@@ -61,12 +62,19 @@ export interface FaunaEvento {
   notas: string | null;
 }
 
+export type EtiquetaFoto = "plantas" | "peixes" | "maternidade" | "outro";
+export type TipoEventoFoto = "tpa" | "medicao" | "fauna";
+
 export interface Foto {
   id: UUID;
   aquario_id: UUID;
   data: string;
   storage_path: string;
+  thumb_path: string | null;
+  etiqueta: EtiquetaFoto;
   legenda: string | null;
+  evento_tipo: TipoEventoFoto | null;
+  evento_id: UUID | null;
 }
 
 /** Evento unificado para timelines e histórico. */

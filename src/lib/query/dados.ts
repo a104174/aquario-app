@@ -10,7 +10,7 @@ import { useUserId } from "@/lib/auth/session";
 import { supabase } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
 import type { Aquario, Condicionador, Definicoes, FaunaEvento, Foto, Medicao, Tpa } from "@/lib/tipos";
-import { apagarFotoPendente, lerFotoPendente, semearCacheFoto } from "./fotos-locais";
+import { apagarFotoPendente, chaveThumb, lerFotoPendente, semearCacheFoto } from "./fotos-locais";
 import { qk, TABELAS, type Colecao } from "./keys";
 
 export type Linhas = {
@@ -98,18 +98,20 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
   if (c === "fotos") {
     const foto = linha as Foto;
     const blob = await lerFotoPendente(foto.id);
-    if (blob) {
-      const { error: errUpload } = await supabase()
+    const thumb = foto.thumb_path ? await lerFotoPendente(chaveThumb(foto.id)) : undefined;
+    const enviar = async (path: string, b: Blob) => {
+      const { error } = await supabase()
         .storage.from("fotos")
-        .upload(foto.storage_path, blob, { upsert: true, contentType: blob.type || "image/jpeg" });
-      if (errUpload) throw errUpload;
-    }
+        .upload(path, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
+      if (error) throw error;
+    };
+    if (blob) await enviar(foto.storage_path, blob);
+    if (thumb && foto.thumb_path) await enviar(foto.thumb_path, thumb);
     const { error } = await supabase().from("fotos").upsert(semCamposLocais(foto));
     if (error) throw error;
-    if (blob) {
-      await semearCacheFoto(foto.storage_path, blob);
-      await apagarFotoPendente(foto.id);
-    }
+    if (blob) await semearCacheFoto(foto.storage_path, blob);
+    if (thumb && foto.thumb_path) await semearCacheFoto(foto.thumb_path, thumb);
+    if (blob || thumb) await apagarFotoPendente(foto.id);
     return;
   }
   const { error } = await supabase().from(TABELAS[c]).upsert(semCamposLocais(linha));
@@ -120,10 +122,11 @@ async function apagarNoServidor(c: Colecao, { id }: VarsApagar, qc: QueryClient)
   if (c === "fotos") {
     const foto = qc.getQueryData<Foto[]>([c])?.find((f) => f.id === id);
     await apagarFotoPendente(id);
-    const { data, error } = await supabase().from("fotos").delete().eq("id", id).select("storage_path");
+    const { data, error } = await supabase().from("fotos").delete().eq("id", id).select("storage_path, thumb_path");
     if (error) throw error;
-    const path = data?.[0]?.storage_path ?? foto?.storage_path;
-    if (path) await supabase().storage.from("fotos").remove([path]);
+    const linha = data?.[0] ?? foto;
+    const paths = [linha?.storage_path, linha?.thumb_path].filter(Boolean) as string[];
+    if (paths.length) await supabase().storage.from("fotos").remove(paths);
     return;
   }
   const { error } = await supabase().from(TABELAS[c]).delete().eq("id", id);
@@ -236,6 +239,7 @@ export const DEFINICOES_PADRAO: Omit<Definicoes, "user_id"> = {
   intervalo_tpa_dias: 7,
   lembretes_push: false,
   lembretes_email: false,
+  lembrete_foto_semanal: true,
 };
 
 // ---------------------------------------------------------------------
@@ -268,21 +272,30 @@ export function useGuardarDefinicoes() {
   };
 }
 
-/** URL assinado de uma foto (ou object URL do Blob ainda por enviar). */
-export function useFotoUrl(foto: Pick<Foto, "id" | "storage_path"> | undefined) {
+/**
+ * URL assinado de uma foto (ou object URL do Blob ainda por enviar).
+ * `thumb` usa a miniatura quando existe (galeria); `ativo` permite adiar o
+ * pedido até a imagem estar perto do ecrã (lazy loading).
+ */
+export function useFotoUrl(
+  foto: Pick<Foto, "id" | "storage_path"> & { thumb_path?: string | null } | undefined,
+  opts: { thumb?: boolean; ativo?: boolean } = {},
+) {
+  const usarThumb = !!opts.thumb && !!foto?.thumb_path;
+  const path = foto ? (usarThumb ? foto.thumb_path! : foto.storage_path) : "";
   return useQuery({
-    queryKey: qk.fotoUrl(foto?.storage_path ?? ""),
-    enabled: !!foto,
+    queryKey: qk.fotoUrl(path),
+    enabled: !!foto && opts.ativo !== false,
     staleTime: 1000 * 60 * 50,
     gcTime: 1000 * 60 * 60 * 24,
     networkMode: "always",
     queryFn: async () => {
-      const blob = await lerFotoPendente(foto!.id);
+      const blob = await lerFotoPendente(usarThumb ? chaveThumb(foto!.id) : foto!.id);
       if (blob) return URL.createObjectURL(blob);
-      const { data, error } = await supabase().storage.from("fotos").createSignedUrl(foto!.storage_path, 60 * 60);
+      const { data, error } = await supabase().storage.from("fotos").createSignedUrl(path, 60 * 60);
       if (error) {
         // Offline: o SW tem a imagem em cache com a chave sem token
-        if (eErroDeRede(error)) return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/sign/fotos/${foto!.storage_path}`;
+        if (eErroDeRede(error)) return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/sign/fotos/${path}`;
         throw error;
       }
       return data.signedUrl;

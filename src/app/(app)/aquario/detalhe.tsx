@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { GraficoParametro } from "@/components/charts/grafico-parametro";
+import { Galeria } from "@/components/fotos/galeria";
 import { Chips, Segmentado } from "@/components/forms/campos";
 import { Timeline } from "@/components/eventos/timeline";
 import { IconMaisOpcoes, IconPeixe } from "@/components/icons";
@@ -23,7 +24,7 @@ import type { Parametro } from "@/lib/tipos";
 const ORDEM_GRAFICOS: Parametro[] = ["no3", "ph", "temperatura_c", "no2", "nh3_nh4", "kh", "gh"];
 import { cx } from "@/lib/cx";
 
-type Vista = "registos" | "graficos" | "fauna";
+type Vista = "registos" | "graficos" | "fauna" | "fotos";
 
 export function DetalheSkeleton() {
   return (
@@ -139,6 +140,7 @@ export function DetalheAquario() {
           { valor: "registos", texto: "Registos" },
           { valor: "graficos", texto: "Gráficos" },
           { valor: "fauna", texto: "Fauna" },
+          { valor: "fotos", texto: "Fotos" },
         ]}
         valor={vista}
         onValor={setVista}
@@ -152,6 +154,7 @@ export function DetalheAquario() {
             <Vazio texto="Ainda não há registos neste aquário." />
           ))}
         {vista === "graficos" && <Graficos aquarioId={id} />}
+        {vista === "fotos" && <Galeria aquarioId={id} />}
         {vista === "fauna" && (
           <Seccao titulo={populacao.lista.length ? plural(populacao.lista.length, "espécie", "espécies") : undefined}>
             {populacao.lista.length ? (

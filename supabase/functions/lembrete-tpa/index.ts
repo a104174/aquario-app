@@ -108,7 +108,34 @@ async function correrLembretes() {
     }
     resumo.push({ userId, aquarios: lista.length, ...push, email });
   }
-  return { utilizadores: porUser.size, resumo };
+  const fotos = await lembretesFoto();
+  return { utilizadores: porUser.size, resumo, fotos };
+}
+
+/** Ao domingo (Lisboa): lembrar foto da semana dos aquários sem fotos nos últimos 7 dias. */
+async function lembretesFoto() {
+  const dia = new Intl.DateTimeFormat("en-GB", { weekday: "short", timeZone: "Europe/Lisbon" }).format(new Date());
+  if (dia !== "Sun") return { domingo: false };
+  const { data, error } = await admin.rpc("lembretes_foto_pendentes");
+  if (error) return { erro: error.message };
+  const porUser = new Map<string, { nome: string; id: string; push: boolean; email: boolean; mail: string | null }[]>();
+  for (const r of (data ?? []) as Record<string, unknown>[]) {
+    const l = porUser.get(r.user_id as string) ?? [];
+    l.push({ nome: r.aquario_nome as string, id: r.aquario_id as string, push: !!r.lembretes_push, email: !!r.lembretes_email, mail: (r.email as string) ?? null });
+    porUser.set(r.user_id as string, l);
+  }
+  let enviados = 0;
+  for (const [userId, lista] of porUser) {
+    const nomes = lista.map((a) => a.nome).join(", ");
+    const payload = {
+      title: "📸 Foto da semana",
+      body: `Ainda não há fotos desta semana: ${nomes}.`,
+      url: lista.length === 1 ? `/aquario?id=${lista[0].id}` : "/",
+      tag: "foto-semanal",
+    };
+    if (lista[0].push) enviados += (await enviarPush(userId, payload)).enviados;
+  }
+  return { domingo: true, utilizadores: porUser.size, enviados };
 }
 
 function mensagem(lista: Pendente[]) {

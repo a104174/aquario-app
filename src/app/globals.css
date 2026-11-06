@@ -361,6 +361,21 @@
     }
   }
 
+  /* Visualizador de fotos (modal pesado): entra a crescer de 94% com
+   * fade (280ms, desacelera); sai a encolher para 96% (200ms, acelera). */
+  .viewer-enter {
+    animation: viewer-in var(--dur-std) var(--ease-out) both;
+  }
+  .viewer-exit {
+    animation: viewer-in var(--dur-exit) var(--ease-in) reverse both;
+  }
+  @keyframes viewer-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+
   /* Erro: abanão horizontal firme, 2-3 oscilações, 360ms, sem overshoot */
   .shake {
     animation: shake 360ms var(--ease-in-out);
@@ -547,6 +562,8 @@ html.no-vt[data-nav="tab"] .screen-enter {
   .header-ambient,
   .toast-enter,
   .toast-exit,
+  .viewer-enter,
+  .viewer-exit,
   .skeleton::after {
     animation: none;
   }

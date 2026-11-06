@@ -28,7 +28,7 @@ export const TIPOS_REGISTO: {
 const FORM_ID = "form-registo";
 
 export function RegistarSheet() {
-  const { aberto, tipo, aquarioId, editarId } = useUI((e) => e.registar);
+  const { aberto, tipo, aquarioId, editarId, evento } = useUI((e) => e.registar);
   const { data: aquarios } = useColecao("aquarios");
   const tpas = useColecao("tpas").data;
   const medicoes = useColecao("medicoes").data;
@@ -53,7 +53,7 @@ export function RegistarSheet() {
     form = <MedicaoForm {...props} inicial={medicoes?.find((x) => x.id === editarId) as Medicao | undefined} />;
   if (tipo === "fauna")
     form = <FaunaForm {...props} inicial={fauna?.find((x) => x.id === editarId) as FaunaEvento | undefined} />;
-  if (tipo === "foto") form = <FotoForm {...props} inicial={fotos?.find((x) => x.id === editarId) as Foto | undefined} />;
+  if (tipo === "foto") form = <FotoForm {...props} evento={evento} inicial={fotos?.find((x) => x.id === editarId) as Foto | undefined} />;
 
   return (
     <Sheet

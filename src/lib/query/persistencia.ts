@@ -20,5 +20,5 @@ export const persister = createAsyncStoragePersister({
 });
 
 // Mudar quando o formato dos dados em cache mudar (invalida a cache local).
-export const CACHE_BUSTER = "v1";
+export const CACHE_BUSTER = "v2";
 export const CACHE_MAX_AGE = 1000 * 60 * 60 * 24 * 30; // 30 dias
