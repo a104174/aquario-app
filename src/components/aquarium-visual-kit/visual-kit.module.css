@@ -1,0 +1,331 @@
+.parametro,
+.ciclo,
+.grafico {
+  --kit-tinta: var(--text, #1c2828);
+  --kit-secundaria: var(--text-2, #556565);
+  --kit-superficie: var(--surface, #fff);
+  --kit-suave: var(--surface-2, #f4f7f6);
+  --kit-linha: var(--separator, #dce4e2);
+  --kit-traco: var(--accent-forte, var(--accent, #246e65));
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  border: 1px solid var(--kit-linha);
+  border-radius: 1.375rem;
+  padding: clamp(.875rem, 4%, 1.25rem);
+  background: var(--kit-superficie);
+  color: var(--kit-tinta);
+  font-size: .875rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.parametro h3,
+.parametro p,
+.ciclo h3,
+.ciclo p,
+.grafico p {
+  margin: 0;
+}
+
+.topoParametro {
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+}
+
+.topoParametro h3 {
+  font-size: 1rem;
+  font-weight: 670;
+  letter-spacing: -.02em;
+}
+
+.seloParametro {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2.375rem;
+  block-size: 2.375rem;
+  border-radius: .825rem;
+  background: var(--kit-suave);
+  color: var(--kit-traco);
+}
+
+.secundario {
+  color: var(--kit-secundaria);
+  font-size: .8125rem;
+}
+
+.leituraParametro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .25rem .5rem;
+  margin-block-start: .75rem;
+}
+
+.valor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .125rem .25rem;
+  font-size: clamp(1.45rem, 5.2vw, 2rem);
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  letter-spacing: -.045em;
+}
+
+.valor span {
+  color: var(--kit-secundaria);
+  font-size: .75rem;
+  font-weight: 570;
+  letter-spacing: 0;
+}
+
+.variacao {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  max-inline-size: 100%;
+  border-radius: .625rem;
+  padding: .2rem .42rem;
+  background: var(--kit-suave);
+  color: var(--kit-secundaria);
+  font-size: .75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.variacao svg {
+  flex: none;
+  color: var(--kit-traco);
+}
+
+.rodapeParametro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .35rem .75rem;
+  margin-block-start: .625rem;
+  color: var(--kit-secundaria);
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.referencia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .125rem .35rem;
+  color: var(--kit-secundaria);
+  font-size: .75rem;
+}
+
+.referencia span + span {
+  color: var(--kit-tinta);
+  font-variant-numeric: tabular-nums;
+}
+
+.regua {
+  display: block;
+  inline-size: 100%;
+  block-size: 1.125rem;
+  margin-block-start: .5rem;
+  color: var(--kit-traco);
+}
+
+.cabecalhoGrafico {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .35rem .625rem;
+  font-weight: 670;
+}
+
+.tracado,
+.tracadoExpandido {
+  margin-block: .45rem .25rem;
+}
+
+.areaGrafico {
+  display: flex;
+  gap: .5rem;
+  animation: revelar .34s cubic-bezier(.2, 0, 0, 1) both;
+}
+
+.areaGrafico svg {
+  display: block;
+  flex: 1 1 0;
+  min-inline-size: 0;
+  block-size: 3.375rem;
+  color: var(--kit-traco);
+}
+
+.tracadoExpandido .areaGrafico svg {
+  block-size: clamp(6rem, 26vw, 10rem);
+}
+
+.linhaBase {
+  stroke: currentColor;
+  opacity: .27;
+}
+
+.escala,
+.datasGrafico {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  color: var(--kit-secundaria);
+  font-size: .6875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.escala {
+  flex-direction: column;
+  padding-block: .125rem;
+  text-align: end;
+}
+
+.datasGrafico {
+  margin-block: .25rem .625rem;
+}
+
+.datasGrafico span:last-child {
+  text-align: end;
+}
+
+.datasGrafico strong {
+  display: block;
+  color: var(--kit-tinta);
+  font-size: .75rem;
+}
+
+.leituraVazia,
+.graficoVazio {
+  margin-block-start: .75rem;
+  border-radius: .9rem;
+  padding: .625rem .75rem;
+  background: var(--kit-suave);
+  font-size: .8125rem;
+  font-weight: 610;
+}
+
+.leituraVazia span,
+.graficoVazio > :last-child {
+  display: block;
+  margin-block-start: .2rem;
+  color: var(--kit-secundaria);
+  font-size: .75rem;
+  font-weight: 400;
+}
+
+.corpoCiclo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-block-start: .625rem;
+}
+
+.corpoCiclo .secundario {
+  margin-block-start: .25rem;
+}
+
+.nivelCiclo {
+  flex: none;
+  inline-size: clamp(3rem, 32%, 7rem);
+  block-size: auto;
+  color: var(--kit-traco);
+}
+
+.nivelAnimado {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: encher .38s cubic-bezier(.2, 0, 0, 1) both;
+}
+
+.datasCiclo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .5rem 1rem;
+  margin: .625rem 0 0;
+  border-block-start: 1px solid var(--kit-linha);
+  padding-block-start: .625rem;
+}
+
+.datasCiclo dt {
+  color: var(--kit-secundaria);
+  font-size: .75rem;
+}
+
+.datasCiclo dd {
+  margin: .125rem 0 0;
+  font-size: .8125rem;
+  font-weight: 630;
+}
+
+.faunaSemFoto {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-inline-size: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: var(--surface-2, #f4f7f6);
+  color: var(--text-2, #556565);
+}
+
+.contornosFauna {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: .2;
+}
+
+.emblemaFauna {
+  display: grid;
+  place-items: center;
+  inline-size: 40%;
+  max-inline-size: 3.25rem;
+  aspect-ratio: 1;
+  border: 1px solid var(--separator, #dce4e2);
+  border-radius: 35%;
+  background: var(--surface, #fff);
+}
+
+.emblemaFauna svg {
+  inline-size: 55%;
+  block-size: auto;
+}
+
+.sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes revelar {
+  from { opacity: .4; }
+  to { opacity: 1; }
+}
+
+@keyframes encher {
+  from { transform: scaleY(.85); opacity: .5; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .areaGrafico,
+  .nivelAnimado {
+    animation: none;
+  }
+}
