@@ -72,7 +72,7 @@ async function buscar<C extends Colecao>(c: C): Promise<Linhas[C][]> {
     novidades: ["detectado_em", false],
   };
   const [ordem, asc] = ORDEM[c];
-  let query = supabase().from(tabela).select("*").order(ordem, { ascending: asc });
+  let query = (await supabase()).from(tabela).select("*").order(ordem, { ascending: asc });
   if (c === "alertas" || c === "novidades") query = query.limit(200);
   const { data, error } = await query;
   if (error) throw error;
@@ -125,14 +125,14 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
     const blob = await lerFotoPendente(foto.id);
     const thumb = foto.thumb_path ? await lerFotoPendente(chaveThumb(foto.id)) : undefined;
     const enviar = async (path: string, b: Blob) => {
-      const { error } = await supabase()
+      const { error } = await (await supabase())
         .storage.from("fotos")
         .upload(path, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
       if (error) throw error;
     };
     if (blob) await enviar(foto.storage_path, blob);
     if (thumb && foto.thumb_path) await enviar(foto.thumb_path, thumb);
-    const { error } = await supabase().from("fotos").upsert(semCamposLocais(foto));
+    const { error } = await (await supabase()).from("fotos").upsert(semCamposLocais(foto));
     if (error) throw error;
     if (blob) await semearCacheFoto(foto.storage_path, blob);
     if (thumb && foto.thumb_path) await semearCacheFoto(foto.thumb_path, thumb);
@@ -143,7 +143,7 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
     // Os alertas são criados pelo servidor; o utilizador só altera o seu
     // estado de leitura e ciclo de vida (resolver, ignorar ou adiar).
     const a = linha as Alerta;
-    const { error } = await supabase()
+    const { error } = await (await supabase())
       .from("alertas")
       .update({
         lido: a.lido,
@@ -162,10 +162,10 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
     // Só as colunas que o utilizador pode alterar (o resto é do servidor)
     const f = linha as FonteExterna;
     const editavel = { tipo: f.tipo, nome: f.nome, url: f.url, configuracao: f.configuracao, ativo: f.ativo };
-    const { data, error } = await supabase().from("fontes_externas").update(editavel).eq("id", f.id).select("id");
+    const { data, error } = await (await supabase()).from("fontes_externas").update(editavel).eq("id", f.id).select("id");
     if (error) throw error;
     if (!data?.length) {
-      const { error: e2 } = await supabase().from("fontes_externas").insert({ id: f.id, ...editavel });
+      const { error: e2 } = await (await supabase()).from("fontes_externas").insert({ id: f.id, ...editavel });
       if (e2) throw e2;
     }
     return;
@@ -174,7 +174,7 @@ async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
     const d = linha as Desejo;
     await enviarPendentes(d.id, d.foto_path, d.thumb_path);
   }
-  const { error } = await supabase().from(TABELAS[c]).upsert(semCamposLocais(linha));
+  const { error } = await (await supabase()).from(TABELAS[c]).upsert(semCamposLocais(linha));
   if (error) throw error;
 }
 
@@ -184,7 +184,7 @@ async function enviarPendentes(id: string, path: string | null, thumbPath: strin
   const thumb = thumbPath ? await lerFotoPendente(chaveThumb(id)) : undefined;
   for (const [p, b] of [[path, blob], [thumbPath, thumb]] as const) {
     if (!p || !b) continue;
-    const { error } = await supabase().storage.from("fotos").upload(p, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
+    const { error } = await (await supabase()).storage.from("fotos").upload(p, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
     if (error) throw error;
     await semearCacheFoto(p, b);
   }
@@ -195,20 +195,20 @@ async function apagarNoServidor(c: Colecao, { id }: VarsApagar, qc: QueryClient)
   if (c === "fotos") {
     const foto = qc.getQueryData<Foto[]>([c])?.find((f) => f.id === id);
     await apagarFotoPendente(id);
-    const { data, error } = await supabase().from("fotos").delete().eq("id", id).select("storage_path, thumb_path");
+    const { data, error } = await (await supabase()).from("fotos").delete().eq("id", id).select("storage_path, thumb_path");
     if (error) throw error;
     const linha = data?.[0] ?? foto;
     const paths = [linha?.storage_path, linha?.thumb_path].filter(Boolean) as string[];
-    if (paths.length) await supabase().storage.from("fotos").remove(paths);
+    if (paths.length) await (await supabase()).storage.from("fotos").remove(paths);
     return;
   }
   if (c === "desejos") {
     const d = qc.getQueryData<Desejo[]>([c])?.find((x) => x.id === id);
     await apagarFotoPendente(id);
     const paths = [d?.foto_path, d?.thumb_path].filter(Boolean) as string[];
-    if (paths.length) await supabase().storage.from("fotos").remove(paths);
+    if (paths.length) await (await supabase()).storage.from("fotos").remove(paths);
   }
-  const { error } = await supabase().from(TABELAS[c]).delete().eq("id", id);
+  const { error } = await (await supabase()).from(TABELAS[c]).delete().eq("id", id);
   if (error) throw error;
 }
 
@@ -283,7 +283,7 @@ export function criarQueryClient() {
 
   qc.setQueryDefaults(qk.definicoes, {
     queryFn: async () => {
-      const { data, error } = await supabase().from("definicoes").select("*").maybeSingle();
+      const { data, error } = await (await supabase()).from("definicoes").select("*").maybeSingle();
       if (error) throw error;
       const pendente = qc
         .getMutationCache()
@@ -294,7 +294,7 @@ export function criarQueryClient() {
   });
   qc.setMutationDefaults(["definicoes"], {
     mutationFn: async (vars: Partial<Definicoes>) => {
-      const { error } = await supabase()
+      const { error } = await (await supabase())
         .from("definicoes")
         .upsert({ ...vars, atualizado_em: new Date().toISOString() });
       if (error) throw error;
@@ -373,7 +373,7 @@ export function useFotoUrl(
     queryFn: async () => {
       const blob = await lerFotoPendente(usarThumb ? chaveThumb(foto!.id) : foto!.id);
       if (blob) return URL.createObjectURL(blob);
-      const { data, error } = await supabase().storage.from("fotos").createSignedUrl(path, 60 * 60);
+      const { data, error } = await (await supabase()).storage.from("fotos").createSignedUrl(path, 60 * 60);
       if (error) {
         // Offline: o SW tem a imagem em cache com a chave sem token
         if (eErroDeRede(error)) return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/sign/fotos/${path}`;

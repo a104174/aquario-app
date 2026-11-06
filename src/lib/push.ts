@@ -46,7 +46,7 @@ export async function ativarPush() {
     (await reg.pushManager.getSubscription()) ??
     (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: chaveVapid(vapid) }));
   const j = sub.toJSON();
-  const { error } = await supabase()
+  const { error } = await (await supabase())
     .from("push_subscricoes")
     .upsert(
       { endpoint: sub.endpoint, p256dh: j.keys?.p256dh, auth: j.keys?.auth, user_agent: navigator.userAgent.slice(0, 200) },
@@ -59,12 +59,12 @@ export async function desativarPush() {
   const reg = await navigator.serviceWorker.getRegistration();
   const sub = await reg?.pushManager.getSubscription();
   if (!sub) return;
-  await supabase().from("push_subscricoes").delete().eq("endpoint", sub.endpoint);
+  await (await supabase()).from("push_subscricoes").delete().eq("endpoint", sub.endpoint);
   await sub.unsubscribe();
 }
 
 export async function enviarTeste() {
-  const { data, error } = await supabase().functions.invoke<{ enviados: number }>("automacoes", {
+  const { data, error } = await (await supabase()).functions.invoke<{ enviados: number }>("automacoes", {
     body: { teste: true },
   });
   if (error) throw error;
@@ -73,7 +73,7 @@ export async function enviarTeste() {
 
 /** Botão "Verificar agora": corre já as fontes externas deste utilizador. */
 export async function verificarFontesAgora() {
-  const { data, error } = await supabase().functions.invoke<{ fontes: { fonte: string; novidades?: number; erro?: string }[] }>(
+  const { data, error } = await (await supabase()).functions.invoke<{ fontes: { fonte: string; novidades?: number; erro?: string }[] }>(
     "automacoes",
     { body: { tarefa: "fontes_agora" } },
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { CartaoAlerta } from "@/components/alertas/cartao-alerta";
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { IconVisto } from "@/components/icons";
 import { useNavegar } from "@/components/shell/nav";
 import { BotaoHeader, Screen } from "@/components/shell/screen";
@@ -101,7 +102,9 @@ export default function AlertasPage() {
         )
       }
     >
-      {alertas.isPending ? (
+      {alertas.isError && !alertas.data ? (
+        <EstadoErro onRetry={() => void alertas.refetch()} aTentar={alertas.isFetching} />
+      ) : alertas.isPending ? (
         <div className="skeleton-delay">
           <SkeletonLista linhas={5} />
         </div>

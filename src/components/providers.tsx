@@ -1,9 +1,9 @@
 "use client";
 
-import { SerwistProvider } from "@serwist/turbopack/react";
 import { defaultShouldDehydrateQuery } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { iniciarEnterAvanca, iniciarTeclado, iniciarTocarFora } from "@/lib/teclado";
 import { SessionProvider } from "@/lib/auth/session";
 import { criarQueryClient } from "@/lib/query/dados";
 import { CACHE_BUSTER, CACHE_MAX_AGE, persister } from "@/lib/query/persistencia";
@@ -11,8 +11,18 @@ import { CACHE_BUSTER, CACHE_MAX_AGE, persister } from "@/lib/query/persistencia
 export function Providers({ children }: { children: ReactNode }) {
   const [qc] = useState(criarQueryClient);
 
+  useEffect(() => {
+    iniciarTeclado();
+    iniciarTocarFora();
+    iniciarEnterAvanca();
+    // Service worker: registo tolerante (em modo privado, ou se falhar, a app
+    // continua a funcionar sem erros na consola)
+    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/serwist/sw.js", { scope: "/", type: "module" }).catch(() => {});
+    }
+  }, []);
+
   return (
-    <SerwistProvider swUrl="/serwist/sw.js" disable={process.env.NODE_ENV !== "production"} reloadOnOnline={false}>
       <PersistQueryClientProvider
         client={qc}
         persistOptions={{
@@ -32,6 +42,5 @@ export function Providers({ children }: { children: ReactNode }) {
       >
         <SessionProvider>{children}</SessionProvider>
       </PersistQueryClientProvider>
-    </SerwistProvider>
   );
 }

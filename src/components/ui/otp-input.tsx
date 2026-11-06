@@ -43,6 +43,15 @@ export function OtpInput({
           onChange(v);
           if (v.length === 6) onComplete(v);
         }}
+        // Colar "123 456" ou "Código: 123456" preenche tudo e submete
+        onPaste={(e) => {
+          const v = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+          if (!v) return;
+          e.preventDefault();
+          onChange(v);
+          if (v.length === 6) onComplete(v);
+        }}
+        enterKeyHint="done"
       />
       <div className="pointer-events-none grid grid-cols-6 gap-2" aria-hidden>
         {Array.from({ length: 6 }).map((_, i) => {

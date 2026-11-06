@@ -1,0 +1,1 @@
+{"projeto":"pixel-7","teste":"transições e sheets com CPU 4×","tipo":"perf","texto":"navegação: {\"fps\":46,\"longos\":3,\"pior\":150} · sheet: {\"fps\":47,\"longos\":2,\"pior\":133}"}

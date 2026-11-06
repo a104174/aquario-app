@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { IconAquario, IconDefinicoes, IconHistorico, IconMais } from "@/components/icons";
 import { cx } from "@/lib/cx";
 import { abrirRegistar } from "@/lib/ui-store";
+import { irAoTopo } from "@/lib/gestos";
 import { NavLink } from "./nav";
 
 const TABS = [
@@ -21,9 +22,9 @@ export function TabBar() {
   return (
     <nav
       style={{ viewTransitionName: "app-tabbar" }}
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-separator bg-[var(--tabbar)] pb-[var(--safe-bottom)] backdrop-blur-xl backdrop-saturate-150"
+      className="tabbar fixed inset-x-0 bottom-0 z-30 border-t border-separator bg-[var(--tabbar)] pb-[var(--safe-bottom)] backdrop-blur-xl backdrop-saturate-150"
     >
-      <div className="mx-auto grid h-[var(--tabbar-h)] max-w-lg grid-cols-4">
+      <div className="tabbar-grelha mx-auto grid h-[var(--tabbar-h)] max-w-lg grid-cols-4">
         <Tab tab={aquarios} ativo={aquarios.ativo(pathname)} pathname={pathname} />
         <button
           type="button"
@@ -34,7 +35,7 @@ export function TabBar() {
               : undefined;
             abrirRegistar({ aquarioId: id });
           }}
-          className="group flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-accent"
+          className="tab group flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-accent"
         >
           <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-accent text-accent-contrast transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:scale-[0.85] group-active:duration-[var(--dur-quick)]">
             <IconMais size={20} strokeWidth={2.4} />
@@ -66,10 +67,13 @@ function Tab({
       tipo={ativo && pathname !== tab.href ? "back" : "tab"}
       aria-current={ativo ? "page" : undefined}
       onClick={(e) => {
-        if (mesmaRota) e.preventDefault();
+        if (mesmaRota) {
+          e.preventDefault();
+          irAoTopo();
+        }
       }}
       className={cx(
-        "group flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium",
+        "tab group flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium",
         "transition-colors duration-[var(--dur-quick)] ease-[var(--ease-out)]",
         ativo ? "text-accent" : "text-text-3",
       )}

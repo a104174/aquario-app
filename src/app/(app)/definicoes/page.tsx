@@ -57,15 +57,6 @@ export default function DefinicoesPage() {
 
   return (
     <Screen titulo="Definições" subtitulo={session?.user.email ?? " "}>
-      {!instalada && (
-        <div className="enter-up mb-5 rounded-[14px] bg-accent-soft px-4 py-3 text-[15px]">
-          <p className="font-semibold">Instala no ecrã principal</p>
-          <p className="text-text-2">
-            No Safari, toca em <span className="font-medium">Partilhar</span> → <span className="font-medium">Adicionar ao ecrã principal</span>.
-          </p>
-        </div>
-      )}
-
       <Grupo titulo="Ferramentas">
         <LinhaNav href="/alertas" icone={<IconSino size={22} />} texto="Alertas" detalhe="Histórico de tudo o que foi avisado" badge={naoLidos} />
         <LinhaNav
@@ -123,6 +114,16 @@ export default function DefinicoesPage() {
           <span className="text-[17px]">Terminar sessão</span>
         </button>
       </Grupo>
+
+      {/* no fim da página: aparece depois da hidratação sem empurrar nada (CLS) */}
+      {!instalada && (
+        <div className="mb-5 rounded-[14px] bg-surface px-4 py-3 text-[15px]">
+          <p className="font-semibold">Instala no ecrã principal</p>
+          <p className="text-text-2">
+            No Safari, toca em <span className="font-medium">Partilhar</span> → <span className="font-medium">Adicionar ao ecrã principal</span>.
+          </p>
+        </div>
+      )}
 
       <p className="pb-2 text-center text-[12px] text-text-3">Aquário · diário pessoal</p>
     </Screen>

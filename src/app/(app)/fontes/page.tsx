@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Exterior } from "@/components/fontes/exterior";
@@ -77,7 +78,9 @@ export default function FontesPage() {
       <Exterior />
 
       <Seccao titulo="Fontes">
-        {fontes.isPending ? (
+        {fontes.isError && !fontes.data ? (
+        <EstadoErro onRetry={() => void fontes.refetch()} aTentar={fontes.isFetching} />
+      ) : fontes.isPending ? (
           <SkeletonLista linhas={5} />
         ) : (
           <div className="overflow-hidden rounded-[14px] bg-surface">

@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useState } from "react";
 import { FeriasSheet } from "@/components/ferias/ferias-sheet";
 import { IconMais, IconMala, IconVisto } from "@/components/icons";
@@ -53,7 +54,9 @@ export default function FeriasPage() {
         </BotaoHeader>
       }
     >
-      {!atual ? (
+      {ferias.isError && !ferias.data ? (
+        <EstadoErro onRetry={() => void ferias.refetch()} aTentar={ferias.isFetching} />
+      ) : !atual ? (
         <div className="enter-up flex flex-col items-center rounded-[14px] bg-surface px-4 py-10 text-center">
           <IconMala size={34} className="mb-2 text-accent" />
           <p className="mb-4 text-text-2">Marca as datas para preparares os aquários e pausares os avisos de TPA.</p>

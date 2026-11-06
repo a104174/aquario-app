@@ -1,6 +1,6 @@
 "use client";
 
-import type { ButtonHTMLAttributes } from "react";
+import { useRef, type ButtonHTMLAttributes } from "react";
 import { cx } from "@/lib/cx";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
@@ -12,11 +12,24 @@ export function Button({
   className,
   children,
   disabled,
+  onClick,
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; block?: boolean; loading?: boolean }) {
+  // Toques repetidos (duplo toque nervoso) dentro de 800 ms são ignorados:
+  // evita submeter duas vezes (ex.: duas TPAs iguais).
+  const ultimo = useRef(0);
   return (
     <button
       {...rest}
+      onClick={(e) => {
+        const agora = performance.now();
+        if (agora - ultimo.current < 800) {
+          e.preventDefault();
+          return;
+        }
+        ultimo.current = agora;
+        onClick?.(e);
+      }}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cx(
@@ -24,7 +37,7 @@ export function Button({
         "disabled:opacity-45 disabled:active:scale-100",
         block && "w-full",
         variant === "primary" && "bg-accent text-accent-contrast",
-        variant === "secondary" && "bg-accent-soft text-accent",
+        variant === "secondary" && "bg-accent-soft text-accent-forte",
         variant === "ghost" && "bg-transparent text-accent",
         variant === "danger" && "bg-danger-soft text-danger",
         className,

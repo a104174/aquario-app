@@ -6,12 +6,14 @@ import { escolher } from "@/components/ui/action-sheet";
 import { cx } from "@/lib/cx";
 import { hora, num } from "@/lib/formato";
 import { INFO_PARAMETROS } from "@/lib/parametros";
-import { useApagar, useColecao } from "@/lib/query/dados";
+import { useApagar } from "@/lib/query/dados";
 import { abrirVisualizador } from "@/lib/visualizador-store";
 import type { Colecao } from "@/lib/query/keys";
 import { abrirRegistar, type TipoRegisto } from "@/lib/ui-store";
 import { PARAMETROS, type Aquario, type Condicionador, type Evento } from "@/lib/tipos";
 import { FotoImg } from "./foto-img";
+import { useToqueLongo } from "@/lib/gestos";
+import { vibrar } from "@/lib/haptic";
 import { NOME_ETIQUETA } from "@/lib/fotos";
 
 const COLECAO: Record<Evento["tipo"], Colecao> = { tpa: "tpas", medicao: "medicoes", fauna: "fauna", foto: "fotos" };
@@ -31,6 +33,7 @@ export function LinhaEvento({
   condicionadores,
   mostrarAquario,
   aquarioContexto,
+  fotosTodas,
 }: {
   evento: Evento;
   aquarios?: Aquario[];
@@ -38,24 +41,38 @@ export function LinhaEvento({
   mostrarAquario?: boolean;
   /** Aquário do ecrã atual (para transferências recebidas) */
   aquarioContexto?: string;
+  fotosTodas?: { id: string; aquario_id: string }[];
 }) {
   const apagar = useApagar(COLECAO[evento.tipo]);
-  const { data: fotosTodas } = useColecao("fotos");
+  const toqueLongo = useToqueLongo(() => void opcoes());
   const [saindo, setSaindo] = useState(false);
   const nomeAquario = aquarios?.find((a) => a.id === evento.aquario_id)?.nome;
 
-  async function opcoes() {
+  /** Toque simples: abre logo (editar; nas fotos, o visualizador). */
+  function abrir() {
+    if (toqueLongo.foiLongo()) return;
     if (evento.tipo === "foto") {
       const doAquario = (fotosTodas ?? []).filter((f) => f.aquario_id === evento.aquario_id).map((f) => f.id);
       return abrirVisualizador(doAquario, Math.max(0, doAquario.indexOf(evento.id)));
     }
+    abrirRegistar({ tipo: evento.tipo as TipoRegisto, editarId: evento.id, aquarioId: evento.aquario_id });
+  }
+
+  /** Toque longo: menu de ações (como o menu de contexto do iOS). */
+  async function opcoes() {
+    const foto = evento.tipo === "foto";
     const i = await escolher({
       titulo: `${NOME[evento.tipo].charAt(0).toUpperCase()}${NOME[evento.tipo].slice(1)} · ${hora(evento.data)}`,
-      opcoes: [{ texto: "Editar" }, { texto: "Adicionar foto" }, { texto: `Apagar ${NOME[evento.tipo]}`, destrutivo: true }],
+      opcoes: [{ texto: "Editar" }, { texto: foto ? "Ver foto" : "Adicionar foto" }, { texto: `Apagar ${NOME[evento.tipo]}`, destrutivo: true }],
     });
     if (i === 0) abrirRegistar({ tipo: evento.tipo as TipoRegisto, editarId: evento.id, aquarioId: evento.aquario_id });
-    if (i === 1) abrirRegistar({ tipo: "foto", aquarioId: evento.aquario_id, evento: { tipo: evento.tipo, id: evento.id } });
+    if (i === 1 && foto) {
+      const doAquario = (fotosTodas ?? []).filter((f) => f.aquario_id === evento.aquario_id).map((f) => f.id);
+      abrirVisualizador(doAquario, Math.max(0, doAquario.indexOf(evento.id)));
+    }
+    if (i === 1 && !foto) abrirRegistar({ tipo: "foto", aquarioId: evento.aquario_id, evento: { tipo: evento.tipo as "tpa" | "medicao" | "fauna", id: evento.id } });
     if (i === 2) {
+      vibrar("medio");
       setSaindo(true);
       // deixa a animação de saída correr antes de remover da cache
       setTimeout(() => apagar.mutate({ id: evento.id }), 260);
@@ -141,7 +158,15 @@ export function LinhaEvento({
       <div>
         <button
           type="button"
-          onClick={opcoes}
+          onClick={abrir}
+          onTouchStart={toqueLongo.onTouchStart}
+          onTouchMove={toqueLongo.onTouchMove}
+          onTouchEnd={toqueLongo.onTouchEnd}
+          onTouchCancel={toqueLongo.onTouchCancel}
+          onContextMenu={(e) => {
+            e.preventDefault();
+            void opcoes();
+          }}
           className="pressable-row relative flex w-full items-start gap-3 px-4 py-3 text-left after:absolute after:bottom-0 after:left-[64px] after:right-0 after:h-px after:bg-separator"
         >
           {icone}

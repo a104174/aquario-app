@@ -1,0 +1,83 @@
+{
+  "aquarios": {
+    "performance": 92,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "corridas": [
+      91,
+      92,
+      92
+    ],
+    "falhas": [
+      "network-dependency-tree-insight"
+    ],
+    "metricas": {
+      "FCP": "0.0 s",
+      "LCP": "0.0 s",
+      "TBT": "340 ms",
+      "CLS": "0.025"
+    }
+  },
+  "detalhe": {
+    "performance": 94,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "corridas": [
+      91,
+      94,
+      94
+    ],
+    "falhas": [
+      "network-dependency-tree-insight"
+    ],
+    "metricas": {
+      "FCP": "0.0 s",
+      "LCP": "0.8 s",
+      "TBT": "300 ms",
+      "CLS": "0"
+    }
+  },
+  "historico": {
+    "performance": 94,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "corridas": [
+      93,
+      94,
+      94
+    ],
+    "falhas": [
+      "network-dependency-tree-insight"
+    ],
+    "metricas": {
+      "FCP": "0.0 s",
+      "LCP": "0.0 s",
+      "TBT": "300 ms",
+      "CLS": "0.032"
+    }
+  },
+  "definicoes": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "corridas": [
+      93,
+      93,
+      95
+    ],
+    "falhas": [
+      "max-potential-fid",
+      "network-dependency-tree-insight"
+    ],
+    "metricas": {
+      "FCP": "0.0 s",
+      "LCP": "0.0 s",
+      "TBT": "330 ms",
+      "CLS": "0.025"
+    }
+  }
+}

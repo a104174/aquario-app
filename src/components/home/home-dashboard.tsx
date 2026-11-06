@@ -71,7 +71,7 @@ export function HomeDashboard() {
         <section className="mb-6">
           <div className="mb-2 flex items-center justify-between px-1">
             <h2 className="text-[13px] font-semibold uppercase tracking-wide text-text-2">Precisa de atenção</h2>
-            <NavLink href="/alertas" tipo="forward" className="pressable flex min-h-10 items-center text-[13px] font-semibold text-accent">
+            <NavLink href="/alertas" tipo="forward" className="pressable flex min-h-11 items-center text-[13px] font-semibold text-accent">
               Ver todos <IconChevronDireita size={16} />
             </NavLink>
           </div>

@@ -63,7 +63,7 @@ export function AtalhosRapidos() {
         <button
           type="button"
           onClick={() => setAEditar((v) => !v)}
-          className="pressable min-h-10 rounded-lg px-2 text-[13px] font-semibold text-accent"
+          className="pressable min-h-11 rounded-lg px-2 text-[13px] font-semibold text-accent"
         >
           {aEditar ? "Concluído" : "Personalizar"}
         </button>

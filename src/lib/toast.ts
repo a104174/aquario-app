@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { vibrar } from "./haptic";
 
 export type AcaoToast = { texto: string; onClick: () => void };
 export type Toast = { id: number; texto: string; tipo: "info" | "erro" | "ok"; saindo?: boolean; acao?: AcaoToast };
@@ -12,6 +13,8 @@ const emitir = () => ouvintes.forEach((f) => f());
 
 export function toast(texto: string, tipo: Toast["tipo"] = "info", ms = 3200, acao?: AcaoToast) {
   const id = ++seq;
+  if (tipo === "ok") vibrar("sucesso");
+  if (tipo === "erro") vibrar("aviso");
   toasts = [...toasts.filter((t) => t.texto !== texto), { id, texto, tipo, acao }].slice(-3);
   emitir();
   setTimeout(() => fecharToast(id), ms);

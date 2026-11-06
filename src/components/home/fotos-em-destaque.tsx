@@ -49,7 +49,7 @@ export function FotosEmDestaque({ fotos, aquarios }: { fotos: Foto[]; aquarios: 
                 aria-label={`Fotografia ${i + 1}`}
                 aria-current={i === indice}
                 onClick={() => setIndice(i)}
-                className="flex h-8 w-8 items-center justify-center rounded-full"
+                className="flex h-11 w-11 items-center justify-center rounded-full"
               >
                 <span
                   className={`h-2 rounded-full transition-[width,background-color] duration-[var(--dur-std)] ${

@@ -45,17 +45,17 @@ export function CartaoAlerta({
 
       {!historico && (
         <div className="flex items-center gap-1 border-t border-separator px-2 py-1.5">
-          <button type="button" onClick={onAbrir} className="pressable min-h-10 rounded-[10px] px-2.5 text-[13px] font-semibold text-accent">
+          <button type="button" onClick={onAbrir} className="pressable min-h-11 rounded-[10px] px-2.5 text-[13px] font-semibold text-accent">
             {p.acao}
           </button>
           <span className="flex-1" />
-          <button type="button" onClick={onAdiar} className="pressable min-h-10 rounded-[10px] px-2.5 text-[13px] font-medium text-text-2">
+          <button type="button" onClick={onAdiar} className="pressable min-h-11 rounded-[10px] px-2.5 text-[13px] font-medium text-text-2">
             Amanhã
           </button>
-          <button type="button" onClick={onIgnorar} className="pressable min-h-10 rounded-[10px] px-2.5 text-[13px] font-medium text-text-2">
+          <button type="button" onClick={onIgnorar} className="pressable min-h-11 rounded-[10px] px-2.5 text-[13px] font-medium text-text-2">
             Ignorar
           </button>
-          <button type="button" onClick={onResolver} className="pressable min-h-10 rounded-[10px] bg-accent-soft px-3 text-[13px] font-semibold text-accent">
+          <button type="button" onClick={onResolver} className="pressable min-h-11 rounded-[10px] bg-accent-soft px-3 text-[13px] font-semibold text-accent">
             Já tratei
           </button>
         </div>
