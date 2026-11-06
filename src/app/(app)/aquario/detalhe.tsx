@@ -21,6 +21,7 @@ import { SkeletonLista } from "@/components/ui/skeleton";
 import { estadoTpa, faunaAtual, juntarEventos, serie, ultimaTpa } from "@/lib/derivados";
 import { dataCurta, hora, num, plural, textoHaDias } from "@/lib/formato";
 import { INFO_PARAMETROS } from "@/lib/parametros";
+import { AguaManutencao } from "@/components/aquarios/agua-manutencao";
 import { DEFINICOES_PADRAO, useApagar, useColecao, useDefinicoes } from "@/lib/query/dados";
 import { abrirRegistar } from "@/lib/ui-store";
 import { useFizTpa } from "@/lib/fiz-tpa";
@@ -169,6 +170,8 @@ export function DetalheAquario() {
           );
         })}
       </div>
+
+      <AguaManutencao aquarioId={id} medicoes={medicoes} tpas={tpas} intervalo={intervalo} />
 
       <Segmentado
         className="mb-5"

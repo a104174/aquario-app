@@ -51,6 +51,8 @@
   --r-cartao: 26px;
   --r-bloco: 18px;
   --r-controlo: 14px;
+  /* Aquarium Visual Kit: sem contorno (usa a elevação --shadow-card) */
+  --kit-contorno: 0 solid transparent;
 
   /* ----- Identidade de motion (skill motion-design) -----
    * Arquétipo: Corporate/iOS — limpo, decidido, sem overshoot em UI pesada.

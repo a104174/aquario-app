@@ -8,7 +8,10 @@ const nextConfig: NextConfig = {
   // pré-cachear tudo e o arranque é instantâneo, mesmo offline.
   turbopack: {
     rules: {
+      // CSS global passa pelo Tailwind. Os CSS Modules (*.module.css) ficam
+      // de fora: senão saem como CSS global e as classes chegam vazias.
       "*.css": {
+        condition: { not: { path: /\.module\.css$/ } },
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },

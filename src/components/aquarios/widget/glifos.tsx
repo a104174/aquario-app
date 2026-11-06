@@ -45,16 +45,6 @@ export function GlifoPeixe({ className, cheio = true }: { className?: string; ch
   );
 }
 
-/** Gota com seta circular: troca parcial de água. */
-export function GlifoTpa({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 20 20" className={className} aria-hidden fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 2.5 C 7 6.5, 5.5 8.8, 5.5 11.2 a4.5 4.5 0 0 0 9 0 c0 -2.4 -1.5 -4.7 -4.5 -8.7 Z" />
-      <path d="M8 12.2 a2 2 0 0 0 3.4 1.2" />
-    </svg>
-  );
-}
-
 /** Seta de tendência (sobe / desce / estável). */
 export function GlifoTendencia({ sentido, className }: { sentido: -1 | 0 | 1; className?: string }) {
   return (
