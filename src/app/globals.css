@@ -419,6 +419,9 @@
     background: radial-gradient(60% 50% at 30% 20%, rgb(127 230 242 / 0.16), transparent 70%);
     animation: caustics 14s var(--ease-in-out) infinite alternate;
     will-change: transform;
+    /* o brilho nasce a 0 na borda de cima do header: ao puxar para baixo
+       (bounce do iOS) não há linha entre o fundo revelado e o header */
+    mask-image: linear-gradient(to bottom, transparent 19%, #000 42%);
     pointer-events: none;
   }
   @keyframes caustics {
@@ -607,10 +610,7 @@ html.no-vt[data-nav="tab"] .screen-enter {
   left: 0;
   right: 0;
   /* até ao fundo físico do ecrã (por baixo do home indicator) */
-  bottom: calc(-1 * var(--fundo-extra, 0px));
-}
-.tabbar {
-  bottom: calc(-1 * var(--fundo-extra, 0px));
+  bottom: 0;
 }
 /* Se mesmo assim sobrar algo no fundo, tem a cor da tab bar (sem bloco partido) */
 html {
