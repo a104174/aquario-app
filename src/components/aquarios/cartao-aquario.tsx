@@ -55,7 +55,10 @@ export function CartaoAquario({
     .slice(0, 4)
     .map((p) => ({ p, ...valores[p]!, serie: serie(medicoes, aquario.id, p).slice(-8).map((x) => x.v) }));
   const { lista, total } = faunaAtual(fauna, aquario.id);
-  const minhas = (fotos ?? []).filter((f) => f.aquario_id === aquario.id).slice(0, MAX_FOTOS);
+  // a capa escolhida no detalhe (foto_capa_id) vem primeiro, como no hero
+  const doAquario = (fotos ?? []).filter((f) => f.aquario_id === aquario.id);
+  const capa = doAquario.find((f) => f.id === aquario.foto_capa_id);
+  const minhas = (capa ? [capa, ...doAquario.filter((f) => f.id !== capa.id)] : doAquario).slice(0, MAX_FOTOS);
 
   const util = aquario.volume_util_l;
   const bruto = aquario.volume_bruto_l;
