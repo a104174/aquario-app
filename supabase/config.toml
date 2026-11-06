@@ -1,0 +1,42 @@
+# Configuração para o Supabase CLI (desenvolvimento local / `supabase link`).
+# Só estão aqui as opções relevantes; o resto usa os valores por defeito.
+project_id = "aquario-app"
+
+[api]
+schemas = ["public"]
+
+[db]
+major_version = 17
+
+[db.seed]
+sql_paths = ["./seed.sql"]
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://localhost:3000"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+# Sessão longa: a app fica com sessão iniciada no iPhone.
+# (O refresh token não expira por tempo, só por inatividade/rotação.)
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+# Código de 6 dígitos (NÃO magic link — no iOS o link abriria no Safari).
+otp_length = 6
+otp_expiry = 900
+max_frequency = "30s"
+
+[auth.email.template.magic_link]
+subject = "O teu código do Aquário"
+content_path = "./supabase/templates/codigo.html"
+
+[auth.email.template.confirmation]
+subject = "O teu código do Aquário"
+content_path = "./supabase/templates/codigo.html"
+
+[storage]
+file_size_limit = "10MiB"
+
+[functions.lembrete-tpa]
+verify_jwt = false

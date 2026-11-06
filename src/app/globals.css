@@ -1,0 +1,562 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ *  Tokens de design
+ *  Modo claro/escuro automático (prefers-color-scheme).
+ *  O header é sempre "oceano" escuro: com statusBarStyle
+ *  black-translucent o texto da status bar é branco, por isso a zona
+ *  por trás dele tem de ser escura nos dois modos.
+ * ------------------------------------------------------------------ */
+:root {
+  color-scheme: light dark;
+
+  --bg: #eef3f6;
+  --surface: #ffffff;
+  --surface-2: #f4f7f9;
+  --surface-3: #e6edf1;
+  --text: #0c1a24;
+  --text-2: #5b6b78;
+  --text-3: #8b9aa5;
+  --separator: rgb(12 26 36 / 0.1);
+  --accent: #0b8aa3;
+  --accent-soft: rgb(11 138 163 / 0.12);
+  --accent-contrast: #ffffff;
+  --danger: #d6453d;
+  --danger-soft: rgb(214 69 61 / 0.12);
+  --warning: #c77c0a;
+  --warning-soft: rgb(199 124 10 / 0.14);
+  --ok: #1f9d55;
+  --ok-soft: rgb(31 157 85 / 0.12);
+  --header-from: #0d4a66;
+  --header-to: #0a3247;
+  --header-text: #ffffff;
+  --tabbar: rgb(255 255 255 / 0.82);
+  --overlay: rgb(5 20 29 / 0.4);
+  --shadow-card: 0 1px 2px rgb(12 26 36 / 0.05), 0 4px 16px rgb(12 26 36 / 0.05);
+  --skeleton: rgb(12 26 36 / 0.07);
+  --skeleton-shine: rgb(255 255 255 / 0.6);
+
+  /* ----- Identidade de motion (skill motion-design) -----
+   * Arquétipo: Corporate/iOS — limpo, decidido, sem overshoot em UI pesada.
+   * Curva de assinatura (80% das animações): cubic-bezier(0.2, 0, 0, 1)
+   * Paleta de durações (mobile = 0.8x): quick 120 / std 280 / slow 420
+   * Entrada: deslize lateral (navegação) ou de baixo (chegada de conteúdo).
+   */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1); /* assinatura / entradas */
+  --ease-in: cubic-bezier(0.3, 0, 1, 1); /* saídas (aceleram) */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* movimento em ecrã */
+  --ease-emph: cubic-bezier(0.05, 0.7, 0.1, 1); /* entradas com ênfase */
+  --ease-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* sucesso (leve overshoot) */
+  --dur-quick: 120ms;
+  --dur-std: 280ms;
+  --dur-slow: 420ms;
+  --dur-exit: 200ms; /* ~70% da entrada */
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --tabbar-h: 52px;
+
+  /* Série dos gráficos (validada com o validador dataviz: banda de
+   * luminosidade, croma e contraste >= 3:1 contra --surface) */
+  --chart-series: #0b8aa3;
+  --chart-wash: rgb(11 138 163 / 0.1);
+  --chart-grid: rgb(12 26 36 / 0.08);
+  --chart-band: rgb(12 26 36 / 0.045);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #071219;
+    --surface: #0f1e28;
+    --surface-2: #142632;
+    --surface-3: #1b313f;
+    --text: #e6f1f6;
+    --text-2: #8fa6b3;
+    --text-3: #5f7685;
+    --separator: rgb(230 241 246 / 0.1);
+    --accent: #3cc6dc;
+    --accent-soft: rgb(60 198 220 / 0.14);
+    --accent-contrast: #04121a;
+    --danger: #ff6b5f;
+    --danger-soft: rgb(255 107 95 / 0.14);
+    --warning: #f2b33d;
+    --warning-soft: rgb(242 179 61 / 0.14);
+    --ok: #4cd98a;
+    --ok-soft: rgb(76 217 138 / 0.14);
+    --header-from: #0b2533;
+    --header-to: #071219;
+    --tabbar: rgb(15 30 40 / 0.82);
+    --overlay: rgb(0 0 0 / 0.55);
+    --shadow-card: 0 0 0 1px rgb(230 241 246 / 0.05);
+    --skeleton: rgb(230 241 246 / 0.07);
+    --skeleton-shine: rgb(230 241 246 / 0.08);
+    --chart-series: #22a6bc;
+    --chart-wash: rgb(34 166 188 / 0.1);
+    --chart-grid: rgb(230 241 246 / 0.08);
+    --chart-band: rgb(230 241 246 / 0.05);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-separator: var(--separator);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --font-sans: -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --font-display: -apple-system-headline, -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Display", sans-serif;
+  --ease-out: var(--ease-out);
+  --ease-in: var(--ease-in);
+}
+
+@layer base {
+  /* ------------------------------------------------------------------ *
+   *  Base: corpo fixo, só o conteúdo de cada ecrã faz scroll
+   * ------------------------------------------------------------------ */
+  html,
+  body {
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  html {
+    background: var(--bg);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 17px; /* corpo iOS */
+    line-height: 1.35;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    /* UI não é selecionável nem tem menu de toque longo… */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* …exceto onde se escreve ou lê texto livre */
+  input,
+  textarea,
+  [contenteditable],
+  .selectable {
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+
+  /* Sem zoom automático do iOS: inputs sempre >= 16px */
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+    font-family: inherit;
+    color: inherit;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: default;
+    touch-action: manipulation;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    touch-action: manipulation;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+
+  /* Container de scroll de cada ecrã */
+  .scroll-area {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .scroll-area::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------------ *
+   *  Feedback de toque: :active com scale 0.97, sem hover
+   *  Press: 120ms ease-out (rápido, <150ms); release: 280ms (settle).
+   * ------------------------------------------------------------------ */
+  .pressable {
+    transition:
+      transform var(--dur-std) var(--ease-out),
+      opacity var(--dur-std) var(--ease-out),
+      background-color var(--dur-std) var(--ease-out);
+    will-change: transform;
+  }
+  .pressable:active {
+    transform: scale(0.97);
+    transition-duration: var(--dur-quick);
+  }
+  /* Linhas de lista: escurecem em vez de encolher (como as células iOS) */
+  .pressable-row {
+    transition: background-color var(--dur-std) var(--ease-out);
+  }
+  .pressable-row:active {
+    background-color: var(--surface-3);
+    transition-duration: 60ms;
+  }
+
+  /* ------------------------------------------------------------------ *
+   *  Skeletons (em vez de spinners)
+   *  Ambient: brilho que atravessa o bloco — linear só porque é um
+   *  movimento contínuo tipo progresso, em loop suave.
+   * ------------------------------------------------------------------ */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--skeleton);
+    border-radius: 10px;
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--skeleton-shine), transparent);
+    animation: shimmer 1.4s var(--ease-in-out) infinite;
+  }
+  /* Os skeletons só aparecem se a cache demorar (>150ms): evita flash
+   * no arranque normal, em que a cache local chega quase de imediato. */
+  .skeleton-delay {
+    animation: vt-fade-in var(--dur-std) var(--ease-out) 150ms both;
+  }
+  @keyframes shimmer {
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  /* ------------------------------------------------------------------ *
+   *  Entradas de conteúdo (cartões, linhas da timeline)
+   *  Card enter: 20px de baixo + opacity, 280ms, curva de assinatura.
+   *  Stagger micro-cascade de 30ms, orçamento total < 200ms (mobile).
+   * ------------------------------------------------------------------ */
+  .enter-up {
+    animation: enter-up var(--dur-std) var(--ease-out) both;
+    animation-delay: calc(min(var(--i, 0), 6) * 30ms);
+  }
+  @keyframes enter-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  .pop-in {
+    animation: pop-in var(--dur-std) var(--ease-pop) both;
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+  }
+
+  /* Passos de um fluxo (ex.: email → código): deslize curto de 24px.
+   * Para a frente entra da direita; para trás entra da esquerda. */
+  .step-forward {
+    animation: step-forward var(--dur-std) var(--ease-out) both;
+  }
+  .step-back {
+    animation: step-back var(--dur-std) var(--ease-out) both;
+  }
+  @keyframes step-forward {
+    from {
+      opacity: 0;
+      transform: translateX(24px);
+    }
+  }
+  @keyframes step-back {
+    from {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+  }
+
+  /* Toast: sobe de baixo (chegada), por cima da tab bar; sai a acelerar */
+  .toast-enter {
+    animation: toast-in var(--dur-std) var(--ease-out) both;
+  }
+  .toast-exit {
+    animation: toast-in var(--dur-exit) var(--ease-in) reverse both;
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+    }
+  }
+
+  /* Remoção de uma linha: desvanece e colapsa a altura (exit = ease-in,
+   * ~70% da entrada). O colapso começa 60ms depois para a linha "sair"
+   * antes de o espaço fechar (follow-through). */
+  .colapsar {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition:
+      grid-template-rows var(--dur-exit) var(--ease-in) 60ms,
+      opacity var(--dur-exit) var(--ease-in),
+      transform var(--dur-exit) var(--ease-in);
+  }
+  .colapsar > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .colapsar[data-saindo] {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+
+  /* Gráfico: a linha "desenha-se" da esquerda para a direita (direção =
+   * tempo/progresso) e a área chega logo a seguir (follow-through). */
+  .grafico-linha {
+    stroke-dasharray: 1;
+    animation: desenhar var(--dur-slow) var(--ease-in-out) both;
+  }
+  .grafico-area {
+    animation: vt-fade-in var(--dur-std) var(--ease-out) 200ms both;
+  }
+  @keyframes desenhar {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Erro: abanão horizontal firme, 2-3 oscilações, 360ms, sem overshoot */
+  .shake {
+    animation: shake 360ms var(--ease-in-out);
+  }
+  @keyframes shake {
+    20% {
+      transform: translateX(-10px);
+    }
+    40% {
+      transform: translateX(8px);
+    }
+    60% {
+      transform: translateX(-5px);
+    }
+    80% {
+      transform: translateX(2px);
+    }
+  }
+
+  /* Ambient do header: luz da água a derivar devagar (gás/fluido: lento) */
+  .header-ambient {
+    background:
+      radial-gradient(120% 80% at 20% -10%, rgb(127 230 242 / 0.16), transparent 60%),
+      linear-gradient(180deg, var(--header-from), var(--header-to));
+    background-size:
+      200% 100%,
+      100% 100%;
+    animation: caustics 14s var(--ease-in-out) infinite alternate;
+  }
+  @keyframes caustics {
+    from {
+      background-position:
+        0% 0%,
+        0 0;
+    }
+    to {
+      background-position:
+        100% 0%,
+        0 0;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  View Transitions (React <ViewTransition> + transitionTypes)
+ *  Página = mudança de contexto: saída 200ms ease-in, entrada 340ms
+ *  ease-out (mobile 0.8x de 420ms). Deslocamento 25% da largura no
+ *  ecrã antigo (parallax iOS) e 100% no novo.
+ * ------------------------------------------------------------------ */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.nav-forward) {
+  animation: var(--dur-slow) var(--ease-out) both vt-slide-out-left;
+}
+::view-transition-new(.nav-forward) {
+  animation: var(--dur-slow) var(--ease-out) both vt-slide-in-right;
+}
+::view-transition-old(.nav-back) {
+  animation: var(--dur-slow) var(--ease-out) both vt-slide-out-right;
+  z-index: 2;
+}
+::view-transition-new(.nav-back) {
+  animation: var(--dur-slow) var(--ease-out) both vt-slide-in-left;
+}
+/* Troca de tab: crossfade curto com leve subida (mesmo nível, sem direção) */
+::view-transition-old(.nav-tab) {
+  animation: var(--dur-exit) var(--ease-in) both vt-fade-out;
+}
+::view-transition-new(.nav-tab) {
+  animation: var(--dur-std) var(--ease-out) 60ms both vt-fade-in-up;
+}
+
+@keyframes vt-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes vt-slide-out-left {
+  to {
+    transform: translateX(-25%);
+    opacity: 0.6;
+  }
+}
+@keyframes vt-slide-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes vt-slide-in-left {
+  from {
+    transform: translateX(-25%);
+    opacity: 0.6;
+  }
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Tab bar ancorada: não se mexe durante a transição */
+::view-transition-group(app-tabbar) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(app-tabbar) {
+  display: none;
+}
+::view-transition-new(app-tabbar) {
+  animation: none;
+}
+
+/* Header: fica no sítio (âncora espacial) e o conteúdo faz crossfade,
+ * como a barra de navegação do iOS — saída rápida, entrada mais suave. */
+::view-transition-group(app-header) {
+  z-index: 99;
+  animation-duration: var(--dur-std);
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-old(app-header) {
+  animation: var(--dur-exit) var(--ease-in) both vt-fade-out;
+}
+::view-transition-new(app-header) {
+  animation: var(--dur-std) var(--ease-out) 80ms both vt-fade-in;
+}
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Fallback sem View Transitions API: o ecrã novo entra com a mesma
+ * linguagem (deslize/fade) por CSS, aplicado via data-nav no <html>. */
+html.no-vt[data-nav="forward"] .screen-enter {
+  animation: vt-slide-in-right var(--dur-slow) var(--ease-out) both;
+}
+html.no-vt[data-nav="back"] .screen-enter {
+  animation: vt-slide-in-left var(--dur-slow) var(--ease-out) both;
+}
+html.no-vt[data-nav="tab"] .screen-enter {
+  animation: vt-fade-in-up var(--dur-std) var(--ease-out) both;
+}
+
+/* ------------------------------------------------------------------ *
+ *  Bottom sheets (vaul) — o vaul já usa a curva iOS
+ *  cubic-bezier(0.32, 0.72, 0, 1) a 500ms para o drawer.
+ * ------------------------------------------------------------------ */
+[data-vaul-overlay] {
+  background: var(--overlay);
+}
+
+/* ------------------------------------------------------------------ *
+ *  Reduced motion: sem movimento espacial, só opacidade, durações -50%
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-std: 140ms;
+    --dur-slow: 200ms;
+    --dur-exit: 100ms;
+  }
+  .pressable:active {
+    transform: none;
+    opacity: 0.6;
+  }
+  .enter-up,
+  .pop-in,
+  .step-forward,
+  .step-back {
+    animation-name: vt-fade-out;
+    animation-direction: reverse;
+    animation-delay: 0ms;
+  }
+  .shake,
+  .grafico-linha,
+  .grafico-area,
+  .header-ambient,
+  .toast-enter,
+  .toast-exit,
+  .skeleton::after {
+    animation: none;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-name: vt-fade-out !important;
+    animation-duration: 160ms !important;
+    animation-delay: 0ms !important;
+  }
+  ::view-transition-new(*) {
+    animation-direction: reverse !important;
+  }
+}
