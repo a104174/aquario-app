@@ -1,0 +1,462 @@
+{"projeto":"iphone-15","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 107×32 Fiz TPA · 9 L"}
+{"projeto":"iphone-15","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 106×32 Fiz TPA · 5 L"}
+{"projeto":"iphone-15","teste":"historico","tipo":"alvo<44","texto":"historico: 76×36 Todos"}
+{"projeto":"iphone-15","teste":"historico","tipo":"alvo<44","texto":"historico: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15","teste":"historico","tipo":"alvo<44","texto":"historico: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15","teste":"historico","tipo":"alvo<44","texto":"historico: 69×36 Betta"}
+{"projeto":"iphone-15","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 89×32 Registos"}
+{"projeto":"iphone-15","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 89×32 Gráficos"}
+{"projeto":"iphone-15","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 89×32 Fauna"}
+{"projeto":"iphone-15","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 89×32 Fotos"}
+{"projeto":"iphone-15","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"iphone-15","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"iphone-15","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"iphone-15","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"iphone-15","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 51×31 Lembrete mensal da esponja"}
+{"projeto":"iphone-15","teste":"desejos","tipo":"alvo<44","texto":"desejos: 179×32 Quero"}
+{"projeto":"iphone-15","teste":"desejos","tipo":"alvo<44","texto":"desejos: 179×32 Comprado"}
+{"projeto":"iphone-15","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 107×32 Fiz TPA · 9 L"}
+{"projeto":"iphone-15","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 106×32 Fiz TPA · 5 L"}
+{"projeto":"iphone-15","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 89×32 Registos"}
+{"projeto":"iphone-15","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 89×32 Gráficos"}
+{"projeto":"iphone-15","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 89×32 Fauna"}
+{"projeto":"iphone-15","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 89×32 Fotos"}
+{"projeto":"iphone-15","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 76×36 Todos"}
+{"projeto":"iphone-15","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 69×36 Betta"}
+{"projeto":"iphone-15","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"iphone-15","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"iphone-15","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"iphone-15","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"iphone-15","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 51×31 Lembrete mensal da esponja"}
+{"projeto":"iphone-15","teste":"desejos vazio","tipo":"alvo<44","texto":"desejos-vazio: 179×32 Quero"}
+{"projeto":"iphone-15","teste":"desejos vazio","tipo":"alvo<44","texto":"desejos-vazio: 179×32 Comprado"}
+{"projeto":"iphone-15","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 41×41 Alertas"}
+{"projeto":"iphone-15","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 41×41 Novo aquário"}
+{"projeto":"iphone-15","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 100×30 Fiz TPA · 9 L"}
+{"projeto":"iphone-15","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 99×30 Fiz TPA · 5 L"}
+{"projeto":"iphone-15","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 88×39 Cancelar"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 101×41 Aquários"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 41×41 Opções do aquário"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 83×30 Registos"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 83×30 Gráficos"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 83×30 Fauna"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 83×30 Fotos"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 85×39 Voltar"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 69×36 Betta"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 97×36 10% · 3 L"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 100×36 20% · 6 L"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 111×36 25% · 7,5 L"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 100×36 30% · 9 L"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 106×36 50% · 15 L"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 204×36 AMTRA Care · 0,25 ml/L"}
+{"projeto":"iphone-15","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 93×36 Nenhum"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 101×41 Aquários"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 41×41 Opções do aquário"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 83×30 Registos"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 83×30 Gráficos"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 83×30 Fauna"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 83×30 Fotos"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 85×39 Voltar"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 69×36 Betta"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 179×32 Teste de gotas"}
+{"projeto":"iphone-15","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 179×32 Tira de teste"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 101×41 Aquários"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 41×41 Opções do aquário"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 83×30 Registos"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 83×30 Gráficos"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 83×30 Fauna"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 83×30 Fotos"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 85×39 Voltar"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 69×36 Betta"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 87×36 Entrada"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 118×36 Nascimento"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 75×36 Morte"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 131×36 Transferência"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 72×36 Saída"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 40×32 Menos"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 40×32 Mais"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 147×36 Betta splendens"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 182×36 Camarão Red Cherry"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 148×36 Corydora panda"}
+{"projeto":"iphone-15","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 70×36 Neon"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 101×41 Aquários"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 41×41 Opções do aquário"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 83×30 Registos"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 83×30 Gráficos"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 83×30 Fauna"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 83×30 Fotos"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 85×39 Voltar"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 69×36 Betta"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 79×36 Peixes"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 85×36 Plantas"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 123×36 Maternidade"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 72×36 Outro"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 93×36 Nenhum"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 146×36 Medição · 5 nov"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 201×36 Corydora panda · 4 nov"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 139×36 TPA 9 L · 3 nov"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 143×36 Medição · 1 nov"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 152×36 Medição · 28 out"}
+{"projeto":"iphone-15","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 144×36 TPA 9 L · 27 out"}
+{"projeto":"iphone-15","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 41×41 Alertas"}
+{"projeto":"iphone-15","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 41×41 Novo aquário"}
+{"projeto":"iphone-15","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 100×30 Fiz TPA · 9 L"}
+{"projeto":"iphone-15","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 99×30 Fiz TPA · 5 L"}
+{"projeto":"iphone-15","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 88×39 Cancelar"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 101×41 Aquários"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 41×41 Opções do aquário"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 83×30 Registos"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 83×30 Gráficos"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 83×30 Fauna"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 83×30 Fotos"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 85×39 Voltar"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 69×36 Betta"}
+{"projeto":"iphone-15","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 229×36 fêmea cauda amarela/preta"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: tpa-litros sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"TPA: tpa-litros sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: Notas sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-nh3_nh4 sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-no2 sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-no3 sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-ph sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-gh sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-kh sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-temperatura_c sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Medição: Notas sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: fauna-especie sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: Notas sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: ninhada-mae sem enterkeyhint"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Ninhada: ninhada-mae sem autocomplete"}
+{"projeto":"iphone-15","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: Notas sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 107×32 Fiz TPA · 9 L"}
+{"projeto":"iphone-se","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 106×32 Fiz TPA · 5 L"}
+{"projeto":"iphone-se","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 85×32 Registos"}
+{"projeto":"iphone-se","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 85×32 Gráficos"}
+{"projeto":"iphone-se","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 85×32 Fauna"}
+{"projeto":"iphone-se","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 85×32 Fotos"}
+{"projeto":"iphone-se","teste":"historico","tipo":"alvo<44","texto":"historico: 76×36 Todos"}
+{"projeto":"iphone-se","teste":"historico","tipo":"alvo<44","texto":"historico: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-se","teste":"historico","tipo":"alvo<44","texto":"historico: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-se","teste":"historico","tipo":"alvo<44","texto":"historico: 69×36 Betta"}
+{"projeto":"iphone-se","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"iphone-se","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"iphone-se","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"iphone-se","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"iphone-se","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 51×31 Lembrete mensal da esponja"}
+{"projeto":"iphone-se","teste":"desejos","tipo":"alvo<44","texto":"desejos: 170×32 Quero"}
+{"projeto":"iphone-se","teste":"desejos","tipo":"alvo<44","texto":"desejos: 170×32 Comprado"}
+{"projeto":"iphone-se","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 107×32 Fiz TPA · 9 L"}
+{"projeto":"iphone-se","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 106×32 Fiz TPA · 5 L"}
+{"projeto":"iphone-se","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 85×32 Registos"}
+{"projeto":"iphone-se","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 85×32 Gráficos"}
+{"projeto":"iphone-se","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 85×32 Fauna"}
+{"projeto":"iphone-se","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 85×32 Fotos"}
+{"projeto":"iphone-se","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 76×36 Todos"}
+{"projeto":"iphone-se","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-se","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-se","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 69×36 Betta"}
+{"projeto":"iphone-se","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"iphone-se","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"iphone-se","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"iphone-se","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"iphone-se","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 51×31 Lembrete mensal da esponja"}
+{"projeto":"iphone-se","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 41×41 Alertas"}
+{"projeto":"iphone-se","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 41×41 Novo aquário"}
+{"projeto":"iphone-se","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 99×30 Fiz TPA · 9 L"}
+{"projeto":"iphone-se","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 99×30 Fiz TPA · 5 L"}
+{"projeto":"iphone-se","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 88×39 Cancelar"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 100×41 Aquários"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 41×41 Opções do aquário"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 79×30 Registos"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 79×30 Gráficos"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 79×30 Fauna"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 79×30 Fotos"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 85×39 Voltar"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 69×36 Betta"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 97×36 10% · 3 L"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 100×36 20% · 6 L"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 111×36 25% · 7,5 L"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 100×36 30% · 9 L"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 106×36 50% · 15 L"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 204×36 AMTRA Care · 0,25 ml/L"}
+{"projeto":"iphone-se","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 93×36 Nenhum"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 100×41 Aquários"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 41×41 Opções do aquário"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 79×30 Registos"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 79×30 Gráficos"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 79×30 Fauna"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 79×30 Fotos"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 85×39 Voltar"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 69×36 Betta"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 170×32 Teste de gotas"}
+{"projeto":"iphone-se","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 170×32 Tira de teste"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 100×41 Aquários"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 41×41 Opções do aquário"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 79×30 Registos"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 79×30 Gráficos"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 79×30 Fauna"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 79×30 Fotos"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 85×39 Voltar"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 69×36 Betta"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 87×36 Entrada"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 118×36 Nascimento"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 75×36 Morte"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 131×36 Transferência"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 72×36 Saída"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 40×32 Menos"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 40×32 Mais"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 147×36 Betta splendens"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 182×36 Camarão Red Cherry"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 148×36 Corydora panda"}
+{"projeto":"iphone-se","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 70×36 Neon"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 100×41 Aquários"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 41×41 Opções do aquário"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 79×30 Registos"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 79×30 Gráficos"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 79×30 Fauna"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 79×30 Fotos"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 85×39 Voltar"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 69×36 Betta"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 79×36 Peixes"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 85×36 Plantas"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 123×36 Maternidade"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 72×36 Outro"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 93×36 Nenhum"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 146×36 Medição · 5 nov"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 201×36 Corydora panda · 4 nov"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 139×36 TPA 9 L · 3 nov"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 143×36 Medição · 1 nov"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 152×36 Medição · 28 out"}
+{"projeto":"iphone-se","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 144×36 TPA 9 L · 27 out"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 100×41 Aquários"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 41×41 Opções do aquário"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 79×30 Registos"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 79×30 Gráficos"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 79×30 Fauna"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 79×30 Fotos"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 85×39 Voltar"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 69×36 Betta"}
+{"projeto":"iphone-se","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 229×36 fêmea cauda amarela/preta"}
+{"projeto":"iphone-se","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 41×41 Alertas"}
+{"projeto":"iphone-se","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 41×41 Novo aquário"}
+{"projeto":"iphone-se","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 99×30 Fiz TPA · 9 L"}
+{"projeto":"iphone-se","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 99×30 Fiz TPA · 5 L"}
+{"projeto":"iphone-se","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 88×39 Cancelar"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: tpa-litros sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"TPA: tpa-litros sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: Notas sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-nh3_nh4 sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-no2 sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-no3 sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-ph sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-gh sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-kh sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-temperatura_c sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Medição: Notas sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: fauna-especie sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: Notas sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: ninhada-mae sem enterkeyhint"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Ninhada: ninhada-mae sem autocomplete"}
+{"projeto":"iphone-se","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: Notas sem enterkeyhint"}
+{"projeto":"iphone-15-pro-max","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 107×32 Fiz TPA · 9 L"}
+{"projeto":"iphone-15-pro-max","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 106×32 Fiz TPA · 5 L"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 99×32 Registos"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 99×32 Gráficos"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 99×32 Fauna"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 99×32 Fotos"}
+{"projeto":"iphone-15-pro-max","teste":"historico","tipo":"alvo<44","texto":"historico: 76×36 Todos"}
+{"projeto":"iphone-15-pro-max","teste":"historico","tipo":"alvo<44","texto":"historico: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15-pro-max","teste":"historico","tipo":"alvo<44","texto":"historico: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15-pro-max","teste":"historico","tipo":"alvo<44","texto":"historico: 69×36 Betta"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 51×31 Lembrete mensal da esponja"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 51×31 Lembrete semanal de foto"}
+{"projeto":"iphone-15-pro-max","teste":"desejos","tipo":"alvo<44","texto":"desejos: 197×32 Quero"}
+{"projeto":"iphone-15-pro-max","teste":"desejos","tipo":"alvo<44","texto":"desejos: 197×32 Comprado"}
+{"projeto":"iphone-15-pro-max","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 107×32 Fiz TPA · 9 L"}
+{"projeto":"iphone-15-pro-max","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 106×32 Fiz TPA · 5 L"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 99×32 Registos"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 99×32 Gráficos"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 99×32 Fauna"}
+{"projeto":"iphone-15-pro-max","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 99×32 Fotos"}
+{"projeto":"iphone-15-pro-max","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 76×36 Todos"}
+{"projeto":"iphone-15-pro-max","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"iphone-15-pro-max","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 145×36 AQUARIUS 20 L"}
+{"projeto":"iphone-15-pro-max","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 69×36 Betta"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 51×31 Lembrete mensal da esponja"}
+{"projeto":"iphone-15-pro-max","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 51×31 Lembrete semanal de foto"}
+{"projeto":"pixel-7","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 107×32 Fiz TPA · 9 L"}
+{"projeto":"pixel-7","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 106×32 Fiz TPA · 5 L"}
+{"projeto":"pixel-7","teste":"aquarios","tipo":"alvo<44","texto":"aquarios: 106×32 Fiz TPA · 2 L"}
+{"projeto":"pixel-7","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 94×32 Registos"}
+{"projeto":"pixel-7","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 94×32 Gráficos"}
+{"projeto":"pixel-7","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 94×32 Fauna"}
+{"projeto":"pixel-7","teste":"detalhe","tipo":"alvo<44","texto":"detalhe: 94×32 Fotos"}
+{"projeto":"pixel-7","teste":"historico","tipo":"alvo<44","texto":"historico: 76×36 Todos"}
+{"projeto":"pixel-7","teste":"historico","tipo":"alvo<44","texto":"historico: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"pixel-7","teste":"historico","tipo":"alvo<44","texto":"historico: 145×36 AQUARIUS 20 L"}
+{"projeto":"pixel-7","teste":"historico","tipo":"alvo<44","texto":"historico: 69×36 Betta"}
+{"projeto":"pixel-7","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"pixel-7","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"pixel-7","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Menos"}
+{"projeto":"pixel-7","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 40×32 Mais"}
+{"projeto":"pixel-7","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 51×31 Lembrete mensal da esponja"}
+{"projeto":"pixel-7","teste":"definicoes","tipo":"alvo<44","texto":"definicoes: 51×31 Lembrete semanal de foto"}
+{"projeto":"pixel-7","teste":"desejos","tipo":"alvo<44","texto":"desejos: 188×32 Quero"}
+{"projeto":"pixel-7","teste":"desejos","tipo":"alvo<44","texto":"desejos: 188×32 Comprado"}
+{"projeto":"pixel-7","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 107×32 Fiz TPA · 9 L"}
+{"projeto":"pixel-7","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 106×32 Fiz TPA · 5 L"}
+{"projeto":"pixel-7","teste":"aquarios escuro","tipo":"alvo<44","texto":"aquarios-escuro: 106×32 Fiz TPA · 2 L"}
+{"projeto":"pixel-7","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 94×32 Registos"}
+{"projeto":"pixel-7","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 94×32 Gráficos"}
+{"projeto":"pixel-7","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 94×32 Fauna"}
+{"projeto":"pixel-7","teste":"detalhe escuro","tipo":"alvo<44","texto":"detalhe-escuro: 94×32 Fotos"}
+{"projeto":"pixel-7","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 76×36 Todos"}
+{"projeto":"pixel-7","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"pixel-7","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 145×36 AQUARIUS 20 L"}
+{"projeto":"pixel-7","teste":"historico escuro","tipo":"alvo<44","texto":"historico-escuro: 69×36 Betta"}
+{"projeto":"pixel-7","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"pixel-7","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"pixel-7","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Menos"}
+{"projeto":"pixel-7","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 40×32 Mais"}
+{"projeto":"pixel-7","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 51×31 Lembrete mensal da esponja"}
+{"projeto":"pixel-7","teste":"definicoes escuro","tipo":"alvo<44","texto":"definicoes-escuro: 51×31 Lembrete semanal de foto"}
+{"projeto":"pixel-7","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 41×41 Alertas"}
+{"projeto":"pixel-7","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 41×41 Novo aquário"}
+{"projeto":"pixel-7","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 100×30 Fiz TPA · 9 L"}
+{"projeto":"pixel-7","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 100×30 Fiz TPA · 5 L"}
+{"projeto":"pixel-7","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 100×30 Fiz TPA · 2 L"}
+{"projeto":"pixel-7","teste":"registar: escolha","tipo":"alvo<44","texto":"registar: 88×39 Cancelar"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 101×41 Aquários"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 41×41 Opções do aquário"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 88×30 Registos"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 88×30 Gráficos"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 88×30 Fauna"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 88×30 Fotos"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 85×39 Voltar"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 145×36 AQUARIUS 20 L"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 69×36 Betta"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 97×36 10% · 3 L"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 100×36 20% · 6 L"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 111×36 25% · 7,5 L"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 100×36 30% · 9 L"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 106×36 50% · 15 L"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 204×36 AMTRA Care · 0,25 ml/L"}
+{"projeto":"pixel-7","teste":"form tpa","tipo":"alvo<44","texto":"form-tpa: 93×36 Nenhum"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 101×41 Aquários"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 41×41 Opções do aquário"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 88×30 Registos"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 88×30 Gráficos"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 88×30 Fauna"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 88×30 Fotos"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 85×39 Voltar"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 145×36 AQUARIUS 20 L"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 69×36 Betta"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 188×32 Teste de gotas"}
+{"projeto":"pixel-7","teste":"form medicao","tipo":"alvo<44","texto":"form-medicao: 188×32 Tira de teste"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 101×41 Aquários"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 41×41 Opções do aquário"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 88×30 Registos"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 88×30 Gráficos"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 88×30 Fauna"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 88×30 Fotos"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 85×39 Voltar"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 145×36 AQUARIUS 20 L"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 69×36 Betta"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 87×36 Entrada"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 118×36 Nascimento"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 75×36 Morte"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 131×36 Transferência"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 72×36 Saída"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 40×32 Menos"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 40×32 Mais"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 147×36 Betta splendens"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 182×36 Camarão Red Cherry"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 148×36 Corydora panda"}
+{"projeto":"pixel-7","teste":"form fauna","tipo":"alvo<44","texto":"form-fauna: 70×36 Neon"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 101×41 Aquários"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 41×41 Opções do aquário"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 88×30 Registos"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 88×30 Gráficos"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 88×30 Fauna"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 88×30 Fotos"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 85×39 Voltar"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 145×36 AQUARIUS 20 L"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 69×36 Betta"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 79×36 Peixes"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 85×36 Plantas"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 123×36 Maternidade"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 72×36 Outro"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 93×36 Nenhum"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 146×36 Medição · 5 nov"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 201×36 Corydora panda · 4 nov"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 139×36 TPA 9 L · 3 nov"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 143×36 Medição · 1 nov"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 152×36 Medição · 28 out"}
+{"projeto":"pixel-7","teste":"form foto","tipo":"alvo<44","texto":"form-foto: 144×36 TPA 9 L · 27 out"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 101×41 Aquários"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 41×41 Opções do aquário"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 88×30 Registos"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 88×30 Gráficos"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 88×30 Fauna"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 88×30 Fotos"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 85×39 Voltar"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 244×36 Principal (Aquatlantis Vienna)"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 145×36 AQUARIUS 20 L"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 69×36 Betta"}
+{"projeto":"pixel-7","teste":"form ninhada","tipo":"alvo<44","texto":"form-ninhada: 229×36 fêmea cauda amarela/preta"}
+{"projeto":"pixel-7","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 41×41 Alertas"}
+{"projeto":"pixel-7","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 41×41 Novo aquário"}
+{"projeto":"pixel-7","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 100×30 Fiz TPA · 9 L"}
+{"projeto":"pixel-7","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 100×30 Fiz TPA · 5 L"}
+{"projeto":"pixel-7","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 100×30 Fiz TPA · 2 L"}
+{"projeto":"pixel-7","teste":"novo aquário","tipo":"alvo<44","texto":"form-aquario: 88×39 Cancelar"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: tpa-litros sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"TPA: tpa-litros sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"TPA: Notas sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-nh3_nh4 sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-no2 sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-no3 sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-ph sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-gh sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-kh sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Medição: med-temperatura_c sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Medição: Notas sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: fauna-especie sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Fauna: Notas sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: ninhada-mae sem enterkeyhint"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"autocomplete","texto":"Ninhada: ninhada-mae sem autocomplete"}
+{"projeto":"pixel-7","teste":"inputs: inputmode, enterkeyhint, autocomplete","tipo":"enterkeyhint","texto":"Ninhada: Notas sem enterkeyhint"}

@@ -59,7 +59,7 @@ export function Galeria({ aquarioId }: { aquarioId: string }) {
         <div key={filtro} className="step-forward">
           {grupos.map((g) => (
             <section key={g.dia} className="mb-5">
-              <h3 className="mb-1.5 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">{cabecalhoDia(g.data)}</h3>
+              <h2 className="mb-1.5 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">{cabecalhoDia(g.data)}</h2>
               <div className="grid grid-cols-3 gap-0.5 overflow-hidden rounded-[14px]">
                 {g.eventos.map((e, i) => (
                   <button

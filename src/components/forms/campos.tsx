@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
 import { IconMais } from "@/components/icons";
 import { cx } from "@/lib/cx";
+import { vibrar } from "@/lib/haptic";
 import type { Aquario } from "@/lib/tipos";
 
 /** Grupo estilo "inset grouped" do iOS. */
@@ -30,8 +31,12 @@ export function Linha({ rotulo, children, htmlFor }: { rotulo: ReactNode; childr
 }
 
 export function InputLinha({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
+  const texto = !props.type || props.type === "text";
   return (
     <input
+      autoComplete="off"
+      autoCapitalize={texto && props.inputMode !== "decimal" && props.inputMode !== "url" ? "sentences" : "off"}
+      autoCorrect={texto && !props.inputMode ? "on" : "off"}
       {...props}
       className={cx(
         "h-[48px] w-full min-w-0 bg-transparent text-right text-[17px] text-text outline-none placeholder:text-text-3",
@@ -55,6 +60,8 @@ export function InputNumero({
   return (
     <span className="flex items-center gap-1.5">
       <InputLinha
+        autoCorrect="off"
+        autoCapitalize="off"
         {...props}
         inputMode="decimal"
         value={valor}
@@ -72,6 +79,8 @@ export function AreaNotas({ valor, onValor, placeholder = "Notas" }: { valor: st
       value={valor}
       onChange={(e) => onValor(e.target.value)}
       placeholder={placeholder}
+      enterKeyHint="enter"
+      autoCapitalize="sentences"
       rows={3}
       className="block w-full resize-none bg-transparent px-4 py-3 text-[17px] outline-none placeholder:text-text-3"
     />
@@ -111,9 +120,12 @@ export function Segmentado<T extends string>({
           type="button"
           role="tab"
           aria-selected={o.valor === valor}
-          onClick={() => onValor(o.valor)}
+          onClick={() => {
+            if (o.valor !== valor) vibrar("leve");
+            onValor(o.valor);
+          }}
           className={cx(
-            "relative z-10 h-8 truncate px-1 text-[13px] font-medium transition-colors duration-[var(--dur-quick)]",
+            "relative z-10 h-11 truncate px-1 text-[14px] font-medium transition-colors duration-[var(--dur-quick)]",
             o.valor === valor ? "text-text" : "text-text-2",
           )}
         >
@@ -153,7 +165,7 @@ export function Chips<T extends string>({
             aria-pressed={ativo}
             onClick={() => onValor(o.valor)}
             className={cx(
-              "pressable h-9 shrink-0 whitespace-nowrap rounded-full px-4 text-[15px] font-medium",
+              "pressable h-11 shrink-0 whitespace-nowrap rounded-full px-4 text-[15px] font-medium",
               escuro
                 ? ativo
                   ? "bg-white text-[#0a3247]"
@@ -206,6 +218,7 @@ export function Stepper({
   const mudar = (d: number) => {
     const n = Math.min(max, Math.max(min, valor + d));
     if (n !== valor) {
+      vibrar("leve");
       onValor(n);
       setK((x) => x + 1);
     }
@@ -217,7 +230,7 @@ export function Stepper({
         aria-label="Menos"
         onClick={() => mudar(-1)}
         disabled={valor <= min}
-        className="pressable flex h-8 w-10 items-center justify-center rounded-l-[9px] bg-surface-3 text-[20px] disabled:opacity-40"
+        className="pressable flex h-11 w-11 items-center justify-center rounded-l-[11px] bg-surface-3 text-[22px] disabled:opacity-40"
       >
         −
       </button>
@@ -230,7 +243,7 @@ export function Stepper({
         aria-label="Mais"
         onClick={() => mudar(1)}
         disabled={valor >= max}
-        className="pressable flex h-8 w-10 items-center justify-center rounded-r-[9px] bg-surface-3 disabled:opacity-40"
+        className="pressable flex h-11 w-11 items-center justify-center rounded-r-[11px] bg-surface-3 disabled:opacity-40"
       >
         <IconMais size={18} strokeWidth={2.2} />
       </button>
@@ -250,6 +263,7 @@ export function Interruptor({
   disabled?: boolean;
   label: string;
 }) {
+  // Pista com o tamanho do UISwitch (51×31) dentro de uma área de toque de 44 px
   return (
     <button
       type="button"
@@ -257,16 +271,27 @@ export function Interruptor({
       aria-checked={ligado}
       aria-label={label}
       disabled={disabled}
-      onClick={() => onMudar(!ligado)}
-      className={cx(
-        "relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors duration-[var(--dur-std)] ease-[var(--ease-out)] disabled:opacity-40",
-        ligado ? "bg-ok" : "bg-surface-3",
-      )}
+      onClick={() => {
+        vibrar("leve");
+        onMudar(!ligado);
+      }}
+      className="group flex h-11 w-[55px] shrink-0 items-center justify-center disabled:opacity-40"
     >
       <span
-        className="absolute left-[2px] top-[2px] h-[27px] w-[27px] rounded-full bg-white shadow-[0_2px_6px_rgb(0_0_0/0.2)] transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)]"
-        style={{ transform: `translateX(${ligado ? 20 : 0}px)` }}
-      />
+        className={cx(
+          "relative h-[31px] w-[51px] rounded-full transition-colors duration-[var(--dur-std)] ease-[var(--ease-out)]",
+          ligado ? "bg-ok" : "bg-surface-3",
+        )}
+      >
+        {/* Ao premir, o botão estica (como o UISwitch) para o lado de dentro */}
+        <span
+          className={cx(
+            "absolute left-[2px] top-[2px] h-[27px] w-[27px] rounded-full bg-white shadow-[0_2px_6px_rgb(0_0_0/0.2)]",
+            "transition-[translate,width] duration-[var(--dur-std)] ease-[var(--ease-out)] group-active:w-[33px]",
+            ligado ? "translate-x-[20px] group-active:translate-x-[14px]" : "translate-x-0",
+          )}
+        />
+      </span>
     </button>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useMemo } from "react";
 import { IconeAlerta } from "@/components/alertas/icone-alerta";
 import { IconVisto } from "@/components/icons";
@@ -47,7 +48,9 @@ export default function AlertasPage() {
         )
       }
     >
-      {alertas.isPending ? (
+      {alertas.isError && !alertas.data ? (
+        <EstadoErro onRetry={() => void alertas.refetch()} aTentar={alertas.isFetching} />
+      ) : alertas.isPending ? (
         <div className="skeleton-delay">
           <SkeletonLista linhas={5} />
         </div>
@@ -59,7 +62,7 @@ export default function AlertasPage() {
       ) : (
         grupos.map((g, gi) => (
           <section key={g.dia} className="enter-up mb-5" style={{ ["--i" as string]: Math.min(gi, 6) }}>
-            <h3 className="mb-1.5 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">{cabecalhoDia(g.data)}</h3>
+            <h2 className="mb-1.5 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">{cabecalhoDia(g.data)}</h2>
             <div className="overflow-hidden rounded-[14px] bg-surface">
               {g.itens.map((a) => (
                 <button

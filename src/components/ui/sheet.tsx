@@ -1,76 +1,23 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Drawer } from "vaul";
+import dynamic from "next/dynamic";
+import { useState, type ComponentProps, type ReactNode } from "react";
 import { cx } from "@/lib/cx";
 
 /**
- * Bottom sheet (vaul). Usa a curva de sheet do iOS do próprio vaul
- * (500ms, cubic-bezier(.32,.72,0,1)) e escala o fundo como no iOS
- * (shouldScaleBackground + [data-vaul-drawer-wrapper] no shell).
+ * Bottom sheet (vaul). Carregada a pedido: o vaul/radix (~70 KB) sai do
+ * bundle inicial e chega logo a seguir à hidratação, antes de ser preciso.
  */
-export function Sheet({
-  open,
-  onOpenChange,
-  titulo,
-  esquerda,
-  direita,
-  rodape,
-  children,
-  nested,
-  onAnimationEnd,
-  className,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  titulo: ReactNode;
-  esquerda?: ReactNode;
-  direita?: ReactNode;
-  rodape?: ReactNode;
-  children: ReactNode;
-  nested?: boolean;
-  onAnimationEnd?: (open: boolean) => void;
-  className?: string;
-}) {
-  const Root = nested ? Drawer.NestedRoot : Drawer.Root;
-  return (
-    <Root
-      open={open}
-      onOpenChange={onOpenChange}
-      shouldScaleBackground={!nested}
-      noBodyStyles
-      repositionInputs
-      onAnimationEnd={onAnimationEnd}
-    >
-      <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-40" />
-        <Drawer.Content
-          aria-describedby={undefined}
-          className={cx(
-            "fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[calc(100dvh-var(--safe-top)-10px)] max-w-lg flex-col",
-            "rounded-t-[20px] bg-bg outline-none",
-            className,
-          )}
-        >
-          <Drawer.Handle className="!mt-2 !h-[5px] !w-9 !bg-[var(--text-3)] !opacity-40" />
-          <div className="grid h-12 shrink-0 grid-cols-[1fr_auto_1fr] items-center px-2">
-            <div className="flex justify-start">{esquerda}</div>
-            <Drawer.Title className="truncate text-center text-[17px] font-semibold">{titulo}</Drawer.Title>
-            <div className="flex justify-end">{direita}</div>
-          </div>
-          <div className="scroll-area min-h-0 flex-1 px-4 pb-4" data-vaul-no-drag={undefined}>
-            {children}
-          </div>
-          {rodape && (
-            <div className="shrink-0 border-t border-separator bg-bg px-4 pb-[calc(var(--safe-bottom)+12px)] pt-3">
-              {rodape}
-            </div>
-          )}
-          {!rodape && <div className="h-[var(--safe-bottom)] shrink-0" />}
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Root>
-  );
+const SheetDinamica = dynamic(() => import("./sheet-impl"), { ssr: false });
+
+/**
+ * Só monta (e só descarrega o vaul) na primeira vez que abre; o 1.º toque
+ * no ecrã já o pré-carrega (app-shell), por isso abre sem esperar.
+ */
+export function Sheet(props: ComponentProps<typeof SheetDinamica>) {
+  const [usada, setUsada] = useState(props.open);
+  if (props.open && !usada) setUsada(true);
+  return usada ? <SheetDinamica {...props} /> : null;
 }
 
 export function BotaoSheet({
@@ -95,7 +42,7 @@ export function BotaoSheet({
       onClick={onClick}
       disabled={disabled}
       className={cx(
-        "pressable rounded-lg px-2 py-2 text-[17px] text-accent disabled:opacity-40",
+        "pressable flex min-h-11 items-center rounded-lg px-2 text-[17px] text-accent disabled:opacity-40",
         forte && "font-semibold",
       )}
     >

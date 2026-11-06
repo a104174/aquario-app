@@ -16,14 +16,15 @@
   --surface-3: #e6edf1;
   --text: #0c1a24;
   --text-2: #5b6b78;
-  --text-3: #8b9aa5;
+  --text-3: #6a7884;
   --separator: rgb(12 26 36 / 0.1);
-  --accent: #0b8aa3;
+  --accent: #07758b; /* 5,35:1 em branco (WCAG AA) */
   --accent-soft: rgb(11 138 163 / 0.12);
+  --accent-forte: #066577; /* texto sobre accent-soft (≥ 4,5:1) */
   --accent-contrast: #ffffff;
-  --danger: #d6453d;
+  --danger: #c0352e;
   --danger-soft: rgb(214 69 61 / 0.12);
-  --warning: #c77c0a;
+  --warning: #9a5b00;
   --warning-soft: rgb(199 124 10 / 0.14);
   --ok: #1f9d55;
   --ok-soft: rgb(31 157 85 / 0.12);
@@ -74,10 +75,11 @@
     --surface-3: #1b313f;
     --text: #e6f1f6;
     --text-2: #8fa6b3;
-    --text-3: #5f7685;
+    --text-3: #7e94a2;
     --separator: rgb(230 241 246 / 0.1);
     --accent: #3cc6dc;
     --accent-soft: rgb(60 198 220 / 0.14);
+    --accent-forte: #3cc6dc;
     --accent-contrast: #04121a;
     --danger: #ff6b5f;
     --danger-soft: rgb(255 107 95 / 0.14);
@@ -110,6 +112,7 @@
   --color-separator: var(--separator);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-forte: var(--accent-forte);
   --color-accent-contrast: var(--accent-contrast);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
@@ -395,26 +398,32 @@
     }
   }
 
-  /* Ambient do header: luz da água a derivar devagar (gás/fluido: lento) */
+  /* Ambient do header: luz da água a derivar devagar (gás/fluido: lento).
+   * Só transform num pseudo-elemento (compositor) — animar
+   * background-position obrigava a repintar o header em cada frame. */
   .header-ambient {
-    background:
-      radial-gradient(120% 80% at 20% -10%, rgb(127 230 242 / 0.16), transparent 60%),
-      linear-gradient(180deg, var(--header-from), var(--header-to));
-    background-size:
-      200% 100%,
-      100% 100%;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--header-from), var(--header-to));
+  }
+  .header-ambient::before {
+    content: "";
+    position: absolute;
+    inset: -30% -60% auto -60%;
+    height: 160%;
+    z-index: -1;
+    background: radial-gradient(60% 50% at 30% 20%, rgb(127 230 242 / 0.16), transparent 70%);
     animation: caustics 14s var(--ease-in-out) infinite alternate;
+    will-change: transform;
+    pointer-events: none;
   }
   @keyframes caustics {
     from {
-      background-position:
-        0% 0%,
-        0 0;
+      transform: translateX(-12%);
     }
     to {
-      background-position:
-        100% 0%,
-        0 0;
+      transform: translateX(12%);
     }
   }
 }
@@ -559,7 +568,7 @@ html.no-vt[data-nav="tab"] .screen-enter {
   .shake,
   .grafico-linha,
   .grafico-area,
-  .header-ambient,
+  .header-ambient::before,
   .toast-enter,
   .toast-exit,
   .viewer-enter,
@@ -575,5 +584,183 @@ html.no-vt[data-nav="tab"] .screen-enter {
   }
   ::view-transition-new(*) {
     animation-direction: reverse !important;
+  }
+  /* sem morph de posição/tamanho: o grupo salta, só o conteúdo faz fade */
+  ::view-transition-group(*) {
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Teclado virtual (lib/teclado.ts define --vv-h, --kb e
+ *  html[data-teclado="aberto"]).
+ *  Motion: a tab bar sai a acelerar (200ms ease-in) e volta a
+ *  desacelerar (280ms ease-out); a sheet sobe com `translate`
+ *  (só transform, compõe com o transform do vaul).
+ * ------------------------------------------------------------------ */
+.altura-app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--vv-h, 100dvh);
+}
+
+.tabbar {
+  transition:
+    transform var(--dur-std) var(--ease-out),
+    opacity var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .tabbar {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: var(--dur-exit);
+  transition-timing-function: var(--ease-in);
+}
+/* Sem tab bar, o conteúdo não precisa da margem dela */
+html[data-teclado] .conteudo-ecra {
+  padding-bottom: 24px;
+}
+
+.toasts {
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 12px);
+  transition: bottom var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .toasts {
+  bottom: calc(var(--kb, 0px) + 12px);
+}
+
+.sheet-conteudo {
+  translate: 0 calc(-1 * var(--kb, 0px));
+  max-height: calc(var(--vv-h, 100dvh) - var(--safe-top) - 10px);
+  transition: translate var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .rodape-sheet {
+  padding-bottom: 12px;
+}
+
+/* Login: o hero encolhe para o formulário ficar acima do teclado */
+.hero-login-icone {
+  transition:
+    transform var(--dur-std) var(--ease-out),
+    opacity var(--dur-std) var(--ease-out);
+}
+html[data-teclado] .hero-login-icone {
+  transform: scale(0.6);
+  opacity: 0;
+  height: 0;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ *  Gestos
+ * ------------------------------------------------------------------ */
+/* Interface: sem zoom por duplo toque (mas o pinch de acessibilidade
+ * continua a funcionar — não usamos user-scalable=no) */
+html {
+  touch-action: manipulation;
+}
+
+/* Puxar para atualizar */
+.ptr {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--safe-top) + 50px);
+  z-index: 15;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.15);
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.6);
+  pointer-events: none;
+}
+.ptr-pop {
+  animation: ptr-pop var(--dur-std) var(--ease-pop);
+}
+@keyframes ptr-pop {
+  50% {
+    scale: 1.15;
+  }
+}
+.ptr[data-estado="a-atualizar"] svg {
+  animation: ptr-roda 0.8s linear infinite;
+}
+@keyframes ptr-roda {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* Toque longo: antecipação ("levantar") enquanto o dedo está pousado */
+.a-levantar {
+  transform: scale(0.97);
+  transition: transform 450ms var(--ease-in-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptr-pop,
+  .ptr[data-estado="a-atualizar"] svg {
+    animation: none;
+  }
+  .a-levantar {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Paisagem: o fundo (oceano, cartões da tab bar) vai até às bordas,
+ *  mas o conteúdo afasta-se do notch/Dynamic Island como no iOS.
+ * ------------------------------------------------------------------ */
+.conteudo-ecra {
+  padding-left: max(16px, calc(var(--safe-left) + 4px));
+  padding-right: max(16px, calc(var(--safe-right) + 4px));
+}
+.header-ambient {
+  padding-left: max(20px, calc(var(--safe-left) + 8px));
+  padding-right: max(20px, calc(var(--safe-right) + 8px));
+}
+.barra-header {
+  padding-left: max(8px, var(--safe-left));
+  padding-right: max(8px, var(--safe-right));
+}
+.tabbar {
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+}
+.toasts {
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  /* pouco espaço vertical: large title mais baixo, conteúdo com largura de leitura */
+  .header-ambient {
+    padding-bottom: 28px;
+  }
+  /* tab bar compacta do iOS em paisagem: ícone ao lado do rótulo */
+  :root {
+    --tabbar-h: 44px;
+  }
+  .tabbar-grelha {
+    max-width: 640px;
+  }
+  .tabbar .tab {
+    flex-direction: row;
+    gap: 6px;
+    font-size: 13px;
+  }
+  .tabbar .tab > span {
+    transform: scale(0.85);
+  }
+  .conteudo-ecra > * {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

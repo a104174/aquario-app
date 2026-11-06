@@ -131,7 +131,7 @@ export function CartaoAquario({
       <button
         type="button"
         onClick={() => fizTpa.registar(aquario.id)}
-        className="pressable absolute bottom-2.5 right-3 h-8 rounded-full bg-accent-soft px-3 text-[14px] font-semibold text-accent"
+        className="pressable absolute bottom-1.5 right-2 h-11 rounded-full bg-accent-soft px-4 text-[14px] font-semibold text-accent"
       >
         {sugestao ? `Fiz TPA · ${num(sugestao.litros, 1)} L` : "Fiz TPA"}
       </button>

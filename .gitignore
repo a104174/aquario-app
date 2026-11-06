@@ -44,3 +44,13 @@ next-env.d.ts
 supabase/.temp
 supabase/.branches
 !.env.example
+
+# testes
+/test-results
+/playwright-report
+
+# reviews: capturas completas só do ciclo 0 (antes) e do final; vídeos só do final
+reviews/*/ciclo-*/*/
+!reviews/*/ciclo-0/*/
+reviews/*/ciclo-0/*/videos/
+reviews/*/dbg/

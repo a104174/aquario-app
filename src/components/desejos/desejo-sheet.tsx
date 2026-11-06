@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FotoImg } from "@/components/eventos/foto-img";
+import { PainelCamara, useCamara } from "@/components/forms/camara";
 import { AreaNotas, ErroForm, Grupo, InputLinha, InputNumero, Linha } from "@/components/forms/campos";
 import { Button } from "@/components/ui/button";
 import { BotaoSheet, Sheet } from "@/components/ui/sheet";
@@ -47,6 +48,7 @@ function Form({ inicial, onFeito }: { inicial?: Desejo; onFeito: () => void }) {
   const [erro, setErro] = useState<string | null>(null);
   const galeria = useRef<HTMLInputElement>(null);
   const camara = useRef<HTMLInputElement>(null);
+  const cam = useCamara(camara);
 
   useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview]);
 
@@ -114,10 +116,20 @@ function Form({ inicial, onFeito }: { inicial?: Desejo; onFeito: () => void }) {
         <button type="button" onClick={() => galeria.current?.click()} className="pressable h-11 rounded-xl bg-surface text-[15px] font-medium text-accent">
           Galeria
         </button>
-        <button type="button" onClick={() => camara.current?.click()} className="pressable h-11 rounded-xl bg-surface text-[15px] font-medium text-accent">
+        <button type="button" onClick={cam.abrir} className="pressable h-11 rounded-xl bg-surface text-[15px] font-medium text-accent">
           Câmara
         </button>
       </div>
+
+      <PainelCamara
+        painel={cam.painel}
+        onContinuar={cam.continuar}
+        onFechar={cam.fechar}
+        onGaleria={() => {
+          cam.fechar();
+          galeria.current?.click();
+        }}
+      />
 
       <Grupo>
         <Linha rotulo="Item" htmlFor="desejo-item">

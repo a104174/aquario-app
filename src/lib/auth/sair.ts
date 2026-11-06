@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase/client";
 /** Termina sessão e apaga todos os dados locais (cache, fotos pendentes). */
 export async function sair(qc: QueryClient) {
   try {
-    await supabase().auth.signOut({ scope: "local" });
+    await (await supabase()).auth.signOut({ scope: "local" });
   } catch {
     // offline: a sessão local é apagada na mesma
   }

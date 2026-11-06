@@ -1,5 +1,6 @@
 "use client";
 
+import { EstadoErro } from "@/components/ui/estado-erro";
 import { useState } from "react";
 import { IconMais } from "@/components/icons";
 import { ProdutoSheet } from "@/components/produtos/produto-sheet";
@@ -26,7 +27,9 @@ export default function ProdutosPage() {
         </BotaoHeader>
       }
     >
-      {produtos.isPending ? (
+      {produtos.isError && !produtos.data ? (
+        <EstadoErro onRetry={() => void produtos.refetch()} aTentar={produtos.isFetching} />
+      ) : produtos.isPending ? (
         <div className="skeleton-delay">
           <SkeletonLista linhas={3} />
         </div>
