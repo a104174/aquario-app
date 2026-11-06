@@ -14,6 +14,7 @@ export interface Definicoes {
 
 export interface Aquario {
   id: UUID;
+  foto_capa_id?: UUID | null;
   nome: string;
   volume_bruto_l: number | null;
   volume_util_l: number | null;
@@ -121,10 +122,15 @@ export interface Medicao extends Partial<Record<Parametro, number | null>> {
   notas: string | null;
 }
 
-export type TipoFauna = "entrada" | "nascimento" | "morte" | "transferencia" | "saida";
+export type TipoFauna = "entrada" | "nascimento" | "morte" | "transferencia" | "saida" | "detalhe";
 
 export interface FaunaEvento {
   id: UUID;
+  variedade?: string | null;
+  nome_personalizado?: string | null;
+  foto_destaque_id?: UUID | null;
+  grupo_proprio?: boolean;
+  grupo_id?: UUID | null;
   aquario_id: UUID;
   data: string;
   tipo: TipoFauna;

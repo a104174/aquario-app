@@ -4,6 +4,7 @@ import {
   QueryClient,
   useMutation,
   useQuery,
+  useQueryClient,
   type MutationKey,
 } from "@tanstack/react-query";
 import { useUserId } from "@/lib/auth/session";
@@ -119,23 +120,28 @@ function semCamposLocais<T extends object>(linha: T) {
   return copia;
 }
 
+async function guardarFotoNoServidor(foto: Foto, blob?: Blob, thumb?: Blob) {
+  const cliente = await supabase();
+  const enviar = async (path: string, b: Blob) => {
+    const { error } = await cliente.storage.from("fotos").upload(path, b, {
+      upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000",
+    });
+    if (error) throw error;
+  };
+  if (blob) await enviar(foto.storage_path, blob);
+  if (thumb && foto.thumb_path) await enviar(foto.thumb_path, thumb);
+  const { error } = await cliente.from("fotos").upsert(semCamposLocais(foto));
+  if (error) throw error;
+  if (blob) await semearCacheFoto(foto.storage_path, blob);
+  if (thumb && foto.thumb_path) await semearCacheFoto(foto.thumb_path, thumb);
+}
+
 async function guardarNoServidor<C extends Colecao>(c: C, linha: Linhas[C]) {
   if (c === "fotos") {
     const foto = linha as Foto;
     const blob = await lerFotoPendente(foto.id);
     const thumb = foto.thumb_path ? await lerFotoPendente(chaveThumb(foto.id)) : undefined;
-    const enviar = async (path: string, b: Blob) => {
-      const { error } = await (await supabase())
-        .storage.from("fotos")
-        .upload(path, b, { upsert: true, contentType: b.type || "image/jpeg", cacheControl: "31536000" });
-      if (error) throw error;
-    };
-    if (blob) await enviar(foto.storage_path, blob);
-    if (thumb && foto.thumb_path) await enviar(foto.thumb_path, thumb);
-    const { error } = await (await supabase()).from("fotos").upsert(semCamposLocais(foto));
-    if (error) throw error;
-    if (blob) await semearCacheFoto(foto.storage_path, blob);
-    if (thumb && foto.thumb_path) await semearCacheFoto(foto.thumb_path, thumb);
+    await guardarFotoNoServidor(foto, blob, thumb);
     if (blob || thumb) await apagarFotoPendente(foto.id);
     return;
   }
@@ -276,6 +282,10 @@ export function criarQueryClient() {
         onSettled: () => {
           // Só refaz o fetch quando já não há nada pendente nesta coleção
           if (qc.isMutating({ mutationKey: [c] }) <= 1) void qc.invalidateQueries({ queryKey: [c] });
+          if (c === "fotos" && acao === "apagar") {
+            void qc.invalidateQueries({ queryKey: ["fauna"] });
+            void qc.invalidateQueries({ queryKey: ["aquarios"] });
+          }
         },
       });
     }
@@ -382,4 +392,24 @@ export function useFotoUrl(
       return data.signedUrl;
     },
   });
+}
+
+/** Atribuições de grupo e saídas só ficam visíveis depois de o servidor validar o saldo. */
+export function useGuardarFaunaConfirmada() {
+  const qc = useQueryClient();
+  return useMutation({
+    networkMode: "always",
+    retry: false,
+    mutationFn: (evento: FaunaEvento) => guardarNoServidor("fauna", evento),
+    onSuccess: async (_v, evento) => {
+      await qc.cancelQueries({ queryKey: ["fauna"] });
+      qc.setQueryData<FaunaEvento[]>(["fauna"], (lista) => aplicar("fauna", lista ?? [], "guardar", evento));
+      void qc.invalidateQueries({ queryKey: ["fauna"] });
+    },
+  });
+}
+
+/** O formulário de fauna aguarda o upload antes de criar a referência. */
+export function guardarFotoFauna(foto: Foto, imagem: Blob, miniatura: Blob) {
+  return guardarFotoNoServidor(foto, imagem, miniatura);
 }

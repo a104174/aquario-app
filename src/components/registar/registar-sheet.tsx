@@ -30,7 +30,7 @@ export const TIPOS_REGISTO: {
 const FORM_ID = "form-registo";
 
 export function RegistarSheet() {
-  const { aberto, tipo, aquarioId, editarId, evento } = useUI((e) => e.registar);
+  const { aberto, tipo, aquarioId, editarId, evento, faunaContexto } = useUI((e) => e.registar);
   const { data: aquarios } = useColecao("aquarios");
   const tpas = useColecao("tpas").data;
   const medicoes = useColecao("medicoes").data;
@@ -39,6 +39,7 @@ export function RegistarSheet() {
   const ninhadas = useColecao("ninhadas").data;
   const [direcao, setDirecao] = useState<"forward" | "back">("forward");
   const [sessao, setSessao] = useState(0);
+  const [aGuardarFauna, setAGuardarFauna] = useState(false);
 
   const info = TIPOS_REGISTO.find((t) => t.tipo === tipo);
   const editando = !!editarId;
@@ -55,14 +56,14 @@ export function RegistarSheet() {
   if (tipo === "medicao")
     form = <MedicaoForm {...props} inicial={medicoes?.find((x) => x.id === editarId) as Medicao | undefined} />;
   if (tipo === "fauna")
-    form = <FaunaForm {...props} inicial={fauna?.find((x) => x.id === editarId) as FaunaEvento | undefined} />;
+    form = <FaunaForm key={editarId ?? "nova-fauna"} {...props} inicial={fauna?.find((x) => x.id === editarId) as FaunaEvento | undefined} contexto={faunaContexto} editarId={editarId} onGuardar={setAGuardarFauna} />;
   if (tipo === "ninhada") form = <NinhadaForm {...props} inicial={ninhadas?.find((x) => x.id === editarId)} />;
   if (tipo === "foto") form = <FotoForm {...props} evento={evento} inicial={fotos?.find((x) => x.id === editarId) as Foto | undefined} />;
 
   return (
     <Sheet
       open={aberto}
-      onOpenChange={(o) => !o && fecharRegistar()}
+      onOpenChange={(o) => !o && !aGuardarFauna && fecharRegistar()}
       onAnimationEnd={(o) => {
         if (!o) {
           // Depois de fechar, a próxima abertura começa do zero
@@ -71,11 +72,12 @@ export function RegistarSheet() {
           setSessao((s) => s + 1);
         }
       }}
-      titulo={info ? (editando ? `Editar ${info.titulo.toLowerCase()}` : info.titulo) : "Registar"}
+      titulo={info ? (tipo === "fauna" && faunaContexto?.detalhar ? "Detalhar grupo" : editando ? `Editar ${info.titulo.toLowerCase()}` : info.titulo) : "Registar"}
       esquerda={
-        info && !editando ? (
+        info && !editando && !faunaContexto ? (
           <BotaoSheet
             onClick={() => {
+              if (aGuardarFauna) return;
               setDirecao("back");
               escolherTipoRegisto(null);
             }}
@@ -85,12 +87,12 @@ export function RegistarSheet() {
             </span>
           </BotaoSheet>
         ) : (
-          <BotaoSheet onClick={fecharRegistar}>Cancelar</BotaoSheet>
+          <BotaoSheet onClick={() => { if (!aGuardarFauna) fecharRegistar(); }}>Cancelar</BotaoSheet>
         )
       }
       rodape={
         form ? (
-          <Button type="submit" form={FORM_ID} block>
+          <Button type="submit" form={FORM_ID} block loading={aGuardarFauna}>
             Guardar
           </Button>
         ) : undefined

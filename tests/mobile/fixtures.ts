@@ -125,6 +125,14 @@ export const test = base.extend<Opcoes & { app: Page; erros: string[] }>({
         }
         return route.fulfill({ status: 201, json: [] });
       }
+      if (req.method() === "PATCH") {
+        const id = url.searchParams.get("id")?.replace("eq.", "");
+        const patch = JSON.parse(req.postData() || "{}");
+        db[tabela] = (db[tabela] ?? []).map((x) => x.id === id ? { ...x, ...patch } : x);
+        const linhas = db[tabela].filter((x) => x.id === id);
+        const objeto = (req.headers()["accept"] ?? "").includes("vnd.pgrst.object");
+        return route.fulfill({ status: 200, json: objeto ? (linhas[0] ?? null) : linhas });
+      }
       if (req.method() === "DELETE") {
         const id = url.searchParams.get("id")?.replace("eq.", "");
         db[tabela] = (db[tabela] ?? []).filter((x) => x.id !== id);

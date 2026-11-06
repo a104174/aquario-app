@@ -5,13 +5,16 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
+import { CapaAquarioSheet } from "@/components/aquarios/capa-aquario-sheet";
+import { HeroAquario } from "@/components/aquarios/hero-aquario";
+import { FaunaAquario } from "@/components/fauna/fauna-aquario";
 import { Ninhadas } from "@/components/fauna/ninhadas";
 import { Chips, Segmentado } from "@/components/forms/campos";
 import { Timeline } from "@/components/eventos/timeline";
-import { IconMaisOpcoes, IconPeixe } from "@/components/icons";
+import { IconMaisOpcoes } from "@/components/icons";
 import { TIPOS_REGISTO } from "@/components/registar/registar-sheet";
 import { useNavegar } from "@/components/shell/nav";
-import { BotaoHeader, Screen, Seccao } from "@/components/shell/screen";
+import { BotaoHeader, Screen } from "@/components/shell/screen";
 import { confirmar, escolher } from "@/components/ui/action-sheet";
 import { Button } from "@/components/ui/button";
 import { SkeletonLista } from "@/components/ui/skeleton";
@@ -51,12 +54,14 @@ export function DetalheAquario() {
   const tpas = useColecao("tpas").data;
   const medicoes = useColecao("medicoes").data;
   const fauna = useColecao("fauna").data;
-  const fotos = useColecao("fotos").data;
+  const fotosQuery = useColecao("fotos");
+  const fotos = fotosQuery.data;
   const condicionadores = useColecao("produtos").data;
   const intervalo = useDefinicoes().data?.intervalo_tpa_dias ?? DEFINICOES_PADRAO.intervalo_tpa_dias;
   const apagar = useApagar("aquarios");
   const [vista, setVista] = useState<Vista>("registos");
   const [editar, setEditar] = useState(false);
+  const [escolherCapa, setEscolherCapa] = useState(false);
   const fizTpa = useFizTpa();
 
   const aquario = aquarios.data?.find((a) => a.id === id);
@@ -80,18 +85,24 @@ export function DetalheAquario() {
       </Screen>
     );
   }
+  // Só esperamos pelos metadados no primeiro carregamento. As imagens
+  // entram depois, num palco de altura fixa; offline usamos a cache ou o fallback.
+  if (fotosQuery.isLoading) return <DetalheSkeleton />;
 
   const tpa = ultimaTpa(tpas, id);
   const { estado, dias } = estadoTpa(tpa, intervalo);
   const populacao = faunaAtual(fauna, id);
+  const fotosDoAquario = (fotos ?? []).filter((f) => f.aquario_id === id);
 
   async function menu() {
+    const temFotos = fotosDoAquario.length > 0;
     const i = await escolher({
       titulo: aquario!.nome,
-      opcoes: [{ texto: "Editar aquário" }, { texto: "Apagar aquário", destrutivo: true }],
+      opcoes: [{ texto: "Editar aquário" }, ...(temFotos ? [{ texto: "Escolher capa" }] : []), { texto: "Apagar aquário", destrutivo: true }],
     });
     if (i === 0) setEditar(true);
-    if (i === 1) {
+    if (temFotos && i === 1) setEscolherCapa(true);
+    if (i === (temFotos ? 2 : 1)) {
       const ok = await confirmar({
         titulo: `Apagar “${aquario!.nome}”?`,
         mensagem: "Todas as TPAs, medições, fauna e fotos deste aquário serão apagadas.",
@@ -106,7 +117,9 @@ export function DetalheAquario() {
   }
 
   return (
-    <Screen
+    <HeroAquario
+      aquario={aquario}
+      fotos={fotosDoAquario}
       titulo={aquario.nome}
       voltar={{ href: "/aquarios", texto: "Aquários" }}
       acoes={
@@ -114,8 +127,8 @@ export function DetalheAquario() {
           <IconMaisOpcoes size={26} />
         </BotaoHeader>
       }
-      hero={
-        <div className="mt-4 grid grid-cols-3 gap-2">
+      indicadores={
+        <>
           <Estatistica
             rotulo="Última TPA"
             valor={dias === null ? "—" : textoHaDias(dias)}
@@ -126,7 +139,7 @@ export function DetalheAquario() {
             valor={aquario.volume_util_l != null ? `${num(aquario.volume_util_l, 1)} L` : aquario.volume_bruto_l != null ? `${num(aquario.volume_bruto_l, 1)} L` : "—"}
           />
           <Estatistica rotulo="Fauna" valor={populacao.total ? String(populacao.total) : "—"} />
-        </div>
+        </>
       }
     >
       {/* 1 toque: repete a última TPA */}
@@ -167,7 +180,7 @@ export function DetalheAquario() {
         onValor={setVista}
       />
 
-      <div key={vista} className="step-forward">
+      <div key={`${id}:${vista}`} className="step-forward">
         {vista === "registos" &&
           (eventos.length ? (
             <Timeline eventos={eventos} aquarios={aquarios.data} condicionadores={condicionadores} aquarioContexto={id} />
@@ -176,42 +189,23 @@ export function DetalheAquario() {
           ))}
         {vista === "graficos" && <Graficos aquarioId={id} />}
         {vista === "fotos" && <Galeria aquarioId={id} />}
-        {vista === "fauna" && <Ninhadas aquarioId={id} />}
         {vista === "fauna" && (
-          <Seccao titulo={populacao.lista.length ? plural(populacao.lista.length, "espécie", "espécies") : undefined}>
-            {populacao.lista.length ? (
-              <div className="overflow-hidden rounded-[14px] bg-surface">
-                {populacao.lista.map((f) => (
-                  <div
-                    key={f.especie}
-                    className="relative flex items-center gap-3 px-4 py-3 after:absolute after:bottom-0 after:left-[60px] after:right-0 after:h-px after:bg-separator last:after:hidden"
-                  >
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-accent">
-                      <IconPeixe size={18} />
-                    </span>
-                    <span className="flex-1 text-[16px]">{f.especie}</span>
-                    <span className="text-[17px] font-semibold tabular-nums">{f.quantidade}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <Vazio texto="Sem fauna registada." />
-            )}
-            <Button variant="secondary" block className="mt-3" onClick={() => abrirRegistar({ tipo: "fauna", aquarioId: id })}>
-              Registar evento de fauna
-            </Button>
-          </Seccao>
+          <>
+            <FaunaAquario id={id} fauna={fauna} fotos={fotos} />
+            <Ninhadas aquarioId={id} />
+          </>
         )}
       </div>
 
       <AquarioSheet open={editar} onOpenChange={setEditar} inicial={aquario} />
-    </Screen>
+      {escolherCapa && <CapaAquarioSheet aquario={aquario} fotos={fotosDoAquario} onFechar={() => setEscolherCapa(false)} />}
+    </HeroAquario>
   );
 }
 
 function Estatistica({ rotulo, valor, alerta }: { rotulo: string; valor: string; alerta?: boolean }) {
   return (
-    <div className={cx("rounded-[12px] px-3 py-2", alerta ? "bg-[rgb(255_107_95/0.25)]" : "bg-white/10")}>
+    <div className={cx("min-w-0 rounded-[12px] border px-2.5 py-2", alerta ? "border-[#ff9b8d]/40 bg-[#49282b]/85" : "border-white/15 bg-[#10232f]/80")}>
       <p className="text-[12px] text-white/70">
         {alerta && <span aria-hidden>⚠︎ </span>}
         {rotulo}

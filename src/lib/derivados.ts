@@ -52,12 +52,13 @@ export function serie(medicoes: Medicao[] | undefined, aquarioId: string, p: Par
   return pts.sort((a, b) => a.t - b.t);
 }
 
-const SINAL: Record<FaunaEvento["tipo"], 1 | -1> = {
+const SINAL: Record<FaunaEvento["tipo"], 1 | -1 | 0> = {
   entrada: 1,
   nascimento: 1,
   morte: -1,
   transferencia: -1,
   saida: -1,
+  detalhe: 0,
 };
 
 /** População atual por espécie (inclui transferências recebidas). */
