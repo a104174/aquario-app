@@ -25,7 +25,7 @@ export function FotosEmDestaque({ fotos, aquarios }: { fotos: Foto[]; aquarios: 
     <section className="mb-6">
       <div className="mb-2 flex items-center justify-between px-1">
         <h2 className="text-[13px] font-semibold uppercase tracking-wide text-text-2">Memórias recentes</h2>
-        <span className="text-[12px] text-text-3">{indice + 1}/{recentes.length}</span>
+        <span className="text-[12px] text-text-2">{indice + 1}/{recentes.length}</span>
       </div>
       <div className="overflow-hidden rounded-[18px] bg-surface shadow-[var(--shadow-card)]">
         <button

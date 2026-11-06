@@ -74,7 +74,7 @@ test.describe("performance (Chromium, CPU 4×)", () => {
     await assentar(app, 1200);
     await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
     const nav = await medir(app, async () => {
-      await app.getByText("Principal (Aquatlantis Vienna)").first().click();
+      await app.locator(`a[href="/aquario?id=a1"]`).filter({ hasText: "Principal (Aquatlantis Vienna)" }).first().click();
       await app.waitForURL(/aquario/);
     });
     const sheet = await medir(app, async () => {

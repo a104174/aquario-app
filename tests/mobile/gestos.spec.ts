@@ -18,7 +18,7 @@ test.afterEach(async ({ page }, info) => {
 test("transições: aquários → detalhe → voltar", async ({ app }, info) => {
   await app.goto("/");
   await assentar(app);
-  await app.getByText("Principal (Aquatlantis Vienna)").first().click();
+  await app.locator(`a[href="/aquario?id=a1"]`).filter({ hasText: "Principal (Aquatlantis Vienna)" }).first().click();
   await app.waitForURL(/aquario/);
   await assentar(app, 900);
   await app.getByRole("button", { name: /Aquários/ }).first().click();
