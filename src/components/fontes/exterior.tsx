@@ -4,6 +4,7 @@ import { IconChevronDireita, IconGota, IconTermometro } from "@/components/icons
 import { NavLink } from "@/components/shell/nav";
 import { num } from "@/lib/formato";
 import { useColecao } from "@/lib/query/dados";
+import { AguaTorneira, type DadosAgua } from "./agua-torneira";
 
 type Dia = { data: string; max: number; min: number };
 type Faixa = { min: number; max: number } | null;
@@ -19,7 +20,7 @@ export function Exterior({ destaque }: { destaque?: boolean }) {
   const { data: fontes, isPending } = useColecao("fontes");
   const meteo = fontes?.find((f) => f.tipo === "meteo" && f.ativo)?.resultado as { dias?: Dia[]; limites?: { max: number; min: number } } | null | undefined;
   const agua = fontes?.find((f) => f.tipo === "agere_qualidade" && f.ativo)?.resultado as
-    | { dureza_dgh?: Faixa; dureza_mg_caco3?: Faixa; ph?: Faixa; cloro_mg_l?: Faixa; trimestre?: string; ano?: string }
+    | DadosAgua
     | null
     | undefined;
   const faixa = (f: Faixa, d = 1) => (!f ? "—" : f.min === f.max ? num(f.max, d) : `${num(f.min, d)}–${num(f.max, d)}`);
@@ -72,8 +73,8 @@ export function Exterior({ destaque }: { destaque?: boolean }) {
               );
             })}
           </div>
-          {resumoAgua}
         </NavLink>
+        {agua && <AguaTorneira agua={agua} />}
       </section>
     );
   }

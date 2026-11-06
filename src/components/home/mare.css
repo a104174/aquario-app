@@ -45,3 +45,62 @@
   overscroll-behavior-x: contain;
 }
 .mare-album::-webkit-scrollbar { display: none; }
+
+.mare-acao {
+  --acao-tom: #79e6e5;
+  color: #edfafd;
+  background: radial-gradient(ellipse at 90% 4%, color-mix(in srgb, var(--acao-tom) 21%, transparent), transparent 69%),
+    linear-gradient(150deg, #142c38, #101f2a 78%);
+  border: 1px solid color-mix(in srgb, var(--acao-tom) 28%, #172733);
+  box-shadow: inset 0 1px #e9fcff0e, 0 3px 8px #04121a18;
+}
+.mare-acao[data-acao="medicao"] { --acao-tom: #a4bbff; }
+.mare-acao[data-acao="foto"] { --acao-tom: #efc4a1; }
+.mare-acao[data-acao="fauna"] { --acao-tom: #a0dfb5; }
+.mare-acao[data-acao="ninhada"] { --acao-tom: #e3bbf0; }
+.mare-acao-sinal {
+  color: var(--acao-tom);
+  border: 1px solid color-mix(in srgb, var(--acao-tom) 33%, transparent);
+}
+.mare-acao-arte {
+  position: absolute;
+  z-index: -1;
+  top: 1px;
+  right: -5px;
+  width: min(120px, 78%);
+  height: 75px;
+  pointer-events: none;
+  color: var(--acao-tom);
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  transition: transform var(--dur-std) var(--ease-out);
+}
+.mare-arte-contexto { stroke-opacity: .24; stroke-width: 1; }
+.mare-arte-sujeito { stroke-width: 1.6; fill: color-mix(in srgb, currentColor 10%, #172733); }
+.mare-arte-detalhe { stroke-width: 1.2; stroke-opacity: .82; }
+.mare-acao:active .mare-acao-arte { transform: translate(-2px, 2px) scale(.94); }
+@media (prefers-reduced-motion: reduce) {
+  .mare-acao-arte { transition: none; }
+  .mare-acao:active .mare-acao-arte { transform: none; }
+}
+
+.mare-agua {
+  background: radial-gradient(ellipse at 10% 0%, var(--accent-soft), transparent 67%), var(--surface);
+}
+.mare-agua-dado {
+  background: color-mix(in srgb, var(--surface-2) 85%, transparent);
+  border: 1px solid var(--separator);
+}
+.mare-ph-escala {
+  background: linear-gradient(90deg, #bf8157, #ad975f 35%, #55b9a8 50%, #6296bf 75%, #9282bb);
+}
+.mare-ph-neutro {
+  background: var(--text);
+  opacity: .75;
+}
+.mare-ph-faixa {
+  background: var(--surface);
+  border: 2px solid var(--text);
+  box-shadow: 0 0 0 1px var(--surface);
+}

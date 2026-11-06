@@ -1,4 +1,4 @@
-import { expect, test, verificarLayout } from "./fixtures";
+import { assentar, captura, expect, test, verificarLayout } from "./fixtures";
 
 test("Início e Aquários têm destinos próprios; Registar fica no centro", async ({ app, erros }, info) => {
   await app.goto("/");
@@ -51,5 +51,40 @@ test("Início liga a manutenção ao aquário e abre a memória selecionada", as
   await expect.poll(() => fotografia.locator("img").evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   await fotografia.click();
   await expect(app.getByRole("dialog", { name: "Fotografia" })).toBeVisible();
+  expect(erros).toEqual([]);
+});
+
+test("Início apresenta a água da rede e mantém os atalhos personalizados", async ({ app, erros }, info) => {
+  await app.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
+  await app.goto("/");
+  const atalhos = app.getByRole("region", { name: "Registo rápido" });
+  await expect(atalhos.getByRole("button", { name: /TPA/ })).toBeVisible();
+  await expect(atalhos.getByRole("button", { name: /Medição/ })).toBeVisible();
+  await expect(atalhos.getByRole("button", { name: /Foto/ })).toBeVisible();
+  await expect(atalhos.getByRole("button", { name: /Fauna/ })).toBeVisible();
+
+  const agua = app.getByRole("link", { name: /Água da torneira/ });
+  await expect(agua.getByRole("img", { name: /pH 6,5–8.*neutro em 7/ })).toBeVisible();
+  await expect(agua.getByText("1,9", { exact: true })).toBeVisible();
+  await expect(agua.getByText("0,24–1,52", { exact: true })).toBeVisible();
+
+  if (info.project.name === "iphone-15-pro-max") {
+    await atalhos.evaluate((el) => el.scrollIntoView({ block: "center" }));
+    await assentar(app, 250);
+    await captura(app, info, "registo-rapido-escuro");
+    await agua.evaluate((el) => el.scrollIntoView({ block: "center" }));
+    await assentar(app, 250);
+    await captura(app, info, "agua-torneira-escuro");
+  }
+
+  await agua.click();
+  await expect(app).toHaveURL(/\/fontes$/);
+  await app.getByRole("link", { name: "Início", exact: true }).click();
+  await atalhos.getByRole("button", { name: "Personalizar" }).click();
+  await atalhos.getByRole("button", { name: "Ninhada" }).click();
+  await atalhos.getByRole("button", { name: "Concluído" }).click();
+  await app.reload();
+  await atalhos.getByRole("button", { name: /Ninhada/ }).click();
+  await expect(app.getByRole("dialog", { name: "Ninhada" })).toBeVisible();
   expect(erros).toEqual([]);
 });
