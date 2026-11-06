@@ -28,11 +28,17 @@ export type EstadoStock = {
 export function estadoStock(p: Produto, tpas: Tpa[] | undefined): EstadoStock {
   if (p.tipo === "condicionador") {
     if (!p.volume_inicial) return { fracao: null, nivel: "desconhecido", resumo: "Sem volume da embalagem" };
-    const desde = p.data_abertura ? new Date(p.data_abertura + "T00:00:00").getTime() : -Infinity;
-    const usadas = (tpas ?? []).filter((t) => t.condicionador_id === p.id && t.dose_ml != null && new Date(t.data).getTime() >= desde);
+    const tpasProduto = (tpas ?? []).filter((t) => t.condicionador_id === p.id && t.dose_ml != null);
+    const desde = p.stock_atualizado_em
+      ? new Date(p.stock_atualizado_em).getTime()
+      : p.data_abertura
+        ? new Date(p.data_abertura + "T00:00:00").getTime()
+        : -Infinity;
+    const usadas = tpasProduto.filter((t) => new Date(t.data).getTime() >= desde);
     const consumo = usadas.reduce((s, t) => s + Number(t.dose_ml), 0);
-    const restante = Math.max(0, p.volume_inicial - consumo);
-    const ultimas = usadas.slice(0, 3).map((t) => Number(t.dose_ml)).filter((d) => d > 0);
+    const quantidadeDePartida = p.volume_inicial * (p.stock_manual_fracao ?? 1);
+    const restante = Math.max(0, quantidadeDePartida - consumo);
+    const ultimas = tpasProduto.slice(0, 3).map((t) => Number(t.dose_ml)).filter((d) => d > 0);
     const media = ultimas.length ? ultimas.reduce((a, b) => a + b, 0) / ultimas.length : null;
     const tpasRestantes = media ? Math.floor(restante / media) : undefined;
     const nivel = restante <= 0 ? "vazio" : media && restante <= 3 * media ? "baixo" : "ok";
@@ -42,6 +48,16 @@ export function estadoStock(p: Produto, tpas: Tpa[] | undefined): EstadoStock {
         : `${Math.round(restante)} ${p.unidade} restantes`;
     return { fracao: restante / p.volume_inicial, nivel, resumo, restante, tpasRestantes };
   }
+
+  if (p.stock_manual_fracao != null) {
+    const fracao = Math.max(0, Math.min(1, Number(p.stock_manual_fracao)));
+    const restante = p.volume_inicial ? p.volume_inicial * fracao : undefined;
+    const nivel = fracao <= 0 ? "vazio" : fracao <= 0.25 ? "baixo" : "ok";
+    const estado = fracao >= 0.85 ? "Cheio" : fracao >= 0.35 ? "A meio" : fracao > 0 ? "Pouco" : "Vazio";
+    const resumo = restante === undefined ? estado : `${estado} · ≈ ${Math.round(restante)} ${p.unidade}`;
+    return { fracao, nivel, resumo, restante };
+  }
+
   if (!p.data_abertura || !p.duracao_dias) return { fracao: null, nivel: "desconhecido", resumo: "Indica a abertura e a duração" };
   const usados = diasDesde(p.data_abertura + "T12:00:00");
   const fim = new Date(p.data_abertura + "T12:00:00");

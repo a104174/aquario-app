@@ -10,10 +10,13 @@ Diário pessoal dos meus aquários, em PWA *mobile-first* pensada para o iPhone.
   - etiquetas, ligação a um registo, galeria por aquário com visualizador em ecrã inteiro;
   - lembrete de foto ao domingo.
 - **Produtos:** condicionador (stock por TPA, aviso quando restam ~3 TPAs), comida e bactérias (fim estimado).
+  O stock pode ser corrigido rapidamente como cheio, metade ou pouco; as TPAs seguintes continuam a descontar o condicionador.
 - **Modo férias:** checklist, quem alimenta; os avisos de TPA ficam em pausa e há um lembrete no regresso.
 - **Lista de desejos:** com print, link, loja e preço.
 - **Alertas:**
   - histórico de tudo o que foi avisado;
+  - ações rápidas para tratar, ignorar ou lembrar amanhã;
+  - mensagens push curtas, com identidade visual por categoria e atalho para o contexto;
   - Web Push com email como alternativa;
   - se está tudo bem, não notifica.
 - **Fontes externas:**
@@ -73,6 +76,8 @@ src/
 | `…0006_parte2` | `produtos` (substitui `condicionadores`, com view de compatibilidade), `ninhadas`, `ferias`, `desejos`, `alertas`, função `gerar_alertas()` |
 | `…0007_cron_automacoes` | `chamar_automacoes()` + job diário |
 | `…0008_fontes_externas` | `fontes_externas`, `novidades_externas`, fontes predefinidas de Braga, job de 3 em 3 h |
+| `…0009_alertas_interativos` | estados, adiamento e tentativas de entrega dos alertas |
+| `…0010_stock_visual` | correção rápida do stock e alertas coerentes com essa estimativa |
 
 ---
 

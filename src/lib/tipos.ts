@@ -35,6 +35,9 @@ export interface Produto {
   data_abertura: string | null; // AAAA-MM-DD
   duracao_dias: number | null;
   ativo: boolean;
+  /** Correção visual opcional: 1 = cheio, 0.5 = metade, 0.2 = pouco. */
+  stock_manual_fracao: number | null;
+  stock_atualizado_em: string | null;
   criado_em: string;
 }
 

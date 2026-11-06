@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Chips, ErroForm, Grupo, InputLinha, InputNumero, Interruptor, Linha, Segmentado } from "@/components/forms/campos";
 import { confirmar } from "@/components/ui/action-sheet";
 import { Button } from "@/components/ui/button";
+import { StockVisual } from "@/components/produtos/stock-visual";
 import { BotaoSheet, Sheet } from "@/components/ui/sheet";
 import { novoId } from "@/lib/derivados";
 import { lerNumero, num } from "@/lib/formato";
@@ -84,16 +85,11 @@ function Form({ inicial, onFeito }: { inicial?: Produto; onFeito: () => void }) 
       data_abertura: abertura || null,
       duracao_dias: tipo !== "condicionador" && dur ? Math.round(dur) : null,
       ativo,
+      stock_manual_fracao: inicial?.stock_manual_fracao ?? null,
+      stock_atualizado_em: inicial?.stock_atualizado_em ?? null,
       criado_em: inicial?.criado_em ?? new Date().toISOString(),
     });
     toast("✓ Produto guardado", "ok");
-    onFeito();
-  }
-
-  function novaEmbalagem() {
-    if (!inicial) return;
-    guardar.mutate({ ...inicial, data_abertura: hojeISO(), ativo: true });
-    toast("✓ Nova embalagem registada", "ok");
     onFeito();
   }
 
@@ -189,9 +185,7 @@ function Form({ inicial, onFeito }: { inicial?: Produto; onFeito: () => void }) 
 
       {inicial && (
         <div className="space-y-2">
-          <Button type="button" variant="secondary" block onClick={novaEmbalagem}>
-            Abri uma embalagem nova
-          </Button>
+          <StockVisual produto={inicial} onFeito={onFeito} />
           <Button type="button" variant="danger" block onClick={remover}>
             Apagar produto
           </Button>
