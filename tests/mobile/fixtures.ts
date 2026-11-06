@@ -42,10 +42,11 @@ function scriptInicial(o: { safeTop: number; safeBottom: number; sessao: boolean
   const real = window.visualViewport;
   const ouvintes: Record<string, Set<EventListener>> = { resize: new Set(), scroll: new Set() };
   let reducao = 0;
+  let deslocamento = 0; // o iOS desloca o viewport visual para mostrar o campo
   const vv = {
     get width() { return real?.width ?? innerWidth; },
     get height() { return (real?.height ?? innerHeight) - reducao; },
-    get offsetTop() { return 0; },
+    get offsetTop() { return deslocamento; },
     get offsetLeft() { return 0; },
     get pageTop() { return scrollY; },
     get pageLeft() { return scrollX; },
@@ -56,8 +57,9 @@ function scriptInicial(o: { safeTop: number; safeBottom: number; sessao: boolean
     dispatchEvent() { return true; },
   };
   Object.defineProperty(window, "visualViewport", { value: vv, configurable: true });
-  (window as unknown as { __tecladoIOS: (px: number) => void }).__tecladoIOS = (px: number) => {
+  (window as unknown as { __tecladoIOS: (px: number, pan?: number) => void }).__tecladoIOS = (px: number, pan = 0) => {
     reducao = px;
+    deslocamento = px ? pan : 0;
     for (const t of ["resize", "scroll"]) ouvintes[t].forEach((f) => f(new Event(t)));
   };
 }

@@ -1,11 +1,15 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { Drawer } from "vaul";
 import { cx } from "@/lib/cx";
 
 /**
- * Bottom sheet (vaul). Usa a curva de sheet do iOS do próprio vaul
+ * Bottom sheet (vaul). O posicionamento com teclado é feito pelo motor
+ * central (lib/teclado + .sheet-conteudo): o repositionInputs do vaul fica
+ * desligado — no iOS em standalone desalinha a sheet quando o viewport é
+ * deslocado ao focar um campo.
+ * Usa a curva de sheet do iOS do próprio vaul
  * (500ms, cubic-bezier(.32,.72,0,1)) e escala o fundo como no iOS
  * (shouldScaleBackground + [data-vaul-drawer-wrapper] no shell).
  */
@@ -33,6 +37,7 @@ export default function SheetImpl({
   className?: string;
 }) {
   const Root = nested ? Drawer.NestedRoot : Drawer.Root;
+  const conteudo = useRef<HTMLDivElement>(null);
   return (
     <Root
       open={open}
@@ -40,11 +45,17 @@ export default function SheetImpl({
       shouldScaleBackground={!nested}
       noBodyStyles
       repositionInputs={false}
-      onAnimationEnd={onAnimationEnd}
+      onAnimationEnd={(aberta) => {
+        // marca a sheet como assente: o autofocus só acontece depois disto
+        if (aberta) conteudo.current?.setAttribute("data-assente", "1");
+        else conteudo.current?.removeAttribute("data-assente");
+        onAnimationEnd?.(aberta);
+      }}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40" />
         <Drawer.Content
+          ref={conteudo}
           aria-describedby={undefined}
           className={cx(
             "sheet-conteudo fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-lg flex-col",

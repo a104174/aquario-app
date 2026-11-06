@@ -90,7 +90,6 @@ export function MedicaoForm({ formId, inicial, aquarioId, onFeito }: PropsForm<M
                 <InputLinha
                   id={`med-${p}`}
                   inputMode="decimal"
-                  enterKeyHint="next"
                   placeholder="—"
                   value={valores[p]}
                   onChange={(e) => setValores((v) => ({ ...v, [p]: e.target.value.replace(/[^0-9.,]/g, "") }))}

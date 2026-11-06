@@ -31,63 +31,141 @@ function contentorScroll(el: HTMLElement): HTMLElement | null {
   return null;
 }
 
-/** Faz scroll do contentor para o campo ficar com folga dentro da zona visível. */
-export function mostrarCampo(el: HTMLElement, visivel: number) {
-  const c = contentorScroll(el);
-  const r = el.getBoundingClientRect();
-  const folga = 24;
-  if (c) {
-    const cr = c.getBoundingClientRect();
-    const fundo = Math.min(cr.bottom, visivel) - folga;
-    const topo = Math.max(cr.top, 0) + folga;
-    if (r.bottom > fundo) c.scrollBy({ top: r.bottom - fundo, behavior: "smooth" });
-    else if (r.top < topo) c.scrollBy({ top: r.top - topo, behavior: "smooth" });
-  }
-  // O iOS às vezes desloca a janela inteira (body é fixo): repor
-  if (window.scrollY !== 0) window.scrollTo(0, 0);
+export type EstadoTeclado = {
+  /** altura visível (px) */
+  vvh: number;
+  /** topo da zona visível no referencial dos elementos fixos (iOS desloca-a ao focar) */
+  topo: number;
+  /** altura do teclado (px; 0 se fechado) */
+  kb: number;
+  aberto: boolean;
+};
+
+let estado: EstadoTeclado = { vvh: 0, topo: 0, kb: 0, aberto: false };
+const ouvintesEstado = new Set<() => void>();
+export const estadoTeclado = () => estado;
+export function subscreverTeclado(f: () => void) {
+  ouvintesEstado.add(f);
+  return () => ouvintesEstado.delete(f);
 }
 
+/**
+ * Faz scroll do contentor do campo (a sheet ou o ecrã, nunca a página) para
+ * o deixar dentro da zona visível [topo, fundo], com folga.
+ */
+export function mostrarCampo(el: HTMLElement, topoVisivel: number, fundoVisivel: number, suave = true) {
+  const c = contentorScroll(el);
+  if (!c) return;
+  const r = el.getBoundingClientRect();
+  const cr = c.getBoundingClientRect();
+  const folga = 20;
+  const fundo = Math.min(cr.bottom, fundoVisivel) - folga;
+  const topo = Math.max(cr.top, topoVisivel) + folga;
+  const behavior: ScrollBehavior = suave && !matchMedia("(prefers-reduced-motion: reduce)").matches ? "smooth" : "auto";
+  if (r.bottom > fundo) c.scrollBy({ top: r.bottom - fundo, behavior });
+  else if (r.top < topo) c.scrollBy({ top: r.top - topo, behavior });
+}
+
+/**
+ * Motor do teclado (um só para a app inteira), a partir do visualViewport.
+ * Publica em <html>:
+ *   --vvh / --vv-h     altura visível
+ *   --vv-topo          topo da zona visível (o iOS desloca-a ao focar um campo)
+ *   --vv-fundo         fundo da zona visível → as sheets ancoram aqui
+ *   --kb-height / --kb altura do teclado (0 fechado)
+ *   data-teclado="aberto"
+ * Não força scroll da janela com o teclado aberto: o iOS desloca o viewport
+ * para mostrar o campo e as âncoras acima já o compensam. Só ao fechar se
+ * repõe a posição (sem saltos nem espaço em branco).
+ */
 export function iniciarTeclado() {
   const vv = window.visualViewport;
   const raiz = document.documentElement;
   let base = window.innerHeight; // altura sem teclado
-  let aberto = false;
   let raf = 0;
+  let assentar = 0;
 
+  const aplicar = () => {
+    const foco = document.activeElement;
+    const temFoco = editavel(foco);
+    const visivel = vv ? vv.height : window.innerHeight;
+    const topo = vv ? Math.max(0, vv.offsetTop) : 0;
+    if (!temFoco) base = Math.max(window.innerHeight, visivel);
+    const aberto = temFoco && base - visivel > 120;
+    // teclado: o que falta da zona visível até ao fundo do layout
+    const kb = aberto ? Math.max(0, Math.round(window.innerHeight - visivel - topo)) : 0;
+    const vvh = Math.round(aberto ? visivel : window.innerHeight);
+    const fundo = aberto ? Math.round(topo + visivel) : window.innerHeight;
+    const s = raiz.style;
+    s.setProperty("--vvh", `${vvh}px`);
+    s.setProperty("--vv-topo", `${aberto ? Math.round(topo) : 0}px`);
+    s.setProperty("--vv-fundo", `${fundo}px`);
+    s.setProperty("--kb-height", `${kb}px`);
+    s.setProperty("--kb", `${kb}px`);
+    // --vv-h (altura da app) só com o teclado: sem ele a app vai até ao fundo
+    if (aberto) s.setProperty("--vv-h", `${vvh}px`);
+    else s.removeProperty("--vv-h");
+    if (aberto !== estado.aberto) {
+      if (aberto) raiz.dataset.teclado = "aberto";
+      else delete raiz.dataset.teclado;
+    }
+    const antes = estado;
+    estado = { vvh, topo: aberto ? topo : 0, kb, aberto };
+    if (antes.aberto !== estado.aberto || antes.kb !== estado.kb || antes.topo !== estado.topo || antes.vvh !== estado.vvh) {
+      ouvintesEstado.forEach((f) => f());
+    }
+    // Campo visível só quando o teclado assentar (sem eventos durante 140 ms)
+    clearTimeout(assentar);
+    if (aberto) {
+      assentar = window.setTimeout(() => {
+        const f = document.activeElement;
+        if (editavel(f)) mostrarCampo(f as HTMLElement, estado.topo, estado.topo + estado.vvh);
+      }, 140);
+    } else if (!temFoco && (window.scrollY !== 0 || document.scrollingElement?.scrollTop)) {
+      // fechou: repõe a página (o iOS pode tê-la deslocado)
+      window.scrollTo(0, 0);
+    }
+  };
   const atualizar = () => {
     cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => {
-      const foco = document.activeElement;
-      const temFoco = editavel(foco);
-      const visivel = vv ? vv.height : window.innerHeight;
-      if (!temFoco) base = Math.max(window.innerHeight, visivel);
-      // aberto: a área visível encolheu muito em relação a "sem teclado"
-      const agora = temFoco && base - visivel > 120;
-      // --kb: quanto o teclado tapa o layout viewport. No iOS = altura do
-      // teclado; no Android (resizes-content) = 0, porque o layout já encolheu.
-      const sobreposto = agora ? Math.max(0, Math.round(window.innerHeight - visivel - (vv?.offsetTop ?? 0))) : 0;
-      // Sem teclado não fixamos altura em px: no iOS (standalone) o innerHeight
-      // pode ser menor do que o ecrã e deixava uma faixa vazia no fundo.
-      if (agora) raiz.style.setProperty("--vv-h", `${Math.round(visivel)}px`);
-      else raiz.style.removeProperty("--vv-h");
-      raiz.style.setProperty("--kb", `${sobreposto}px`);
-      if (agora !== aberto) {
-        aberto = agora;
-        if (agora) raiz.dataset.teclado = "aberto";
-        else delete raiz.dataset.teclado;
-      }
-      if (agora) setTimeout(() => mostrarCampo(foco as HTMLElement, visivel), 30);
-      else if (window.scrollY !== 0) window.scrollTo(0, 0);
-    });
+    raf = requestAnimationFrame(aplicar);
   };
 
   vv?.addEventListener("resize", atualizar);
   vv?.addEventListener("scroll", atualizar);
   window.addEventListener("resize", atualizar);
+  // trocar de campo (setas ↑/↓ da barra do iOS, Seguinte): mostrar o novo campo
   document.addEventListener("focusin", () => setTimeout(atualizar, 60));
   document.addEventListener("focusout", () => setTimeout(atualizar, 60));
   window.addEventListener("orientationchange", () => setTimeout(atualizar, 300));
-  atualizar();
+  aplicar();
+}
+
+/**
+ * Foca um campo só depois de as animações à volta terminarem (abrir a sheet,
+ * passo do formulário). Evita a corrida animação × teclado que no iOS deixa
+ * o layout desalinhado.
+ */
+let ultimoToque = 0;
+if (typeof window !== "undefined") {
+  window.addEventListener("pointerdown", () => (ultimoToque = performance.now()), { capture: true, passive: true });
+}
+
+export async function focarDepoisDaAnimacao(el: HTMLElement) {
+  const inicio = performance.now();
+  const esperar: Promise<unknown>[] = [];
+  for (let p: HTMLElement | null = el; p; p = p.parentElement) {
+    for (const a of p.getAnimations()) esperar.push(a.finished.catch(() => {}));
+    if (p.hasAttribute("data-vaul-drawer")) break;
+  }
+  // o vaul anima a abertura com transform (transição, não animação CSS)
+  await new Promise((r) => setTimeout(r, 60));
+  await Promise.all(esperar);
+  const gaveta = el.closest("[data-vaul-drawer]");
+  if (gaveta) await new Promise((r) => setTimeout(r, gaveta.getAttribute("data-assente") ? 0 : 420));
+  // o utilizador já tocou ou focou outra coisa entretanto: não roubar o foco
+  if (ultimoToque > inicio || editavel(document.activeElement)) return;
+  if (el.isConnected && document.activeElement !== el) el.focus({ preventScroll: true });
 }
 
 const SALTAR = new Set(["date", "datetime-local", "time", "month", "week", "hidden", "file", "checkbox", "radio", "button", "submit", "range", "color"]);
@@ -104,8 +182,8 @@ function camposDoGrupo(el: HTMLElement) {
 
 /**
  * Teclado com "Seguinte"/"OK": cada campo recebe enterkeyhint automático
- * (next se houver um campo a seguir, done no último) e Enter salta para o
- * campo seguinte ou fecha o teclado — sem submeter o formulário por engano.
+ * (next se houver um campo a seguir, done no último). Enter salta para o
+ * campo seguinte; no último fecha o teclado e guarda.
  * Um campo com enterkeyhint explícito (ex.: "send", "go") mantém o seu.
  */
 export function iniciarEnterAvanca() {
@@ -118,7 +196,7 @@ export function iniciarEnterAvanca() {
     }
     const campos = camposDoGrupo(el);
     const i = campos.indexOf(el);
-    el.enterKeyHint = i >= 0 && i < campos.length - 1 ? "next" : "done";
+    el.setAttribute("enterkeyhint", i >= 0 && i < campos.length - 1 ? "next" : "done");
     el.dataset.enterAuto = "1";
   });
   document.addEventListener("keydown", (e) => {
@@ -136,7 +214,11 @@ export function iniciarEnterAvanca() {
         return;
       }
     }
+    // "OK" no último campo (automático) guarda o formulário; um "done"
+    // explícito (ex.: código OTP) só fecha o teclado
+    const form = el.form ?? (el.closest("[data-vaul-drawer]")?.querySelector("form") as HTMLFormElement | null);
     el.blur();
+    if (el.dataset.enterAuto && form) form.requestSubmit();
   });
 }
 

@@ -1,9 +1,10 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
 import { IconMais } from "@/components/icons";
 import { cx } from "@/lib/cx";
 import { vibrar } from "@/lib/haptic";
+import { focarDepoisDaAnimacao } from "@/lib/teclado";
 import type { Aquario } from "@/lib/tipos";
 
 /** Grupo estilo "inset grouped" do iOS. */
@@ -30,10 +31,16 @@ export function Linha({ rotulo, children, htmlFor }: { rotulo: ReactNode; childr
   );
 }
 
-export function InputLinha({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
+export function InputLinha({ className, autoFocus, ...props }: InputHTMLAttributes<HTMLInputElement>) {
   const texto = !props.type || props.type === "text";
+  const ref = useRef<HTMLInputElement>(null);
+  // autoFocus só depois de a sheet/passo acabar de animar (ver lib/teclado)
+  useEffect(() => {
+    if (autoFocus && ref.current) void focarDepoisDaAnimacao(ref.current);
+  }, [autoFocus]);
   return (
     <input
+      ref={ref}
       autoComplete="off"
       autoCapitalize={texto && props.inputMode !== "decimal" && props.inputMode !== "url" ? "sentences" : "off"}
       autoCorrect={texto && !props.inputMode ? "on" : "off"}

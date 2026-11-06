@@ -59,7 +59,6 @@ export function TpaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Tpa>)
             <InputLinha
               id="tpa-litros"
               inputMode="decimal"
-              enterKeyHint="done"
               placeholder="0"
               value={litros}
               onChange={(e) => setLitros(e.target.value.replace(/[^0-9.,]/g, ""))}
