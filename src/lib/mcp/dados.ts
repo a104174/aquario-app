@@ -1,39 +1,16 @@
-// Consultas do servidor MCP. Correm SEMPRE com o token OAuth do utilizador,
-// por isso a RLS do Postgres garante que só os dados dele são lidos.
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { faunaAtual, ultimosValores } from "@/lib/derivados";
+// Contratos existentes e consultas especializadas do MCP.
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { faunaAtual, ultimosValores, volumeReferencia } from "@/lib/derivados";
 import { proximoMarco } from "@/lib/ninhadas";
 import { INFO_PARAMETROS } from "@/lib/parametros";
 import { estadoStock } from "@/lib/produtos";
-import { PARAMETROS, type Aquario, type FaunaEvento, type Medicao, type Ninhada, type Produto, type Tpa } from "@/lib/tipos";
+import { PARAMETROS, type Alerta, type FaunaEvento, type FonteExterna, type Medicao, type Ninhada, type Parametro, type Produto, type Tpa } from "@/lib/tipos";
+import {
+  aquarios, COL_FAUNA, COL_MEDICAO, COL_NINHADA, COL_PRODUTO, COL_TPA, compararInstantes, filtroFauna, historicoFauna,
+  pagina, paginar, periodo, q, textoDado, type Cursor, type Periodo,
+} from "./consultas";
 
-export function clienteDoUtilizador(token: string): SupabaseClient {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-  });
-}
-
-const desde = (dias: number) => new Date(Date.now() - dias * 864e5).toISOString();
-const diasDesde = (iso: string) => Math.floor((Date.now() - new Date(iso).getTime()) / 864e5);
-
-async function q<T>(p: PromiseLike<{ data: T | null; error: { message: string } | null }>): Promise<T> {
-  const { data, error } = await p;
-  if (error) throw new Error(error.message);
-  return (data ?? []) as T;
-}
-
-/** Aquários que correspondem ao filtro (id exato ou parte do nome). */
-export async function aquarios(sb: SupabaseClient, filtro?: string) {
-  const todos = await q<Aquario[]>(sb.from("aquarios").select("*").order("criado_em"));
-  if (!filtro) return todos;
-  const f = filtro.trim().toLocaleLowerCase("pt-PT");
-  const r = todos.filter((a) => a.id === filtro || a.nome.toLocaleLowerCase("pt-PT").includes(f));
-  if (!r.length) throw new Error(`Nenhum aquário corresponde a "${filtro}". Disponíveis: ${todos.map((a) => a.nome).join(", ")}`);
-  return r;
-}
-
-const nomeDe = (lista: Aquario[]) => (id: string) => lista.find((a) => a.id === id)?.nome ?? id;
+const diasDesde = (iso: string) => Math.floor((Date.now() - Date.parse(iso)) / 86_400_000);
 
 function avaliar(m: Medicao) {
   const valores: Record<string, number> = {};
@@ -41,169 +18,222 @@ function avaliar(m: Medicao) {
   for (const p of PARAMETROS) {
     const v = m[p];
     if (v == null) continue;
-    valores[p] = Number(v);
-    const f = INFO_PARAMETROS[p].faixa(Number(v));
+    valores[p] = v;
+    const f = INFO_PARAMETROS[p].faixa(v);
     if (f !== "ok") fora.push(`${INFO_PARAMETROS[p].curto} ${v} (${f === "mau" ? "fora da referência" : "atenção"})`);
   }
   return { valores, fora };
 }
 
-export async function ultimasTpas(sb: SupabaseClient, aquario?: string, dias = 30) {
-  const aqs = await aquarios(sb, aquario);
-  const nome = nomeDe(aqs);
-  const [tpas, produtos] = await Promise.all([
-    q<Tpa[]>(sb.from("tpas").select("*").in("aquario_id", aqs.map((a) => a.id)).gte("data", desde(dias)).order("data", { ascending: false })),
-    q<Produto[]>(sb.from("produtos").select("*")),
-  ]);
-  return tpas.map((t) => {
-    const aq = aqs.find((a) => a.id === t.aquario_id);
-    const vol = aq?.volume_util_l ?? aq?.volume_bruto_l;
+export async function ultimasTpas(sb: SupabaseClient, filtro: string | undefined, janela: Periodo, limite = 100) {
+  const aqs = await aquarios(sb, filtro);
+  if (!aqs.length) return [];
+  const mapa = new Map(aqs.map((a) => [a.id, a]));
+  const tpas = await pagina<Tpa>(sb, "tpas", COL_TPA, { periodo: janela, limite, filtrar: (c) => c.in("aquario_id", [...mapa.keys()]) });
+  const itens = tpas.slice(0, limite);
+  const ids = [...new Set(itens.flatMap((t) => t.condicionador_id ? [t.condicionador_id] : []))];
+  const produtos = ids.length ? await q<Pick<Produto, "id" | "nome">[]>(sb.from("produtos").select("id,nome").in("id", ids).limit(limite)) : [];
+  const nomes = new Map(produtos.map((p) => [p.id, p.nome]));
+  return itens.map((t) => {
+    const aq = mapa.get(t.aquario_id);
+    const vol = volumeReferencia(aq);
     return {
-      aquario: nome(t.aquario_id),
-      data: t.data,
-      litros: Number(t.litros),
-      percentagem: vol ? Math.round((Number(t.litros) / Number(vol)) * 100) : null,
-      condicionador: produtos.find((p) => p.id === t.condicionador_id)?.nome ?? null,
-      dose_ml: t.dose_ml,
-      notas: t.notas,
+      id: t.id, aquario_id: t.aquario_id, aquario: aq?.nome ?? t.aquario_id,
+      data: t.data, litros: t.litros, percentagem: vol ? Math.round(t.litros / vol * 100) : null,
+      volume_de_referencia: aq?.volume_util_l != null ? "util" : vol ? "bruto" : null,
+      condicionador: t.condicionador_id ? nomes.get(t.condicionador_id) ?? null : null,
+      condicionador_id: t.condicionador_id, dose_ml: t.dose_ml, notas: textoDado(t.notas),
     };
   });
 }
 
-export async function medicoes(sb: SupabaseClient, aquario?: string, dias = 30) {
-  const aqs = await aquarios(sb, aquario);
-  const nome = nomeDe(aqs);
-  const ms = await q<Medicao[]>(
-    sb.from("medicoes").select("*").in("aquario_id", aqs.map((a) => a.id)).gte("data", desde(dias)).order("data", { ascending: false }),
-  );
+export async function medicoes(sb: SupabaseClient, args: {
+  aquario?: string; periodo: Periodo; parametro?: Parametro; limite: number; cursor?: Cursor;
+}) {
+  const aqs = await aquarios(sb, args.aquario);
+  const nomes = new Map(aqs.map((a) => [a.id, a.nome]));
+  const p = args.parametro;
+  const colunas = p ? `id,aquario_id,data,metodo,notas,${p}` : COL_MEDICAO;
+  const ms = aqs.length ? await pagina<Medicao>(sb, "medicoes", colunas, {
+    ...args,
+    filtrar: (c) => {
+      const consulta = c.in("aquario_id", [...nomes.keys()]);
+      return p ? consulta.not(p, "is", null) : consulta;
+    },
+  }) : [];
+  const { itens, periodo, proximo_cursor } = paginar(ms, args.limite, args.periodo);
+  const estatisticas = p ? aqs.map((a) => {
+    const pontos = itens.filter((m) => m.aquario_id === a.id);
+    const primeiro = pontos.at(-1);
+    const ultimo = pontos[0];
+    const intervaloDias = pontos.slice(1).reduce((max, m, i) =>
+      Math.max(max, (Date.parse(pontos[i].data) - Date.parse(m.data)) / 86_400_000), 0);
+    return {
+      aquario_id: a.id, pontos: pontos.length, primeira_medicao_em: primeiro?.data ?? null,
+      ultima_medicao_em: ultimo?.data ?? null,
+      variacao_liquida: primeiro?.[p] != null && ultimo?.[p] != null && compararInstantes(primeiro.data, ultimo.data) !== 0
+        ? Number((ultimo[p] - primeiro[p]).toPrecision(12)) : null,
+      maior_intervalo_entre_medicoes_dias: pontos.length > 1 ? Number(intervaloDias.toFixed(3)) : null,
+    };
+  }) : undefined;
   return {
-    referencias: Object.fromEntries(PARAMETROS.map((p) => [p, { nome: INFO_PARAMETROS[p].nome, unidade: INFO_PARAMETROS[p].unidade, referencia: INFO_PARAMETROS[p].referencia }])),
-    medicoes: ms.map((m) => ({ aquario: nome(m.aquario_id), data: m.data, metodo: m.metodo, ...avaliar(m), notas: m.notas })),
+    referencias: Object.fromEntries((p ? [p] : PARAMETROS).map((chave) => [
+      chave, { nome: INFO_PARAMETROS[chave].nome, unidade: INFO_PARAMETROS[chave].unidade, referencia: INFO_PARAMETROS[chave].referencia },
+    ])),
+    tipo_referencia: "generica_da_app",
+    medicoes: itens.map((m) => ({
+      id: m.id, aquario_id: m.aquario_id, aquario: nomes.get(m.aquario_id) ?? m.aquario_id,
+      data: m.data, metodo: m.metodo, ...avaliar(m), notas: textoDado(m.notas),
+    })),
+    periodo, proximo_cursor, estatisticas_da_pagina: estatisticas,
   };
 }
 
-export async function faunaENinhadas(sb: SupabaseClient, aquario?: string) {
-  const aqs = await aquarios(sb, aquario);
-  const todos = await aquarios(sb);
-  const nome = nomeDe(todos);
-  const [fauna, ninhadas] = await Promise.all([
-    q<FaunaEvento[]>(sb.from("fauna_eventos").select("*").order("data", { ascending: false })),
-    q<Ninhada[]>(sb.from("ninhadas").select("*").in("aquario_id", aqs.map((a) => a.id)).order("data_parto", { ascending: false })),
+function eventoFauna(e: FaunaEvento, nomes: Map<string, string>) {
+  return {
+    id: e.id, data: e.data, tipo: e.tipo, especie: e.especie, quantidade: e.quantidade,
+    origem: nomes.get(e.aquario_id) ?? e.aquario_id,
+    destino: e.aquario_destino_id ? nomes.get(e.aquario_destino_id) ?? e.aquario_destino_id : null,
+    aquario_id: e.aquario_id, aquario_destino_id: e.aquario_destino_id,
+    variedade: e.variedade ?? null, nome_personalizado: e.nome_personalizado ?? null,
+    grupo_id: e.grupo_proprio ? e.id : e.grupo_id ?? null, foto_id: e.foto_destaque_id ?? null,
+    notas: textoDado(e.notas),
+  };
+}
+
+export async function faunaENinhadas(sb: SupabaseClient, filtro: string | undefined, janela: Periodo, limite: number) {
+  const aqs = await aquarios(sb, filtro);
+  if (!aqs.length) return [];
+  const ids = aqs.map((a) => a.id);
+  const [todos, fauna, eventos, ninhadas] = await Promise.all([
+    filtro ? aquarios(sb) : aqs,
+    historicoFauna(sb, ids, new Date().toISOString()),
+    pagina<FaunaEvento>(sb, "fauna_eventos", COL_FAUNA, { periodo: janela, limite, filtrar: (c) => c.neq("tipo", "detalhe").or(filtroFauna(ids)) }),
+    q<Ninhada[]>(sb.from("ninhadas").select(COL_NINHADA).in("aquario_id", ids)
+      .order("data_parto", { ascending: false }).order("id").limit(101)),
   ]);
+  const nomes = new Map(todos.map((a) => [a.id, a.nome]));
   return aqs.map((a) => {
-    const pop = faunaAtual(fauna, a.id);
+    const pop = fauna ? faunaAtual(fauna, a.id) : null;
     return {
-      aquario: a.nome,
-      populacao_total: pop.total,
-      especies: pop.lista,
-      eventos_recentes: fauna
-        .filter((e) => e.tipo !== "detalhe" && (e.aquario_id === a.id || e.aquario_destino_id === a.id) && diasDesde(e.data) <= 60)
-        .map((e) => ({ data: e.data, tipo: e.tipo, especie: e.especie, quantidade: e.quantidade, origem: nome(e.aquario_id), destino: e.aquario_destino_id ? nome(e.aquario_destino_id) : null, notas: e.notas })),
-      ninhadas: ninhadas
-        .filter((n) => n.aquario_id === a.id)
-        .map((n) => {
-          const prox = proximoMarco(n);
-          return { mae: n.mae, data_parto: n.data_parto, estado: n.estado, proximo: prox ? { data: prox.quando.toISOString().slice(0, 10), acao: prox.texto } : null, notas: n.notas };
-        }),
+      aquario: a.nome, aquario_id: a.id,
+      populacao_total: pop?.total ?? null, especies: pop?.lista ?? [],
+      historico_populacao_truncado: fauna === null,
+      eventos_recentes: eventos.slice(0, limite).filter((e) => e.aquario_id === a.id || e.aquario_destino_id === a.id)
+        .map((e) => eventoFauna(e, nomes)),
+      eventos_truncados: eventos.length > limite,
+      ninhadas: ninhadas.slice(0, 100).filter((n) => n.aquario_id === a.id).map((n) => {
+        const prox = proximoMarco(n);
+        return {
+          id: n.id, mae: n.mae, data_parto: n.data_parto, estado: n.estado,
+          proximo: prox ? { data: prox.quando.toISOString().slice(0, 10), acao: prox.texto } : null, notas: textoDado(n.notas),
+        };
+      }),
+      ninhadas_truncadas: ninhadas.length > 100,
     };
   });
 }
 
-export async function fotosRecentes(sb: SupabaseClient, aquario?: string, dias = 14) {
-  const aqs = await aquarios(sb, aquario);
-  const nome = nomeDe(aqs);
-  const fotos = await q<{ aquario_id: string; data: string; storage_path: string; etiqueta: string; legenda: string | null; evento_tipo: string | null }[]>(
-    sb.from("fotos").select("aquario_id, data, storage_path, etiqueta, legenda, evento_tipo").in("aquario_id", aqs.map((a) => a.id)).gte("data", desde(dias)).order("data", { ascending: false }).limit(50),
-  );
-  if (!fotos.length) return [];
-  const { data: urls } = await sb.storage.from("fotos").createSignedUrls(fotos.map((f) => f.storage_path), 60 * 60);
-  return fotos.map((f, i) => ({
-    aquario: nome(f.aquario_id),
-    data: f.data,
-    etiqueta: f.etiqueta,
-    legenda: f.legenda,
-    ligada_a: f.evento_tipo,
-    url: urls?.[i]?.signedUrl ?? null,
-    url_expira_em_minutos: 60,
-  }));
+export async function alertasRecentes(sb: SupabaseClient, janela: Periodo, limite = 100, estado?: Alerta["estado"]) {
+  const linhas = await pagina<Alerta>(sb, "alertas", "id,criado_em,tipo,titulo,mensagem,lido,canal,estado,adiado_ate,resolvido_em", {
+    periodo: janela, limite, colunaData: "criado_em", filtrar: (c) => estado ? c.eq("estado", estado) : c,
+  });
+  return linhas.slice(0, limite).map((a) => ({ ...a, titulo: textoDado(a.titulo, 160), mensagem: textoDado(a.mensagem) }));
 }
 
-export async function alertasRecentes(sb: SupabaseClient, dias = 14) {
-  return q(sb.from("alertas").select("criado_em, tipo, titulo, mensagem, lido, canal").gte("criado_em", desde(dias)).order("criado_em", { ascending: false }));
+export async function listaDesejos(sb: SupabaseClient, estado?: "quero" | "comprado", limite = 100) {
+  let consulta = sb.from("desejos").select("id,item,loja,link,preco,notas,estado,criado_em").order("criado_em", { ascending: false }).order("id").limit(limite);
+  if (estado) consulta = consulta.eq("estado", estado);
+  const itens = await q<{ notas: string | null }[]>(consulta);
+  return itens.map((d) => ({ ...d, notas: textoDado(d.notas) }));
 }
 
-export async function listaDesejos(sb: SupabaseClient, estado?: "quero" | "comprado") {
-  let qb = sb.from("desejos").select("item, loja, link, preco, notas, estado, criado_em").order("criado_em", { ascending: false });
-  if (estado) qb = qb.eq("estado", estado);
-  return q(qb);
+export async function novidadesExternas(sb: SupabaseClient, janela: Periodo, limite = 100) {
+  const { data, error } = await sb.from("novidades_externas").select("id,titulo,url,detectado_em,resumo,fontes_externas(nome,tipo)")
+    .gte("detectado_em", janela.de).lt("detectado_em", janela.ate)
+    .order("detectado_em", { ascending: false }).order("id").limit(limite);
+  if (error?.code === "42P01" || error?.code === "PGRST205") return { aviso: "Fontes externas ainda não configuradas.", novidades: [] };
+  if (error) throw new Error("Falha na consulta de fontes externas");
+  return data.map((n) => ({ ...n, titulo: textoDado(n.titulo, 160), resumo: textoDado(n.resumo) }));
 }
 
-export async function novidadesExternas(sb: SupabaseClient, dias = 14) {
-  const { data, error } = await sb
-    .from("novidades_externas")
-    .select("titulo, url, detectado_em, resumo, fontes_externas(nome, tipo)")
-    .gte("detectado_em", desde(dias))
-    .order("detectado_em", { ascending: false })
-    .limit(100);
-  if (error) return { aviso: "Fontes externas ainda não configuradas.", novidades: [] };
-  return data;
+export async function estadoFontes(sb: SupabaseClient) {
+  type Fonte = Pick<FonteExterna, "id" | "nome" | "tipo" | "ultima_verificacao" | "resultado">;
+  const fontes = await q<Fonte[]>(sb.from("fontes_externas").select("id,nome,tipo,ultima_verificacao,resultado")
+    .eq("ativo", true).order("nome").order("id").limit(11));
+  return {
+    itens: fontes.slice(0, 10).map(({ resultado, ...fonte }) => {
+      const resultadoTruncado = resultado !== null && JSON.stringify(resultado).length > 3500;
+      return { ...fonte, resultado: resultadoTruncado ? null : resultado, resultado_truncado: resultadoTruncado };
+    }),
+    truncadas: fontes.length > 10,
+    origem: "fontes_externas_da_app",
+  };
 }
 
 export async function resumoAquarios(sb: SupabaseClient) {
   const aqs = await aquarios(sb);
-  const [tpas, ms, fauna, ninhadas, produtos, def] = await Promise.all([
-    q<Tpa[]>(sb.from("tpas").select("*").order("data", { ascending: false }).limit(500)),
-    q<Medicao[]>(sb.from("medicoes").select("*").order("data", { ascending: false }).limit(500)),
-    q<FaunaEvento[]>(sb.from("fauna_eventos").select("*")),
-    q<Ninhada[]>(sb.from("ninhadas").select("*").neq("estado", "encerrada")),
-    q<Produto[]>(sb.from("produtos").select("*").eq("ativo", true)),
-    sb.from("definicoes").select("intervalo_tpa_dias, aviso_tpa_urgente_dias").maybeSingle(),
+  const [tpas, ms, fauna, ninhadas, produtos, definicoes] = await Promise.all([
+    q<Tpa[]>(sb.from("tpas").select(COL_TPA).order("data", { ascending: false }).order("id").limit(501)),
+    q<Medicao[]>(sb.from("medicoes").select(COL_MEDICAO).order("data", { ascending: false }).order("id").limit(501)),
+    historicoFauna(sb),
+    q<Ninhada[]>(sb.from("ninhadas").select(COL_NINHADA).neq("estado", "encerrada").order("id").limit(101)),
+    q<Produto[]>(sb.from("produtos").select(COL_PRODUTO).eq("ativo", true).order("nome").order("id").limit(101)),
+    q<{ intervalo_tpa_dias: number } | null>(sb.from("definicoes").select("intervalo_tpa_dias").maybeSingle()),
   ]);
-  const intervalo = def.data?.intervalo_tpa_dias ?? 7;
+  const intervalo = definicoes?.intervalo_tpa_dias ?? null;
   return {
     intervalo_tpa_dias: intervalo,
     aquarios: aqs.map((a) => {
       const ultima = tpas.find((t) => t.aquario_id === a.id);
       const valores = ultimosValores(ms, a.id);
-      const pop = faunaAtual(fauna, a.id);
+      const pop = fauna ? faunaAtual(fauna, a.id) : null;
       return {
-        nome: a.nome,
-        volume_util_l: a.volume_util_l,
-        volume_bruto_l: a.volume_bruto_l,
-        ultima_tpa: ultima ? { data: ultima.data, dias: diasDesde(ultima.data), litros: Number(ultima.litros) } : null,
-        tpa_em_atraso: ultima ? diasDesde(ultima.data) >= intervalo : true,
+        id: a.id, nome: a.nome, volume_util_l: a.volume_util_l, volume_bruto_l: a.volume_bruto_l,
+        ultima_tpa: ultima ? { id: ultima.id, data: ultima.data, dias: diasDesde(ultima.data), litros: ultima.litros } : null,
+        tpa_em_atraso: ultima && intervalo !== null ? diasDesde(ultima.data) >= intervalo : null,
         ultimos_parametros: Object.fromEntries(
-          Object.entries(valores).map(([p, v]) => [p, { valor: v!.valor, data: v!.data, estado: INFO_PARAMETROS[p as keyof typeof INFO_PARAMETROS].faixa(v!.valor) }]),
+          Object.entries(valores).map(([chave, v]) => {
+            const info = INFO_PARAMETROS[chave as Parametro];
+            return [chave, { ...v, unidade: info.unidade, estado: info.faixa(v!.valor) }];
+          }),
         ),
-        fauna: { total: pop.total, especies: pop.lista },
-        ninhadas_ativas: ninhadas.filter((n) => n.aquario_id === a.id).map((n) => ({ mae: n.mae, data_parto: n.data_parto, estado: n.estado })),
-        notas: a.notas,
+        fauna: { total: pop?.total ?? null, especies: pop?.lista ?? [] },
+        ninhadas_ativas: ninhadas.slice(0, 100).filter((n) => n.aquario_id === a.id)
+          .map((n) => ({ id: n.id, mae: n.mae, data_parto: n.data_parto, estado: n.estado })),
+        notas: textoDado(a.notas),
       };
     }),
-    produtos: produtos.map((p) => ({ nome: p.nome, tipo: p.tipo, ...(({ nivel, resumo }) => ({ nivel, resumo }))(estadoStock(p, tpas)) })),
+    produtos: produtos.slice(0, 100).map((p) => {
+      const { nivel, resumo } = p.tipo === "condicionador" && tpas.length > 500
+        ? { nivel: "desconhecido", resumo: "Histórico de consumo incompleto" } : estadoStock(p, tpas);
+      return { id: p.id, nome: p.nome, tipo: p.tipo, nivel, resumo };
+    }),
+    truncados: { tpas: tpas.length > 500, medicoes: ms.length > 500, fauna: fauna === null, ninhadas: ninhadas.length > 100, produtos: produtos.length > 100 },
+    tipo_referencia: "generica_da_app",
   };
 }
 
-export async function resumoSemanal(sb: SupabaseClient) {
+async function contar(consulta: PromiseLike<{ count: number | null; error: unknown }>) {
+  const { count, error } = await consulta;
+  if (error) throw new Error("Falha na contagem de registos");
+  return count;
+}
+
+export async function resumoSemanal(sb: SupabaseClient, janela = periodo({}, 7)) {
   const [estado, tpas, med, fauna, fotos, alertas, desejos, novidades] = await Promise.all([
-    resumoAquarios(sb),
-    ultimasTpas(sb, undefined, 7),
-    medicoes(sb, undefined, 7),
-    faunaENinhadas(sb),
-    q<{ aquario_id: string }[]>(sb.from("fotos").select("aquario_id").gte("data", desde(7))),
-    alertasRecentes(sb, 7),
-    listaDesejos(sb, "quero"),
-    novidadesExternas(sb, 7),
+    resumoAquarios(sb), ultimasTpas(sb, undefined, janela, 50), medicoes(sb, { periodo: janela, limite: 50 }),
+    pagina<FaunaEvento>(sb, "fauna_eventos", COL_FAUNA, { periodo: janela, limite: 50, filtrar: (c) => c.neq("tipo", "detalhe") }),
+    contar(sb.from("fotos").select("id", { count: "exact", head: true }).gte("data", janela.de).lt("data", janela.ate)),
+    alertasRecentes(sb, janela, 30), contar(sb.from("desejos").select("id", { count: "exact", head: true }).eq("estado", "quero")),
+    novidadesExternas(sb, janela, 30),
   ]);
+  const nomes = new Map(estado.aquarios.map((a) => [a.id, a.nome]));
   return {
-    periodo: { de: desde(7).slice(0, 10), ate: new Date().toISOString().slice(0, 10) },
-    estado_atual: estado,
-    tpas_da_semana: tpas,
-    medicoes_da_semana: med.medicoes,
-    fauna_eventos_da_semana: fauna.flatMap((f) => f.eventos_recentes.filter((e) => diasDesde(e.data) <= 7).map((e) => ({ aquario: f.aquario, ...e }))),
-    fotos_da_semana: fotos.length,
-    alertas_da_semana: alertas,
-    desejos_por_comprar: Array.isArray(desejos) ? desejos.length : 0,
-    novidades_externas: novidades,
+    periodo: { de: janela.de.slice(0, 10), ate: janela.ate.slice(0, 10) }, janela,
+    estado_atual: estado, tpas_da_semana: tpas, medicoes_da_semana: med.medicoes,
+    fauna_eventos_da_semana: fauna.slice(0, 50).map((e) => ({ aquario: nomes.get(e.aquario_id) ?? e.aquario_id, ...eventoFauna(e, nomes) })),
+    fotos_da_semana: fotos, alertas_da_semana: alertas, desejos_por_comprar: desejos, novidades_externas: novidades,
+    medicoes_proximo_cursor: med.proximo_cursor,
   };
 }

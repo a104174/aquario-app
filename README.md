@@ -230,16 +230,7 @@ Cada verificação compara com a anterior. Só cria uma novidade (e um alerta) q
 
 O endpoint `https://<app>.vercel.app/api/mcp` é Streamable HTTP, com autenticação OAuth 2.1 obrigatória. O servidor de autorização é o Supabase Auth, com registo dinâmico de clientes, e o consentimento fica em `/oauth/consent`. As consultas correm com o teu token, por isso a RLS garante que só os teus dados são lidos.
 
-Ferramentas, todas só de leitura:
-- `resumo_aquarios`
-- `ultimas_tpas(aquario, dias)`
-- `medicoes(aquario, dias)`
-- `fauna_e_ninhadas(aquario)`
-- `fotos_recentes(aquario, dias)`: URLs assinados, válidos 60 min
-- `alertas_recentes(dias)`
-- `lista_desejos`
-- `novidades_externas(dias)`
-- `resumo_semanal`
+Usa `resumo_aquarios` em modo compacto para identificar os aquários, `contexto_aquario` para obter o estado de um deles e `linha_temporal` para aprofundar. Para analisar imagens privadas, lista os IDs com `fotos_recentes` em modo metadados e pede uma imagem de cada vez com `conteudo_foto`. Os contratos, exemplos e passos de validação estão na [documentação do MCP](docs/mcp.md).
 
 **claude.ai:**
 1. Em **Definições → Conectores → Adicionar conector personalizado**, usa o nome `Aquário` e o URL `https://aquario-delta.vercel.app/api/mcp`.
