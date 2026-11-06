@@ -60,6 +60,19 @@ test("o detalhe suporta ausência de capa, slideshow, fullscreen e escolher capa
   await app.goto("/aquario?id=a1");
   const palco = app.getByRole("group", { name: "Fotografias do aquário" });
   await expect(palco.getByRole("button", { name: /Abrir fotografia 1 do aquário/ }).locator("img")).toBeVisible();
+  const capa = (await palco.boundingBox())!;
+  const largura = app.viewportSize()!.width;
+  const voltar = (await app.getByRole("button", { name: "Aquários", exact: true }).boundingBox())!;
+  const titulo = (await app.getByRole("heading", { name: "Principal (Aquatlantis Vienna)", level: 1 }).boundingBox())!;
+  const volume = (await app.getByText("Volume", { exact: true }).boundingBox())!;
+  const tpa = (await app.getByRole("button", { name: /^Fiz TPA/ }).boundingBox())!;
+  expect(capa.x).toBeCloseTo(0);
+  expect(capa.y).toBeCloseTo(0);
+  expect(capa.width).toBeCloseTo(largura);
+  expect(voltar.y).toBeGreaterThanOrEqual(capa.y);
+  expect(titulo.y + titulo.height).toBeLessThan(capa.y + capa.height);
+  expect(volume.y + volume.height).toBeLessThan(capa.y + capa.height);
+  expect(tpa.y + 1).toBeGreaterThanOrEqual(capa.y + capa.height);
   await verificarLayout(app, info, "aquario-capa");
   if (info.project.name === "iphone-15-pro-max") await captura(app, info, "aquario-com-capa");
 

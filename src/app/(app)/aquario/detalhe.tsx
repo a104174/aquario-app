@@ -117,7 +117,9 @@ export function DetalheAquario() {
   }
 
   return (
-    <Screen
+    <HeroAquario
+      aquario={aquario}
+      fotos={fotosDoAquario}
       titulo={aquario.nome}
       voltar={{ href: "/aquarios", texto: "Aquários" }}
       acoes={
@@ -125,8 +127,8 @@ export function DetalheAquario() {
           <IconMaisOpcoes size={26} />
         </BotaoHeader>
       }
-      hero={
-        <HeroAquario key={`${id}:${aquario.foto_capa_id ?? "recente"}:${fotosDoAquario[0]?.id ?? ""}`} aquario={aquario} fotos={fotosDoAquario}>
+      indicadores={
+        <>
           <Estatistica
             rotulo="Última TPA"
             valor={dias === null ? "—" : textoHaDias(dias)}
@@ -137,7 +139,7 @@ export function DetalheAquario() {
             valor={aquario.volume_util_l != null ? `${num(aquario.volume_util_l, 1)} L` : aquario.volume_bruto_l != null ? `${num(aquario.volume_bruto_l, 1)} L` : "—"}
           />
           <Estatistica rotulo="Fauna" valor={populacao.total ? String(populacao.total) : "—"} />
-        </HeroAquario>
+        </>
       }
     >
       {/* 1 toque: repete a última TPA */}
@@ -197,13 +199,13 @@ export function DetalheAquario() {
 
       <AquarioSheet open={editar} onOpenChange={setEditar} inicial={aquario} />
       {escolherCapa && <CapaAquarioSheet aquario={aquario} fotos={fotosDoAquario} onFechar={() => setEscolherCapa(false)} />}
-    </Screen>
+    </HeroAquario>
   );
 }
 
 function Estatistica({ rotulo, valor, alerta }: { rotulo: string; valor: string; alerta?: boolean }) {
   return (
-    <div className={cx("rounded-[12px] px-3 py-2", alerta ? "bg-[rgb(255_107_95/0.25)]" : "bg-white/10")}>
+    <div className={cx("min-w-0 rounded-[12px] border px-2.5 py-2", alerta ? "border-[#ff9b8d]/40 bg-[#49282b]/85" : "border-white/15 bg-[#10232f]/80")}>
       <p className="text-[12px] text-white/70">
         {alerta && <span aria-hidden>⚠︎ </span>}
         {rotulo}

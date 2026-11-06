@@ -21,6 +21,7 @@ export function Screen({
   voltar,
   acoes,
   hero,
+  fundoHero,
   children,
   puxarParaAtualizar = true,
 }: {
@@ -30,16 +31,21 @@ export function Screen({
   acoes?: ReactNode;
   /** Conteúdo extra dentro da zona oceano, por baixo do título. */
   hero?: ReactNode;
+  /** Fundo opcional, de margem a margem, atrás do título e do hero. */
+  fundoHero?: ReactNode;
   children: ReactNode;
   /** Puxar para atualizar (por defeito volta a pedir os dados visíveis). */
   puxarParaAtualizar?: boolean | (() => Promise<unknown>);
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const tituloRef = useRef<HTMLHeadingElement>(null);
   const ecraRef = useRef<HTMLDivElement>(null);
   const ptrRef = useRef<HTMLDivElement>(null);
   const [compacto, setCompacto] = useState(false);
   const navegar = useNavegar();
   const qc = useQueryClient();
+  const temFundoHero = !!fundoHero;
 
   const atualizar = useCallback(
     () => (typeof puxarParaAtualizar === "function" ? puxarParaAtualizar() : qc.refetchQueries({ type: "active" })),
@@ -58,14 +64,21 @@ export function Screen({
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => setCompacto(el.scrollTop > 36));
+      raf = requestAnimationFrame(() => {
+        const titulo = tituloRef.current;
+        const header = headerRef.current;
+        setCompacto(temFundoHero && titulo && header
+          ? titulo.getBoundingClientRect().top <= header.getBoundingClientRect().bottom
+          : el.scrollTop > 36);
+      });
     };
     el.addEventListener("scroll", onScroll, { passive: true });
+    if (temFundoHero) onScroll();
     return () => {
       el.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [temFundoHero]);
 
   return (
     <ViewTransition enter={DIRECIONAL} exit={DIRECIONAL} default="none">
@@ -87,6 +100,7 @@ export function Screen({
         )}
         {/* Header fixo */}
         <header
+          ref={headerRef}
           style={{ viewTransitionName: "app-header" }}
           className={cx(
             "absolute inset-x-0 top-0 z-20 pt-[var(--safe-top)] text-white",
@@ -131,17 +145,22 @@ export function Screen({
           style={{ background: "linear-gradient(var(--header-from) 50%, var(--bg) 50%)" }}
         >
           <div className="header-ambient px-5 pb-9 pt-[calc(var(--safe-top)+44px)] text-white">
-            <h1
-              className={cx(
-                "origin-left text-[34px] font-bold leading-tight tracking-tight",
-                "transition-[opacity,transform] duration-[var(--dur-std)] ease-[var(--ease-out)]",
-                compacto && "opacity-0",
-              )}
-            >
-              {titulo}
-            </h1>
-            {subtitulo && <div className="mt-0.5 text-[15px] text-white/70">{subtitulo}</div>}
-            {hero}
+            {fundoHero}
+            <div className={temFundoHero ? "pointer-events-none relative pt-[clamp(56px,20vw,100px)] [@media(orientation:landscape)_and_(max-height:500px)]:pt-5" : undefined}>
+              <h1
+                ref={tituloRef}
+                className={cx(
+                  "origin-left text-[34px] font-bold leading-tight tracking-tight",
+                  "transition-[opacity,transform] duration-[var(--dur-std)] ease-[var(--ease-out)]",
+                  temFundoHero && "[text-shadow:0_2px_10px_#020a10]",
+                  compacto && "opacity-0",
+                )}
+              >
+                {titulo}
+              </h1>
+              {subtitulo && <div className="mt-0.5 text-[15px] text-white/70">{subtitulo}</div>}
+              {hero}
+            </div>
           </div>
           <main className="conteudo-ecra relative -mt-5 min-h-[calc(100%-var(--safe-top)-60px)] rounded-t-[22px] bg-bg px-4 pb-[calc(var(--tabbar-h)+var(--safe-bottom)+32px)] pt-5">
             {children}
