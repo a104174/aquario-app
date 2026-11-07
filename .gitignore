@@ -54,3 +54,8 @@ reviews/*/ciclo-*/*/
 !reviews/*/ciclo-0/*/
 reviews/*/ciclo-0/*/videos/
 reviews/*/dbg/
+
+# Impeccable: runtime do modo live (não versionar)
+.impeccable/live/sessions/
+.impeccable/live/annotations/
+.impeccable/live/server.json
