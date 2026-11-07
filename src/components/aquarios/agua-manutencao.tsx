@@ -6,6 +6,7 @@ import type { MedicaoVisual } from "@/components/aquarium-visual-kit/dados";
 import { ParametroAgua, type ParametroVisual } from "@/components/aquarium-visual-kit/parametro-agua";
 import { Seccao } from "@/components/shell/screen";
 import { ultimaTpa } from "@/lib/derivados";
+import { diasDesde, textoHaDias } from "@/lib/formato";
 import { INFO_PARAMETROS } from "@/lib/parametros";
 import type { Medicao, Tpa } from "@/lib/tipos";
 
@@ -40,15 +41,19 @@ export function AguaManutencao({ aquarioId, medicoes, tpas, intervalo }: { aquar
   // instante fixo por montagem: a mesma referência para todo o cartão
   const [agora] = useState(() => new Date().toISOString());
   const params = parametrosComDados(medicoes, aquarioId, 4);
+  const ultimaMedicao = params.length ? params.map(({ l }) => l[l.length - 1].data).sort().pop()! : null;
 
   return (
-    <Seccao titulo="Água e manutenção">
+    <Seccao
+      titulo="Água e manutenção"
+      acao={ultimaMedicao ? <span className="pb-0.5 text-footnote text-text-2">medida {textoHaDias(diasDesde(ultimaMedicao))}</span> : undefined}
+    >
       <div className="space-y-2.5">
         <CicloTrocaAgua ultimaTpa={ultimaTpa(tpas, aquarioId)?.data ?? null} intervaloDias={intervalo} agora={agora} />
         {params.length > 0 && (
           <div className="grid grid-cols-2 gap-2.5">
             {params.map(({ p, l }) => (
-              <ParametroAgua key={p} parametro={p} medicoes={l} referencia={INFO_PARAMETROS[p].referencia} />
+              <ParametroAgua key={p} parametro={p} medicoes={l} referencia={INFO_PARAMETROS[p].referencia} compacto />
             ))}
           </div>
         )}

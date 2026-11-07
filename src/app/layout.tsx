@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
+import { Toasts } from "@/components/ui/toasts";
 import { splashScreens } from "./splash-screens";
 import "./globals.css";
 
@@ -29,7 +30,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   colorScheme: "light dark",
-  themeColor: "#f2f2ef",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f2f2ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1114" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -47,6 +51,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body>
         <Providers>{children}</Providers>
+        {/* um só Toaster, na raiz (Sonner) */}
+        <Toasts />
       </body>
     </html>
   );

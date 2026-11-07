@@ -64,7 +64,7 @@ export function AtalhosRapidos() {
         <button
           type="button"
           onClick={() => setAEditar((v) => !v)}
-          className="pressable min-h-11 rounded-lg px-2 text-[13px] font-semibold text-accent"
+          className="pressable min-h-11 rounded-lg px-2 text-footnote font-semibold text-accent"
         >
           {aEditar ? "Concluído" : "Personalizar"}
         </button>
@@ -81,13 +81,13 @@ export function AtalhosRapidos() {
                 type="button"
                 aria-pressed={ativa}
                 onClick={() => alternar(opcao.tipo)}
-                className={`pressable flex min-h-12 items-center gap-2 rounded-[12px] px-3 text-left text-[14px] font-medium ${
-                  ativa ? "bg-accent-soft text-accent" : "bg-surface-2 text-text-2"
+                className={`pressable flex min-h-12 items-center gap-2 rounded-[12px] px-3 text-left text-subhead font-medium ${
+                  ativa ? "bg-accent-soft text-accent-forte" : "bg-surface-2 text-text-2"
                 }`}
               >
                 <Icon size={20} />
                 <span>{opcao.titulo}</span>
-                <span className="ml-auto text-[16px]" aria-hidden>{ativa ? "✓" : "+"}</span>
+                <span className="ml-auto text-callout" aria-hidden>{ativa ? "✓" : "+"}</span>
               </button>
             );
           })}
@@ -112,8 +112,8 @@ export function AtalhosRapidos() {
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2.5v7m-3.5-3.5h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[16px] font-semibold leading-tight tracking-tight">{opcao.titulo}</span>
-                  <span className="mt-0.5 block text-[12px] leading-tight text-text-2">{opcao.descricao}</span>
+                  <span className="block text-callout font-semibold leading-tight tracking-tight">{opcao.titulo}</span>
+                  <span className="mt-0.5 block text-caption leading-tight text-text-2">{opcao.descricao}</span>
                 </span>
               </button>
             );

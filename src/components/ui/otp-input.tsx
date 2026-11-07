@@ -61,7 +61,7 @@ export function OtpInput({
             <div
               key={i}
               className={cx(
-                "flex h-14 items-center justify-center rounded-xl bg-surface-2 text-[26px] font-semibold tabular-nums",
+                "flex h-14 items-center justify-center rounded-xl bg-surface-2 text-title1 font-semibold tabular-nums",
                 "transition-[box-shadow,transform] duration-[var(--dur-quick)] ease-[var(--ease-out)]",
                 ativo && "shadow-[inset_0_0_0_2px_var(--accent)]",
                 erro && "shadow-[inset_0_0_0_2px_var(--danger)] text-danger",

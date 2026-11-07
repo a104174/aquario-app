@@ -1,5 +1,6 @@
 "use client";
 
+import { Mascote } from "@/components/mascote/mascote";
 import { EstadoErro } from "@/components/ui/estado-erro";
 import { useEffect, useMemo, useState } from "react";
 import { Chips } from "@/components/forms/campos";
@@ -76,9 +77,13 @@ export default function HistoricoPage() {
           <SkeletonLista linhas={7} />
         </div>
       ) : eventos.length === 0 ? (
-        <p className="enter-up rounded-[14px] bg-surface px-4 py-10 text-center text-text-2">
-          Ainda não há registos. Toca em <span className="font-semibold text-accent">Registar</span> para começar.
-        </p>
+        <div className="enter-up flex flex-col items-center px-4 py-8 text-center">
+          <Mascote humor="contente" tamanho={112} entrar className="mb-2" />
+          <p className="text-title3 font-semibold">O diário está em branco</p>
+          <p className="mt-1 max-w-xs text-subhead text-text-2">
+            Toca em <span className="font-semibold text-accent-forte">+</span> na barra de baixo para registar a primeira TPA ou medição.
+          </p>
+        </div>
       ) : (
         <div key={ativo} className="step-forward">
           <Timeline

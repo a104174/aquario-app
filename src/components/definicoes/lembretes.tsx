@@ -112,17 +112,17 @@ export function Lembretes() {
       <div className="relative flex min-h-[52px] items-center gap-3 px-4 py-2 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator">
         <IconSino size={22} className="shrink-0 text-accent" />
         <div className="min-w-0 flex-1">
-          <p className="text-[17px]">Notificações push</p>
+          <p className="text-body">Notificações push</p>
           {estado === null ? (
             <Skeleton className="mt-1 h-3 w-1/2" />
           ) : (
-            <p className="text-[13px] text-text-2">
+            <p className="text-footnote text-text-2">
               {ligada ? "Ativas neste iPhone" : (explicacao ?? "Desligadas")}
             </p>
           )}
         </div>
         {estado === "desligada" && (
-          <Button className="h-9 px-4 text-[15px]" onClick={() => setExplicar(true)} loading={aTrabalhar}>
+          <Button className="h-9 px-4 text-subhead" onClick={() => setExplicar(true)} loading={aTrabalhar}>
             Ativar
           </Button>
         )}
@@ -131,8 +131,8 @@ export function Lembretes() {
 
       {passos && (
         <div className="pop-in relative px-4 pb-3 pt-1 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator">
-          <p className="text-[15px] font-semibold">{passos.titulo}</p>
-          <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-[15px] text-text-2">
+          <p className="text-subhead font-semibold">{passos.titulo}</p>
+          <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-subhead text-text-2">
             {passos.passos.map((p) => (
               <li key={p}>{p}</li>
             ))}
@@ -140,7 +140,7 @@ export function Lembretes() {
           {!emailLigado && (
             <Button
               variant="secondary"
-              className="mt-3 h-11 w-full text-[15px]"
+              className="mt-3 h-11 w-full text-subhead"
               onClick={() => {
                 guardar.mutate({ lembretes_email: true });
                 toast("✓ Vais receber os lembretes por email", "ok");
@@ -157,7 +157,7 @@ export function Lembretes() {
           type="button"
           onClick={testar}
           disabled={aTrabalhar}
-          className="pressable-row relative flex min-h-[48px] w-full items-center px-4 text-left text-[17px] text-accent disabled:opacity-50 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator"
+          className="pressable-row relative flex min-h-[48px] w-full items-center px-4 text-left text-body text-accent disabled:opacity-50 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator"
         >
           Enviar notificação de teste
         </button>
@@ -165,8 +165,8 @@ export function Lembretes() {
 
       <div className="relative flex min-h-[52px] items-center gap-3 px-4 py-2 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator">
         <span className="flex-1">
-          <span className="block text-[17px]">Foto da semana</span>
-          <span className="block text-[13px] text-text-2">Ao domingo, se um aquário não tiver fotos dessa semana</span>
+          <span className="block text-body">Foto da semana</span>
+          <span className="block text-footnote text-text-2">Ao domingo, se um aquário não tiver fotos dessa semana</span>
         </span>
         <Interruptor
           ligado={definicoes.data?.lembrete_foto_semanal ?? true}
@@ -176,7 +176,7 @@ export function Lembretes() {
       </div>
 
       <div className="flex min-h-[52px] items-center gap-3 px-4">
-        <span className="flex-1 text-[17px]">Email (alternativa)</span>
+        <span className="flex-1 text-body">Email (alternativa)</span>
         <Interruptor
           ligado={emailLigado}
           label="Lembretes por email"
@@ -195,21 +195,21 @@ export function Lembretes() {
         }
       >
         <div className="flex flex-col items-center px-2 pb-2 pt-2 text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent-forte">
             <IconSino size={32} />
           </span>
-          <p className="mt-3 text-[22px] font-bold leading-tight">Lembretes na hora certa</p>
-          <p className="mt-1 text-[15px] text-text-2">A seguir, o iPhone pergunta se permites notificações. Só enviamos isto:</p>
+          <p className="mt-3 text-title2 font-bold leading-tight">Lembretes na hora certa</p>
+          <p className="mt-1 text-subhead text-text-2">A seguir, o iPhone pergunta se permites notificações. Só enviamos isto:</p>
         </div>
         <ul className="mt-4 overflow-hidden rounded-[14px] bg-surface">
           {O_QUE_RECEBES.map((x) => (
             <li key={x.t} className="relative px-4 py-3 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator last:after:hidden">
-              <p className="text-[17px]">{x.t}</p>
-              <p className="text-[13px] text-text-2">{x.d}</p>
+              <p className="text-body">{x.t}</p>
+              <p className="text-footnote text-text-2">{x.d}</p>
             </li>
           ))}
         </ul>
-        <p className="mt-3 px-4 text-[13px] text-text-2">Podes desligar a qualquer momento aqui nas Definições.</p>
+        <p className="mt-3 px-4 text-footnote text-text-2">Podes desligar a qualquer momento aqui nas Definições.</p>
       </Sheet>
     </Grupo>
   );

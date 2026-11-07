@@ -52,26 +52,26 @@ export function AnelTpa({ estado, dias, intervalo }: { estado: EstadoTpa; dias: 
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {nunca ? (
-            <span className="text-[22px] font-semibold leading-none text-text-3">—</span>
+            <span className="text-title2 font-semibold leading-none text-text-3">—</span>
           ) : (
             <>
-              <span className={cx("text-[24px] font-bold leading-none tabular-nums", estado === "atrasada" && "text-danger")}>
+              <span className={cx("text-title2 font-bold leading-none tabular-nums", estado === "atrasada" && "text-danger")}>
                 {Math.min(dias!, 99)}
               </span>
-              <span className="mt-0.5 text-[11px] font-medium text-text-2">{dias === 1 ? "dia" : "dias"}</span>
+              <span className="mt-0.5 text-caption font-medium text-text-2">{dias === 1 ? "dia" : "dias"}</span>
             </>
           )}
         </div>
       </div>
       <p
         className={cx(
-          "-mt-1 text-center text-[12px] font-medium leading-tight",
+          "-mt-1 text-center text-caption font-medium leading-tight",
           estado === "atrasada" ? "text-danger" : estado === "quase" ? "text-warning" : "text-text-2",
         )}
       >
         {nunca ? "Sem TPAs" : estado === "atrasada" ? `TPA em atraso` : estado === "quase" ? "TPA amanhã" : `desde a TPA`}
       </p>
-      {!nunca && <p className="text-[11px] tabular-nums text-text-3">ciclo de {intervalo} d</p>}
+      {!nunca && <p className="text-caption tabular-nums text-text-3">ciclo de {intervalo} d</p>}
     </div>
   );
 }

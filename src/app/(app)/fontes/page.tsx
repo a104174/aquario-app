@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Exterior } from "@/components/fontes/exterior";
 import { FonteSheet } from "@/components/fontes/fonte-sheet";
-import { IconChevronDireita, IconGlobo, IconGota, IconMais, IconSino, IconEstrela, IconTermometro } from "@/components/icons";
+import { IconChevronDireita, IconGlobo, IconGota, IconMais, IconRaio, IconEstrela, IconTermometro } from "@/components/icons";
 import { BotaoHeader, Screen, Seccao } from "@/components/shell/screen";
 import { Button } from "@/components/ui/button";
 import { SkeletonLista } from "@/components/ui/skeleton";
@@ -18,7 +18,7 @@ import type { FonteExterna } from "@/lib/tipos";
 
 const ICONE: Record<string, React.ReactNode> = {
   meteo: <IconTermometro size={22} />,
-  eredes: <IconSino size={22} />,
+  eredes: <IconRaio size={22} />,
   agere_avisos: <IconGota size={22} />,
   agere_qualidade: <IconGota size={22} />,
   loja: <IconEstrela size={22} />,
@@ -100,8 +100,8 @@ export default function FontesPage() {
                 >
                   <span className="text-accent">{ICONE[f.tipo] ?? <IconGlobo size={22} />}</span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[17px]">{f.nome}</span>
-                    <span className={cx("block truncate text-[13px]", e.erro ? "text-warning" : "text-text-2")}>{e.texto}</span>
+                    <span className="block truncate text-body">{f.nome}</span>
+                    <span className={cx("block truncate text-footnote", e.erro ? "text-warning" : "text-text-2")}>{e.texto}</span>
                   </span>
                   <IconChevronDireita size={18} className="text-text-3" />
                 </button>
@@ -117,7 +117,7 @@ export default function FontesPage() {
 
       <Seccao titulo="Novidades">
         {novidades.length === 0 ? (
-          <p className="rounded-[14px] bg-surface px-4 py-6 text-center text-[15px] text-text-2">Sem novidades. Só aparece aqui o que mudar.</p>
+          <p className="rounded-[14px] bg-surface px-4 py-6 text-center text-subhead text-text-2">Sem novidades. Só aparece aqui o que mudar.</p>
         ) : (
           <div className="overflow-hidden rounded-[14px] bg-surface">
             {novidades.slice(0, 40).map((n) => (
@@ -128,11 +128,11 @@ export default function FontesPage() {
                 className="pressable-row relative block w-full px-4 py-3 text-left after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator last:after:hidden"
               >
                 <span className="flex items-baseline justify-between gap-2">
-                  <span className="text-[15px] font-semibold">{n.titulo}</span>
-                  <span className="shrink-0 text-[12px] text-text-3">{diasDesde(n.detectado_em) < 2 ? cabecalhoDia(n.detectado_em) : cabecalhoDia(n.detectado_em).split(",")[0]} {hora(n.detectado_em)}</span>
+                  <span className="text-subhead font-semibold">{n.titulo}</span>
+                  <span className="shrink-0 text-caption text-text-3">{diasDesde(n.detectado_em) < 2 ? cabecalhoDia(n.detectado_em) : cabecalhoDia(n.detectado_em).split(",")[0]} {hora(n.detectado_em)}</span>
                 </span>
-                {n.resumo && <span className="block text-[14px] text-text-2">{n.resumo}</span>}
-                <span className="block text-[12px] text-text-3">{nomeFonte(n.fonte_id)}</span>
+                {n.resumo && <span className="block text-subhead text-text-2">{n.resumo}</span>}
+                <span className="block text-caption text-text-3">{nomeFonte(n.fonte_id)}</span>
               </button>
             ))}
           </div>

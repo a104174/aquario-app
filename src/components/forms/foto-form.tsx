@@ -150,7 +150,7 @@ export function FotoForm({
             <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft">
               <IconCamara size={32} />
             </span>
-            <span className="text-[17px] font-semibold">Tirar foto</span>
+            <span className="text-body font-semibold">Tirar foto</span>
           </button>
         )}
       </div>
@@ -172,7 +172,7 @@ export function FotoForm({
             { t: "Galeria", f: () => galeriaRef.current?.click() },
             { t: "Colar print", f: colar },
           ].map((b) => (
-            <button key={b.t} type="button" onClick={b.f} className="pressable h-11 rounded-xl bg-surface text-[15px] font-medium text-accent">
+            <button key={b.t} type="button" onClick={b.f} className="pressable h-11 rounded-xl bg-surface text-subhead font-medium text-accent">
               {b.t}
             </button>
           ))}
@@ -180,13 +180,13 @@ export function FotoForm({
       )}
 
       <div className="mb-5">
-        <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Etiqueta</p>
+        <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">Etiqueta</p>
         <Chips opcoes={ETIQUETAS} valor={etiqueta} onValor={setEtiqueta} />
       </div>
 
       {eventos.length > 0 && (
         <div className="mb-5">
-          <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Ligar a um registo</p>
+          <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">Ligar a um registo</p>
           <Chips opcoes={[{ chave: SEM_EVENTO, texto: "Nenhum" }, ...eventos].map((e) => ({ valor: e.chave, texto: e.texto }))} valor={ligacao} onValor={setLigacao} />
         </div>
       )}

@@ -40,7 +40,7 @@ export default defineConfig({
     iphone("iphone-se", 375, 667, 20, 0),
     iphone("iphone-15-pro-max", 430, 932, 59, 34),
     // iPhone 16 Pro Max (alvo principal): só os testes de teclado
-    { ...iphone("iphone-16-pro-max", 440, 956, 62, 34), testMatch: /teclado.*\.spec\.ts/ },
+    { ...iphone("iphone-16-pro-max", 440, 956, 62, 34), testMatch: /(teclado.*|design-review.*)\.spec\.ts/ },
     {
       name: "pixel-7",
       use: {

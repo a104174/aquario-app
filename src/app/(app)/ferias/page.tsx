@@ -1,10 +1,12 @@
 "use client";
 
+import { celebrar } from "@/lib/celebrar";
+import { Mascote } from "@/components/mascote/mascote";
 import { EstadoErro } from "@/components/ui/estado-erro";
 import { useState } from "react";
 import { FeriasSheet } from "@/components/ferias/ferias-sheet";
-import { IconMais, IconMala, IconVisto } from "@/components/icons";
-import { BotaoHeader, Screen, Seccao } from "@/components/shell/screen";
+import { IconMais, IconVisto } from "@/components/icons";
+import { Screen, Seccao } from "@/components/shell/screen";
 import { escolher } from "@/components/ui/action-sheet";
 import { Button } from "@/components/ui/button";
 import { cx } from "@/lib/cx";
@@ -27,7 +29,10 @@ export default function FeriasPage() {
   const passadas = (ferias.data ?? []).filter((f) => f.regresso < hoje);
 
   function alternar(f: Ferias, i: number) {
-    guardar.mutate({ ...f, checklist: f.checklist.map((c, j) => (j === i ? { ...c, feito: !c.feito } : c)) });
+    const checklist = f.checklist.map((c, j) => (j === i ? { ...c, feito: !c.feito } : c));
+    guardar.mutate({ ...f, checklist });
+    // última tarefa feita: pequena celebração (só ao completar, não ao desmarcar)
+    if (!f.checklist[i].feito && checklist.every((c) => c.feito)) celebrar("Tudo pronto!", "Os aquários ficam bem entregues");
   }
 
   async function opcoes(f: Ferias) {
@@ -48,28 +53,29 @@ export default function FeriasPage() {
       titulo="Modo férias"
       subtitulo={estado ?? "Sem férias marcadas"}
       voltar={{ href: "/definicoes", texto: "Definições" }}
-      acoes={
-        <BotaoHeader label="Planear férias" onClick={() => setSheet({ aberto: true })}>
-          <IconMais size={24} strokeWidth={2} />
-        </BotaoHeader>
+      // ação principal no terço inferior (uso a uma mão)
+      acaoFlutuante={
+        <Button variant="secondary" block onClick={() => setSheet({ aberto: true })}>
+          <IconMais size={20} strokeWidth={2.6} />
+          Planear férias
+        </Button>
       }
     >
       {ferias.isError && !ferias.data ? (
         <EstadoErro onRetry={() => void ferias.refetch()} aTentar={ferias.isFetching} />
       ) : !atual ? (
         <div className="enter-up flex flex-col items-center rounded-[14px] bg-surface px-4 py-10 text-center">
-          <IconMala size={34} className="mb-2 text-accent" />
-          <p className="mb-4 text-text-2">Marca as datas para preparares os aquários e pausares os avisos de TPA.</p>
-          <Button onClick={() => setSheet({ aberto: true })}>Planear férias</Button>
+          <Mascote humor="contente" tamanho={108} entrar className="mb-2" />
+          <p className="max-w-xs text-text-2">Marca as datas para preparares os aquários e pausares os avisos de TPA.</p>
         </div>
       ) : (
         <>
           <button type="button" onClick={() => opcoes(atual)} className="pressable enter-up mb-5 block w-full rounded-[18px] bg-surface p-4 text-left">
-            <p className="text-[22px] font-bold">
+            <p className="text-title2 font-bold">
               {d(atual.ida)} → {d(atual.regresso)}
             </p>
             {atual.quem_alimenta && <p className="text-text-2">Quem alimenta: {atual.quem_alimenta}</p>}
-            {atual.notas && <p className="selectable mt-1 text-[15px] text-text-2">{atual.notas}</p>}
+            {atual.notas && <p className="selectable mt-1 text-subhead text-text-2">{atual.notas}</p>}
           </button>
 
           <Seccao titulo={`Checklist · ${feitos}/${atual.checklist.length}`}>
@@ -86,12 +92,12 @@ export default function FeriasPage() {
                   <span
                     className={cx(
                       "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-[var(--dur-quick)]",
-                      c.feito ? "border-ok bg-ok text-white" : "border-text-3",
+                      c.feito ? "border-ok bg-ok text-sobre-ok" : "border-text-3",
                     )}
                   >
                     {c.feito && <IconVisto size={16} strokeWidth={3} className="pop-in" />}
                   </span>
-                  <span className={cx("text-[16px] transition-colors duration-[var(--dur-std)]", c.feito && "text-text-3 line-through")}>{c.texto}</span>
+                  <span className={cx("text-callout transition-colors duration-[var(--dur-std)]", c.feito && "text-text-3 line-through")}>{c.texto}</span>
                 </button>
               ))}
               <form
@@ -108,7 +114,7 @@ export default function FeriasPage() {
                   value={novoItem}
                   onChange={(e) => setNovoItem(e.target.value)}
                   placeholder="Adicionar item"
-                  className="h-[50px] flex-1 bg-transparent text-[16px] outline-none placeholder:text-text-3"
+                  className="h-[50px] flex-1 bg-transparent text-callout outline-none placeholder:text-text-3"
                 />
               </form>
             </div>
@@ -120,7 +126,7 @@ export default function FeriasPage() {
         <Seccao titulo="Anteriores">
           <div className="overflow-hidden rounded-[14px] bg-surface">
             {passadas.map((f) => (
-              <button key={f.id} type="button" onClick={() => opcoes(f)} className="pressable-row flex min-h-[48px] w-full items-center px-4 text-left text-[16px] text-text-2">
+              <button key={f.id} type="button" onClick={() => opcoes(f)} className="pressable-row flex min-h-[48px] w-full items-center px-4 text-left text-callout text-text-2">
                 {d(f.ida)} → {d(f.regresso)}
                 {f.quem_alimenta ? ` · ${f.quem_alimenta}` : ""}
               </button>

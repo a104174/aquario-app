@@ -168,7 +168,7 @@ export function GraficoParametro({ pontos, info }: { pontos: Ponto[]; info: Info
       )}
       {sel && geo && (
         <div
-          className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-lg bg-text px-2.5 py-1 text-[13px] text-bg shadow-lg transition-[left] duration-[var(--dur-quick)] ease-[var(--ease-out)]"
+          className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-lg bg-text px-2.5 py-1 text-footnote text-bg shadow-lg transition-[left] duration-[var(--dur-quick)] ease-[var(--ease-out)]"
           style={{ left: Math.max(56, Math.min(largura - 56, geo.xy[ativo!][0])) }}
         >
           <span className="font-semibold tabular-nums">{fmt(sel.v)}</span>

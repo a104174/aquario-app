@@ -43,7 +43,7 @@ export function EscolherFotoFauna({ fotos, valor, onValor, ocupado, onProcessar 
 
   return (
     <fieldset className="mb-5 rounded-[18px] border border-separator bg-surface p-3" disabled={ocupado}>
-      <legend className="px-2 text-[13px] font-semibold text-text-2">Fotografia de destaque · opcional</legend>
+      <legend className="px-2 text-footnote font-semibold text-text-2">Fotografia de destaque · opcional</legend>
       <input ref={input} type="file" accept="image/*" aria-label="Carregar fotografia" className="sr-only" tabIndex={-1} onChange={(e) => {
         const ficheiro = e.target.files?.[0];
         e.target.value = "";
@@ -56,9 +56,9 @@ export function EscolherFotoFauna({ fotos, valor, onValor, ocupado, onProcessar 
             preview && <img src={preview} alt="Fotografia selecionada" className="h-28 w-full object-cover" />
           )}
         </div>
-      ) : <p className="mb-1 text-[13px] text-text-2">Escolhe uma fotografia do iPhone ou da galeria deste aquário.</p>}
-      {erro && <p role="alert" className="text-[13px] text-danger">{erro}</p>}
-      <div className="flex flex-wrap gap-x-3 text-[13px] font-semibold text-accent">
+      ) : <p className="mb-1 text-footnote text-text-2">Escolhe uma fotografia do iPhone ou da galeria deste aquário.</p>}
+      {erro && <p role="alert" className="text-footnote text-danger">{erro}</p>}
+      <div className="flex flex-wrap gap-x-3 text-footnote font-semibold text-accent">
         <button type="button" className="pressable flex min-h-11 items-center gap-1.5" onClick={() => input.current?.click()}>
           <IconCamara size={17} />{valor ? "Substituir" : "Carregar foto"}
         </button>

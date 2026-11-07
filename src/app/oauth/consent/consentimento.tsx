@@ -68,7 +68,7 @@ export function Consentimento() {
   return (
     <div className="altura-app flex flex-col">
       <div className="header-ambient flex flex-1 flex-col items-center justify-end px-6 pb-8 pt-[calc(var(--safe-top)+24px)] text-center text-text">
-        <h1 className="text-[28px] font-bold">Autorizar acesso</h1>
+        <h1 className="text-title1 font-bold">Autorizar acesso</h1>
         <p className="mt-1 text-text-2">Aquário · leitura dos teus dados</p>
       </div>
       <div className="bg-bg px-5 pb-[calc(var(--safe-bottom)+24px)] pt-6">
@@ -81,10 +81,10 @@ export function Consentimento() {
           </div>
         ) : (
           <div className="enter-up">
-            <p className="text-[17px]">
+            <p className="text-body">
               <span className="font-semibold">{det.cliente}</span> ({det.uri}) quer ler os dados dos teus aquários: TPAs, medições, fauna, fotos, alertas e lista de desejos.
             </p>
-            <p className="mt-2 text-[14px] text-text-2">Só leitura. Conta: {det.email}. Podes revogar a qualquer momento.</p>
+            <p className="mt-2 text-subhead text-text-2">Só leitura. Conta: {det.email}. Podes revogar a qualquer momento.</p>
             <div className="mt-5 space-y-2">
               <Button block onClick={() => decidir(true)} loading={aEnviar}>
                 Autorizar

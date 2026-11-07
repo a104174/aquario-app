@@ -26,6 +26,7 @@ export function Screen({
   fundoHero,
   children,
   puxarParaAtualizar = true,
+  acaoFlutuante,
 }: {
   titulo: string;
   subtitulo?: ReactNode;
@@ -38,6 +39,8 @@ export function Screen({
   children: ReactNode;
   /** Puxar para atualizar (por defeito volta a pedir os dados visíveis). */
   puxarParaAtualizar?: boolean | (() => Promise<unknown>);
+  /** Ação principal do ecrã, fixa no terço inferior (acima da navegação). */
+  acaoFlutuante?: ReactNode;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -128,7 +131,7 @@ export function Screen({
             <h2
               aria-hidden={!compacto}
               className={cx(
-                "pointer-events-none absolute inset-x-[108px] truncate text-center text-[17px] font-semibold",
+                "pointer-events-none absolute inset-x-[108px] truncate text-center text-body font-semibold",
                 "transition-[opacity,transform] duration-[var(--dur-std)] ease-[var(--ease-out)]",
                 compacto ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0",
               )}
@@ -148,13 +151,16 @@ export function Screen({
           className="scroll-area screen-enter absolute inset-0"
           style={{ background: temFundoHero ? "linear-gradient(#141517 50%, var(--bg) 50%)" : "var(--bg)" }}
         >
-          <div className={cx("header-ambient px-5 pt-[calc(var(--safe-top)+48px)]", temFundoHero ? "pb-9 text-white" : "pb-5 text-text")}>
+          <section
+            aria-label={titulo}
+            className={cx("header-ambient px-5 pt-[calc(var(--safe-top)+48px)]", temFundoHero ? "pb-9 text-white" : "pb-5 text-text")}
+          >
             {fundoHero}
             <div className={temFundoHero ? "pointer-events-none relative pt-[clamp(56px,20vw,100px)] [@media(orientation:landscape)_and_(max-height:500px)]:pt-5" : undefined}>
               <h1
                 ref={tituloRef}
                 className={cx(
-                  "origin-left text-[34px] font-bold leading-[1.1] tracking-[-0.025em]",
+                  "origin-left text-large font-bold leading-[1.1] tracking-[-0.025em]",
                   "transition-[opacity,transform] duration-[var(--dur-std)] ease-[var(--ease-out)]",
                   temFundoHero && "[text-shadow:0_2px_10px_#020a10]",
                   compacto && "opacity-0",
@@ -162,19 +168,21 @@ export function Screen({
               >
                 {titulo}
               </h1>
-              {subtitulo && <div className={cx("mt-1 text-[15px]", temFundoHero ? "text-white/75" : "text-text-2")}>{subtitulo}</div>}
+              {subtitulo && <div className={cx("mt-1 text-subhead", temFundoHero ? "text-white/75" : "text-text-2")}>{subtitulo}</div>}
               {hero}
             </div>
-          </div>
+          </section>
           <main
             className={cx(
               "conteudo-ecra relative min-h-[calc(100%-var(--safe-top)-60px)] bg-bg px-4 pb-[calc(var(--tabbar-h)+var(--safe-bottom)+24px)]",
               temFundoHero ? "-mt-5 rounded-t-[28px] pt-5" : "pt-2",
+              !!acaoFlutuante && "com-acao-flutuante",
             )}
           >
             {children}
           </main>
         </div>
+        {acaoFlutuante && <div className="acao-flutuante">{acaoFlutuante}</div>}
       </div>
     </ViewTransition>
   );
@@ -196,7 +204,7 @@ export function Seccao({
     <section className={cx("mb-6", className)}>
       {(titulo || acao) && (
         <div className="mb-2.5 flex items-end justify-between px-1">
-          <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-text">{titulo}</h2>
+          <h2 className="text-title3 font-semibold tracking-[-0.02em] text-text">{titulo}</h2>
           {acao}
         </div>
       )}

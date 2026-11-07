@@ -25,21 +25,32 @@ interface ParametroAguaProps {
   parametro: ParametroVisual;
   medicoes: readonly MedicaoVisual[];
   referencia?: IntervaloVisual;
+  /**
+   * Variante compacta (listas com vários parâmetros): sem detalhe nem
+   * rodapé quando o valor está dentro da referência; fora dela, o cartão é
+   * destacado e mostra a referência. A data fica a cargo de quem agrupa.
+   */
+  compacto?: boolean;
 }
 
-export function ParametroAgua({ parametro, medicoes, referencia }: ParametroAguaProps) {
+export function ParametroAgua({ parametro, medicoes, referencia, compacto = false }: ParametroAguaProps) {
   const titulo = useId();
   const { nome, detalhe, unidade, amplitude, grupo } = parametros[parametro];
   const modelo = modeloTendencia(medicoes, referencia, amplitude);
   const serie = modelo?.serie;
+  const fora = !!modelo?.faixa && (modelo.ultimo.valor < modelo.faixa[0] || modelo.ultimo.valor > modelo.faixa[1]);
 
   return (
-    <section className={estilos.parametro} aria-labelledby={titulo}>
+    <section
+      className={compacto ? `${estilos.parametro} ${estilos.compacto}` : estilos.parametro}
+      data-fora={fora ? "" : undefined}
+      aria-labelledby={titulo}
+    >
       <div className={estilos.topoParametro}>
         <div className={estilos.seloParametro}><GlifoParametro grupo={grupo} /></div>
         <div>
-          <h3 id={titulo}>{nome}</h3>
-          <p className={estilos.secundario}>{detalhe}</p>
+          <h3 id={titulo}>{nome}{fora ? <span className={estilos.sr}> — fora da referência</span> : null}</h3>
+          {compacto ? null : <p className={estilos.secundario}>{detalhe}</p>}
         </div>
       </div>
 
@@ -54,10 +65,12 @@ export function ParametroAgua({ parametro, medicoes, referencia }: ParametroAgua
           ) : modelo.faixa ? (
             <ReguaReferencia valor={modelo.ultimo.valor} intervalo={modelo.faixa} />
           ) : null}
-          <div className={estilos.rodapeParametro}>
-            <time dateTime={new Date(modelo.ultimo.instante).toISOString()}>{formatarDataHora(modelo.ultimo.instante)}</time>
-            {modelo.faixa ? <Referencia intervalo={modelo.faixa} unidade={unidade} /> : null}
-          </div>
+          {compacto && !fora ? null : (
+            <div className={estilos.rodapeParametro}>
+              {compacto ? null : <time dateTime={new Date(modelo.ultimo.instante).toISOString()}>{formatarDataHora(modelo.ultimo.instante)}</time>}
+              {modelo.faixa ? <Referencia intervalo={modelo.faixa} unidade={unidade} /> : null}
+            </div>
+          )}
         </>
       ) : (
         <div className={estilos.leituraVazia}>

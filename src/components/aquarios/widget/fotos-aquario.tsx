@@ -50,7 +50,7 @@ export function FotosAquario({ fotos, nome }: { fotos: Foto[]; nome: string }) {
           <Slide key={f.id} foto={f} ativa={Math.abs(k - i) <= 1} onAbrir={() => abrirVisualizador(ids, k)} rotulo={`Abrir fotografia ${k + 1} de ${n}`} />
         ))}
       </div>
-      <span className="pointer-events-none absolute left-3 top-2.5 rounded-full bg-black/35 px-2 py-0.5 text-[12px] font-medium text-white backdrop-blur-md">
+      <span className="pointer-events-none absolute left-3 top-2.5 rounded-full bg-black/35 px-2 py-0.5 text-caption font-medium text-white backdrop-blur-md">
         {dataCurta(fotos[i].data)}
       </span>
       {n > 1 && (
@@ -96,7 +96,7 @@ function Slide({ foto, ativa, onAbrir, rotulo }: { foto: Foto; ativa: boolean; o
         />
       )}
       {indisponivel && (
-        <span className="absolute inset-0 flex items-center justify-center text-[13px] text-text-3">Fotografia indisponível</span>
+        <span className="absolute inset-0 flex items-center justify-center text-footnote text-text-3">Fotografia indisponível</span>
       )}
     </button>
   );

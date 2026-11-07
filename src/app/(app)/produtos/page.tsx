@@ -4,7 +4,8 @@ import { EstadoErro } from "@/components/ui/estado-erro";
 import { useState } from "react";
 import { IconMais } from "@/components/icons";
 import { ProdutoSheet } from "@/components/produtos/produto-sheet";
-import { BotaoHeader, Screen, Seccao } from "@/components/shell/screen";
+import { Button } from "@/components/ui/button";
+import { Screen, Seccao } from "@/components/shell/screen";
 import { SkeletonLista } from "@/components/ui/skeleton";
 import { cx } from "@/lib/cx";
 import { estadoStock, TIPOS_PRODUTO } from "@/lib/produtos";
@@ -21,10 +22,12 @@ export default function ProdutosPage() {
       titulo="Produtos"
       subtitulo="Stock e fim estimado"
       voltar={{ href: "/definicoes", texto: "Definições" }}
-      acoes={
-        <BotaoHeader label="Novo produto" onClick={() => setSheet({ aberto: true })}>
-          <IconMais size={24} strokeWidth={2} />
-        </BotaoHeader>
+      // ação principal no terço inferior (uso a uma mão)
+      acaoFlutuante={
+        <Button variant="secondary" block onClick={() => setSheet({ aberto: true })}>
+          <IconMais size={20} strokeWidth={2.6} />
+          Novo produto
+        </Button>
       }
     >
       {produtos.isError && !produtos.data ? (
@@ -54,8 +57,8 @@ export default function ProdutosPage() {
                       )}
                     >
                       <span className="flex items-baseline justify-between gap-2">
-                        <span className="truncate text-[17px]">{p.nome}</span>
-                        <span className={cx("shrink-0 text-[14px] tabular-nums", e.nivel === "baixo" || e.nivel === "vazio" ? "font-semibold text-danger" : "text-text-2")}>
+                        <span className="truncate text-body">{p.nome}</span>
+                        <span className={cx("shrink-0 text-subhead tabular-nums", e.nivel === "baixo" || e.nivel === "vazio" ? "font-semibold text-danger" : "text-text-2")}>
                           {(e.nivel === "baixo" || e.nivel === "vazio") && <span aria-hidden>⚠︎ </span>}
                           {e.resumo}
                         </span>

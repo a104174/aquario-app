@@ -282,10 +282,10 @@ function Visualizador({ ids, inicial, saindo }: { ids: string[]; inicial: number
         )}
       >
         <div className="pointer-events-auto flex h-11 items-center justify-between">
-          <button type="button" onClick={fecharVisualizador} className="pressable h-11 rounded-lg px-3 text-[17px] font-semibold">
+          <button type="button" onClick={fecharVisualizador} className="pressable h-11 rounded-lg px-3 text-body font-semibold">
             Fechar
           </button>
-          <span className="text-[15px] tabular-nums text-white/80">
+          <span className="text-subhead tabular-nums text-white/80">
             {Math.min(indice, fotos.length - 1) + 1} de {fotos.length}
           </span>
           <button type="button" aria-label="Opções" onClick={menu} className="pressable flex h-11 w-11 items-center justify-center rounded-full">
@@ -303,12 +303,12 @@ function Visualizador({ ids, inicial, saindo }: { ids: string[]; inicial: number
         )}
       >
         <div key={atual.id} className="enter-up">
-          <div className="mb-1 flex flex-wrap items-center gap-1.5 text-[13px]">
+          <div className="mb-1 flex flex-wrap items-center gap-1.5 text-footnote">
             <span className="rounded-full bg-white/20 px-2 py-0.5">{NOME_ETIQUETA[atual.etiqueta] ?? "Outro"}</span>
             {ligado && <span className="rounded-full bg-white/20 px-2 py-0.5">{ligado}</span>}
           </div>
-          {atual.legenda && <p className="selectable text-[17px]">{atual.legenda}</p>}
-          <p className="text-[13px] text-white/70">
+          {atual.legenda && <p className="selectable text-body">{atual.legenda}</p>}
+          <p className="text-footnote text-white/70">
             {aquario?.nome} · {cabecalhoDia(atual.data)}, {hora(atual.data)}
           </p>
         </div>

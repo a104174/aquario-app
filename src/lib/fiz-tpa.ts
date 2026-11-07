@@ -5,6 +5,7 @@ import { num } from "./formato";
 import { estadoStock } from "./produtos";
 import { useApagar, useColecao, useGuardar } from "./query/dados";
 import { vibrar } from "./haptic";
+import { celebrar } from "./celebrar";
 import { toast } from "./toast";
 import { abrirRegistar } from "./ui-store";
 
@@ -48,11 +49,13 @@ export function useFizTpa() {
     });
     const doseTxt = s.cond && s.dose != null ? ` · ${num(s.dose, 2)} ml ${s.cond.nome}` : "";
     vibrar("sucesso");
-    toast(`✓ TPA de ${num(s.litros, 1)} L${doseTxt}`, "ok", 6000, { texto: "Anular", onClick: () => apagar.mutate({ id }) });
+    // pico da tarefa: celebração curta + toast com "Anular" (reversível)
+    celebrar("TPA feita!", `${num(s.litros, 1)} L de água nova`);
+    toast(`TPA de ${num(s.litros, 1)} L${doseTxt}`, "ok", 6000, { texto: "Anular", onClick: () => apagar.mutate({ id }) });
     if (s.cond) {
       const futuro = [{ id, aquario_id: aquarioId, data: new Date().toISOString(), litros: s.litros, condicionador_id: s.cond.id, dose_ml: s.dose, notas: null }, ...(tpas ?? [])];
       const e = estadoStock(s.cond, futuro);
-      if (e.nivel === "baixo" || e.nivel === "vazio") setTimeout(() => toast(`⚠︎ ${s.cond!.nome}: ${e.resumo}`, "erro", 5000), 600);
+      if (e.nivel === "baixo" || e.nivel === "vazio") setTimeout(() => toast(`${s.cond!.nome}: ${e.resumo}`, "erro", 5000), 1900); // depois da celebração
     }
   }
 

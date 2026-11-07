@@ -27,15 +27,15 @@ export function CartaoAlerta({
         <IconeAlerta tipo={alerta.tipo} />
         <span className="min-w-0 flex-1">
           <span className="flex items-center justify-between gap-2">
-            <span className="text-[12px] font-semibold uppercase tracking-wide text-text-3">{p.categoria}</span>
-            <span className="shrink-0 text-[12px] tabular-nums text-text-3">{hora(alerta.criado_em)}</span>
+            <span className="text-caption font-semibold uppercase tracking-wide text-text-3">{p.categoria}</span>
+            <span className="shrink-0 text-caption tabular-nums text-text-3">{hora(alerta.criado_em)}</span>
           </span>
-          <span className={cx("mt-0.5 block text-[16px] leading-snug", alerta.lido || historico ? "font-medium text-text-2" : "font-semibold")}>
+          <span className={cx("mt-0.5 block text-callout leading-snug", alerta.lido || historico ? "font-medium text-text-2" : "font-semibold")}>
             {alerta.titulo}
           </span>
-          <span className="mt-0.5 block text-[14px] leading-snug text-text-2">{alerta.mensagem}</span>
+          <span className="mt-0.5 block text-subhead leading-snug text-text-2">{alerta.mensagem}</span>
           {alerta.estado === "adiado" && alerta.adiado_ate && (
-            <span className="mt-2 inline-flex rounded-full bg-warning-soft px-2.5 py-1 text-[12px] font-semibold text-warning">
+            <span className="mt-2 inline-flex rounded-full bg-warning-soft px-2.5 py-1 text-caption font-semibold text-warning">
               Lembrar amanhã
             </span>
           )}
@@ -51,17 +51,17 @@ export function CartaoAlerta({
 
       {!historico && (
         <div className="flex items-center gap-1 border-t border-separator px-2 py-1.5">
-          <button type="button" onClick={onAbrir} className="pressable min-h-11 rounded-[10px] px-2.5 text-[13px] font-semibold text-accent">
+          <button type="button" onClick={onAbrir} className="pressable min-h-11 rounded-[10px] px-2.5 text-footnote font-semibold text-accent">
             {p.acao}
           </button>
           <span className="flex-1" />
-          <button type="button" onClick={onAdiar} className="pressable min-h-11 rounded-[10px] px-2.5 text-[13px] font-medium text-text-2">
+          <button type="button" onClick={onAdiar} className="pressable min-h-11 rounded-[10px] px-2.5 text-footnote font-medium text-text-2">
             Amanhã
           </button>
-          <button type="button" onClick={onIgnorar} className="pressable min-h-11 rounded-[10px] px-2.5 text-[13px] font-medium text-text-2">
+          <button type="button" onClick={onIgnorar} className="pressable min-h-11 rounded-[10px] px-2.5 text-footnote font-medium text-text-2">
             Ignorar
           </button>
-          <button type="button" onClick={onResolver} className="pressable min-h-11 rounded-[10px] bg-accent-soft px-3 text-[13px] font-semibold text-accent">
+          <button type="button" onClick={onResolver} className="pressable min-h-11 rounded-[10px] bg-accent-soft px-3 text-footnote font-semibold text-accent-forte">
             Já tratei
           </button>
         </div>

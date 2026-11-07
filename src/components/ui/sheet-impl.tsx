@@ -66,7 +66,7 @@ export default function SheetImpl({
           <Drawer.Handle className="!mt-2 !h-[5px] !w-9 !bg-[var(--text-3)] !opacity-40" />
           <div className="grid h-12 shrink-0 grid-cols-[1fr_auto_1fr] items-center px-2">
             <div className="flex justify-start">{esquerda}</div>
-            <Drawer.Title className="truncate text-center text-[17px] font-semibold">{titulo}</Drawer.Title>
+            <Drawer.Title className="truncate text-center text-body font-semibold">{titulo}</Drawer.Title>
             <div className="flex justify-end">{direita}</div>
           </div>
           <div className="scroll-area min-h-0 flex-1 px-4 pb-4" data-vaul-no-drag={undefined}>

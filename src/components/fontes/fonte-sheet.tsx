@@ -135,7 +135,7 @@ function Form({ inicial, onFeito }: { inicial?: FonteExterna; onFeito: () => voi
       )}
 
       {tipo === "agere_qualidade" && (
-        <p className="mb-5 rounded-[14px] bg-surface px-4 py-3 text-[15px] text-text-2">
+        <p className="mb-5 rounded-[14px] bg-surface px-4 py-3 text-subhead text-text-2">
           Deteta um novo relatório trimestral da qualidade da água da rede de Braga e extrai dureza, pH e cloro. Não precisa de configuração.
         </p>
       )}
@@ -175,7 +175,7 @@ function Form({ inicial, onFeito }: { inicial?: FonteExterna; onFeito: () => voi
       {!(tipo === "loja" && plataforma === "nenhuma") && (
         <Grupo>
           <div className="flex min-h-[48px] items-center justify-between px-4">
-            <span className="text-[17px]">Ativa</span>
+            <span className="text-body">Ativa</span>
             <Interruptor ligado={ativo} onMudar={setAtivo} label="Fonte ativa" />
           </div>
         </Grupo>

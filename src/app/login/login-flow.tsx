@@ -80,10 +80,10 @@ export function LoginFlow() {
       <div className="header-ambient relative flex min-h-0 flex-1 flex-col items-center justify-end overflow-hidden px-6 pb-10 pt-[calc(var(--safe-top)+24px)] text-text">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/icons/logo-256.png" alt="" width={96} height={96} className="hero-login-icone enter-up mb-5 h-24 w-24 rounded-[22px] shadow-lg" />
-        <h1 className="enter-up text-[34px] font-bold tracking-tight" style={{ ["--i" as string]: 1 }}>
+        <h1 className="enter-up text-large font-bold tracking-tight" style={{ ["--i" as string]: 1 }}>
           Aquário
         </h1>
-        <p className="enter-up mt-1 text-[15px] text-text-2" style={{ ["--i" as string]: 2 }}>
+        <p className="enter-up mt-1 text-subhead text-text-2" style={{ ["--i" as string]: 2 }}>
           O diário dos teus aquários
         </p>
       </div>
@@ -91,7 +91,7 @@ export function LoginFlow() {
       <div className="relative bg-bg px-5 pb-[calc(var(--safe-bottom)+24px)] pt-6">
         {passo === "email" && (
           <form key="email" onSubmit={enviarCodigo} className={direcao === "forward" ? "step-forward" : "step-back"}>
-            <label htmlFor="email" className="mb-2 block text-[13px] font-medium uppercase tracking-wide text-text-2">
+            <label htmlFor="email" className="mb-2 block text-footnote font-medium uppercase tracking-wide text-text-2">
               Email
             </label>
             <input
@@ -106,13 +106,13 @@ export function LoginFlow() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="eu@exemplo.pt"
-              className="h-[52px] w-full rounded-[14px] bg-surface px-4 text-[17px] outline-none ring-accent focus:ring-2"
+              className="h-[52px] w-full rounded-[14px] bg-surface px-4 text-body outline-none ring-accent focus:ring-2"
             />
             <MensagemErro key={erroKey} texto={erro} />
             <Button type="submit" block loading={aEnviar} className="mt-4">
               {aEnviar ? "A enviar…" : "Enviar código"}
             </Button>
-            <p className="mt-3 text-center text-[13px] text-text-3">
+            <p className="mt-3 text-center text-footnote text-text-3">
               Vais receber um código de 6 dígitos por email.
             </p>
           </form>
@@ -127,11 +127,11 @@ export function LoginFlow() {
                 setErro(null);
                 setPasso("email");
               }}
-              className="pressable -ml-2 mb-2 flex min-h-11 items-center gap-1 rounded-lg px-2 text-[15px] text-accent"
+              className="pressable -ml-2 mb-2 flex min-h-11 items-center gap-1 rounded-lg px-2 text-subhead text-accent"
             >
               <IconChevronEsquerda size={18} /> Alterar email
             </button>
-            <p className="mb-4 text-[15px] text-text-2">
+            <p className="mb-4 text-subhead text-text-2">
               Enviámos um código para <span className="font-semibold text-text">{email}</span>.
             </p>
             <OtpInput
@@ -167,7 +167,7 @@ export function LoginFlow() {
 function MensagemErro({ texto }: { texto: string | null }) {
   if (!texto) return null;
   return (
-    <p role="alert" className="enter-up mt-2 text-[14px] text-danger">
+    <p role="alert" className="enter-up mt-2 text-subhead text-danger">
       {texto}
     </p>
   );

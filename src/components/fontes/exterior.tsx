@@ -27,7 +27,7 @@ export function Exterior({ destaque }: { destaque?: boolean }) {
   const resumoAgua = agua && (
     <div className="mt-2 flex items-center gap-3 border-t border-separator pt-2">
       <IconGota size={20} className="shrink-0 text-accent" />
-      <span className="flex-1 text-[14px] text-text-2">
+      <span className="flex-1 text-subhead text-text-2">
         Torneira: <span className="font-medium text-text">≈ {faixa(agua.dureza_dgh ?? null)} °dGH</span> · pH {faixa(agua.ph ?? null)} · cloro {faixa(agua.cloro_mg_l ?? null, 2)} mg/L
       </span>
     </div>
@@ -47,7 +47,7 @@ export function Exterior({ destaque }: { destaque?: boolean }) {
       <section aria-labelledby="previsao-exterior">
         <h2 id="previsao-exterior" className="mare-seccao">Previsão exterior</h2>
         <NavLink href="/fontes" className="mare-superficie mare-toque block rounded-[22px] p-4">
-          <span className="mb-3 flex items-center justify-between gap-2 text-[12px] font-medium text-text-2">
+          <span className="mb-3 flex items-center justify-between gap-2 text-caption font-medium text-text-2">
             <span className="flex items-center gap-2"><IconTermometro size={17} className="text-accent" /> Temperatura do ar</span>
             <IconChevronDireita size={17} />
           </span>
@@ -55,7 +55,7 @@ export function Exterior({ destaque }: { destaque?: boolean }) {
             {previsao.map(({ nome, valores }) => {
               const fora = valores && meteo?.limites && (valores.max >= meteo.limites.max || valores.min <= meteo.limites.min);
               return (
-                <div key={nome} className="grid grid-cols-[4.5rem_2.35rem_minmax(0,1fr)_2.35rem] items-center gap-1.5 text-[13px] tabular-nums">
+                <div key={nome} className="grid grid-cols-[4.5rem_2.35rem_minmax(0,1fr)_2.35rem] items-center gap-1.5 text-footnote tabular-nums">
                   <span className="font-semibold">{nome}</span>
                   {valores ? (
                     <>
@@ -86,7 +86,7 @@ export function Exterior({ destaque }: { destaque?: boolean }) {
       {meteo?.dias?.length ? (
         <div className="flex items-center gap-3">
           <IconTermometro size={20} className="shrink-0 text-accent" />
-          <div className="flex flex-1 justify-between gap-2 text-[14px] tabular-nums">
+          <div className="flex flex-1 justify-between gap-2 text-subhead tabular-nums">
             {meteo.dias.slice(0, 3).map((d, i) => {
               const alerta = meteo.limites && (d.max >= meteo.limites.max || d.min <= meteo.limites.min);
               return (

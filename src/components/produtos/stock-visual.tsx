@@ -43,15 +43,15 @@ export function StockVisual({ produto, onFeito }: { produto: Produto; onFeito: (
 
   return (
     <div className="mb-5">
-      <p className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">Atualizar stock</p>
+      <p className="mb-2 px-1 text-footnote font-semibold uppercase tracking-wide text-text-2">Atualizar stock</p>
       <div className="grid grid-cols-4 gap-2">
         <button
           type="button"
           onClick={novaEmbalagem}
-          className="pressable flex min-h-[74px] flex-col items-center justify-center gap-2 rounded-[14px] bg-accent-soft px-1 text-accent"
+          className="pressable flex min-h-[74px] flex-col items-center justify-center gap-2 rounded-[14px] bg-accent-soft px-1 text-accent-forte"
         >
           <IconCaixa size={22} />
-          <span className="text-[12px] font-semibold">Nova</span>
+          <span className="text-caption font-semibold">Nova</span>
         </button>
         {NIVEIS.map((nivel) => (
           <button
@@ -63,11 +63,11 @@ export function StockVisual({ produto, onFeito }: { produto: Produto; onFeito: (
             <span className="flex h-7 w-5 items-end overflow-hidden rounded-[5px] border-2 border-accent/60 p-0.5" aria-hidden>
               <span className="w-full rounded-[2px] bg-accent" style={{ height: nivel.largura }} />
             </span>
-            <span className="text-[12px] font-semibold">{nivel.texto}</span>
+            <span className="text-caption font-semibold">{nivel.texto}</span>
           </button>
         ))}
       </div>
-      <p className="mt-2 px-1 text-[12px] leading-snug text-text-3">Uma estimativa rápida; as TPAs seguintes continuam a descontar o condicionador automaticamente.</p>
+      <p className="mt-2 px-1 text-caption leading-snug text-text-3">Uma estimativa rápida; as TPAs seguintes continuam a descontar o condicionador automaticamente.</p>
     </div>
   );
 }

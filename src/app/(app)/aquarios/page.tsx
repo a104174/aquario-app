@@ -5,7 +5,8 @@ import { useDeferredValue, useState } from "react";
 import { AquarioSheet } from "@/components/aquarios/aquario-sheet";
 import { CartaoAquario } from "@/components/aquarios/cartao-aquario";
 import { SkeletonWidget } from "@/components/aquarios/widget/skeleton-widget";
-import { IconAquario, IconMais } from "@/components/icons";
+import { IconMais } from "@/components/icons";
+import { Mascote } from "@/components/mascote/mascote";
 import { BotaoHeader, Screen } from "@/components/shell/screen";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
@@ -73,10 +74,8 @@ function Vazio({ onNovo }: { onNovo: () => void }) {
 
   return (
     <div className="enter-up flex flex-col items-center px-4 py-10 text-center">
-      <span className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent-soft text-accent">
-        <IconAquario size={40} />
-      </span>
-      <h2 className="text-[20px] font-semibold">Ainda não há aquários</h2>
+      <Mascote humor="contente" tamanho={128} entrar className="mb-3" />
+      <h2 className="text-title3 font-semibold">Ainda não há aquários</h2>
       <p className="mt-1 max-w-xs text-text-2">Cria o teu primeiro aquário ou adiciona de uma vez os três aquários de casa.</p>
       <div className="mt-6 w-full max-w-xs space-y-2">
         <Button block onClick={criarMeus} loading={aCriar}>
@@ -86,7 +85,7 @@ function Vazio({ onNovo }: { onNovo: () => void }) {
           Criar aquário
         </Button>
       </div>
-      <p className="mt-4 text-[13px] text-text-3">Principal (Aquatlantis Vienna) · AQUARIUS 20 L · Betta</p>
+      <p className="mt-4 text-footnote text-text-3">Principal (Aquatlantis Vienna) · AQUARIUS 20 L · Betta</p>
     </div>
   );
 }
