@@ -30,7 +30,7 @@ export function LinhaNav({
         {detalhe && <span className="block truncate text-footnote text-text-2">{detalhe}</span>}
       </span>
       {!!badge && (
-        <span className="pop-in min-w-[22px] rounded-full bg-danger px-1.5 text-center text-footnote font-semibold leading-[22px] text-white">
+        <span className="pop-in min-w-[22px] rounded-full bg-danger-solido px-1.5 text-center text-footnote font-semibold leading-[22px] text-white">
           {badge}
         </span>
       )}

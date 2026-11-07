@@ -78,9 +78,9 @@ export function Mascote({
       {festa ? (
         <path d="M90 50 Q 98 52, 96 60 Q 90 60, 88 54 Z" fill="var(--mascote-tinta)" />
       ) : preocupado ? (
-        <path d="M89 57 Q 93 54, 97 57" fill="none" stroke="var(--mascote-tinta)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M87 60 Q 93 52, 99 60" fill="none" stroke="var(--mascote-tinta)" strokeWidth="3.4" strokeLinecap="round" />
       ) : (
-        <path d="M89 53 Q 93 58, 98 54" fill="none" stroke="var(--mascote-tinta)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M87 52 Q 93 61, 99 52" fill="none" stroke="var(--mascote-tinta)" strokeWidth="3.4" strokeLinecap="round" />
       )}
       {/* gota de suor (preocupado) */}
       {preocupado && <path d="M98 26 Q 103 34, 98 36 Q 93 34, 98 26 Z" fill="var(--agua)" opacity="0.9" />}

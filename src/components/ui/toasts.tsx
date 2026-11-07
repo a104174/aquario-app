@@ -33,7 +33,7 @@ export function ToastPill({ id, texto, tipo, acao }: { id: string | number; text
       className={cx(
         "mx-auto flex w-fit max-w-[min(92vw,420px)] items-center gap-2.5 rounded-full py-2.5 pl-3 text-subhead font-semibold shadow-[var(--shadow-flutuante)]",
         acao ? "pr-2" : "pr-5",
-        tipo === "erro" ? "bg-danger text-white" : "bg-nav text-white",
+        tipo === "erro" ? "bg-danger-solido text-white" : "bg-nav text-white",
       )}
     >
       <span

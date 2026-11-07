@@ -25,7 +25,7 @@ export default function InicioPage() {
         <NavLink href="/alertas" tipo="forward" aria-label={naoLidos ? `Alertas, ${naoLidos} por ler` : "Alertas"} className="botao-circular pressable relative">
           <IconSino size={21} />
           {naoLidos > 0 && (
-            <span aria-hidden className="pop-in absolute -right-0.5 -top-0.5 min-w-[18px] ring-2 ring-bg rounded-full bg-danger px-1 text-center text-caption font-bold leading-[18px] text-white">
+            <span aria-hidden className="pop-in absolute -right-0.5 -top-0.5 min-w-[18px] ring-2 ring-bg rounded-full bg-danger-solido px-1 text-center text-caption font-bold leading-[18px] text-white">
               {naoLidos}
             </span>
           )}

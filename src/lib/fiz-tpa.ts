@@ -55,7 +55,7 @@ export function useFizTpa() {
     if (s.cond) {
       const futuro = [{ id, aquario_id: aquarioId, data: new Date().toISOString(), litros: s.litros, condicionador_id: s.cond.id, dose_ml: s.dose, notas: null }, ...(tpas ?? [])];
       const e = estadoStock(s.cond, futuro);
-      if (e.nivel === "baixo" || e.nivel === "vazio") setTimeout(() => toast(`⚠︎ ${s.cond!.nome}: ${e.resumo}`, "erro", 5000), 600);
+      if (e.nivel === "baixo" || e.nivel === "vazio") setTimeout(() => toast(`${s.cond!.nome}: ${e.resumo}`, "erro", 5000), 1900); // depois da celebração
     }
   }
 

@@ -1,12 +1,14 @@
 "use client";
 
+import { Mascote } from "@/components/mascote/mascote";
 import { EstadoErro } from "@/components/ui/estado-erro";
 import { useState } from "react";
 import { DesejoSheet } from "@/components/desejos/desejo-sheet";
 import { FotoImg } from "@/components/eventos/foto-img";
 import { Segmentado } from "@/components/forms/campos";
 import { IconEstrela, IconMais } from "@/components/icons";
-import { BotaoHeader, Screen } from "@/components/shell/screen";
+import { Button } from "@/components/ui/button";
+import { Screen } from "@/components/shell/screen";
 import { escolher } from "@/components/ui/action-sheet";
 import { SkeletonLista } from "@/components/ui/skeleton";
 import { num } from "@/lib/formato";
@@ -38,10 +40,12 @@ export default function DesejosPage() {
     <Screen
       titulo="Lista de desejos"
       voltar={{ href: "/definicoes", texto: "Definições" }}
-      acoes={
-        <BotaoHeader label="Novo desejo" onClick={() => setSheet({ aberto: true })}>
-          <IconMais size={24} strokeWidth={2} />
-        </BotaoHeader>
+      // ação principal no terço inferior (uso a uma mão)
+      acaoFlutuante={
+        <Button variant="secondary" block onClick={() => setSheet({ aberto: true })}>
+          <IconMais size={20} strokeWidth={2.6} />
+          Novo desejo
+        </Button>
       }
     >
       <Segmentado
@@ -61,7 +65,7 @@ export default function DesejosPage() {
         </div>
       ) : lista.length === 0 ? (
         <div className="enter-up flex flex-col items-center rounded-[14px] bg-surface px-4 py-10 text-center">
-          <IconEstrela size={32} className="mb-2 text-accent" />
+          <Mascote humor="contente" tamanho={104} entrar className="mb-2" />
           <p className="text-text-2">{vista === "quero" ? "Guarda aqui prints e links do que queres comprar." : "Nada comprado ainda."}</p>
         </div>
       ) : (

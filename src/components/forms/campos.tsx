@@ -118,7 +118,7 @@ export function Segmentado<T extends string>({
     >
       <span
         aria-hidden
-        className="absolute bottom-0.5 left-0.5 top-0.5 rounded-[8px] bg-surface shadow-[0_1px_4px_rgb(0_0_0/0.12)] transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)]"
+        className="absolute bottom-0.5 left-0.5 top-0.5 rounded-[8px] bg-segmento-ativo shadow-[0_1px_4px_rgb(0_0_0/0.12)] transition-transform duration-[var(--dur-std)] ease-[var(--ease-out)]"
         style={{ width: `calc((100% - 4px) / ${opcoes.length})`, transform: `translateX(${i * 100}%)` }}
       />
       {opcoes.map((o) => (

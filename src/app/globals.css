@@ -32,6 +32,9 @@
   --agua: #0b7f90;
   --agua-soft: rgb(11 127 144 / 0.1);
   --danger: #c0352e;
+  --danger-solido: #c0352e; /* fundo para texto branco (≥ 4,5:1) */
+  --sobre-ok: #ffffff;
+  --segmento-ativo: #ffffff; /* segmento ativo do controlo segmentado (mais claro que a calha) */
   --danger-soft: rgb(214 69 61 / 0.1);
   --warning: #9a5b00;
   --warning-soft: rgb(199 124 10 / 0.12);
@@ -44,7 +47,7 @@
   /* navegação flutuante */
   --nav: #1b1c1f;
   --nav-texto: rgb(255 255 255 / 0.62);
-  --tabbar: rgb(242 242 239 / 0.86);
+  --tabbar: rgb(242 242 239 / 0.94);
   --tabbar-solido: var(--bg);
   --overlay: rgb(20 21 23 / 0.32);
   /* elevação: duas camadas, curtas e suaves */
@@ -127,6 +130,9 @@
     --agua: #4cc9db;
     --agua-soft: rgb(76 201 219 / 0.13);
     --danger: #ff7166;
+    --danger-solido: #c7362c;
+    --sobre-ok: #062014;
+    --segmento-ativo: var(--surface-3);
     --danger-soft: rgb(255 113 102 / 0.14);
     --warning: #f2b33d;
     --warning-soft: rgb(242 179 61 / 0.14);
@@ -134,7 +140,7 @@
     --ok-soft: rgb(76 217 138 / 0.14);
     --nav: #222b31;
     --nav-texto: rgb(237 242 244 / 0.62);
-    --tabbar: rgb(11 17 20 / 0.86);
+    --tabbar: rgb(11 17 20 / 0.94);
     --overlay: rgb(0 0 0 / 0.55);
     --shadow-card: 0 0 0 1px rgb(237 242 244 / 0.05), 0 8px 24px -8px rgb(0 0 0 / 0.5);
     --shadow-flutuante: 0 0 0 1px rgb(237 242 244 / 0.07), 0 14px 34px -8px rgb(0 0 0 / 0.7);
@@ -168,6 +174,9 @@
   --color-accent-contrast: var(--accent-contrast);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-danger-solido: var(--danger-solido);
+  --color-sobre-ok: var(--sobre-ok);
+  --color-segmento-ativo: var(--segmento-ativo);
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
   --color-ok: var(--ok);
@@ -715,7 +724,7 @@ html[data-teclado] .altura-app {
 }
 .tabbar-disco::before {
   content: "";
-  width: calc(100% - 8px);
+  width: calc(100% - 2px);
   height: 48px;
   border-radius: 999px;
   background: #fff;
@@ -993,7 +1002,7 @@ html {
   right: 0;
   bottom: 0;
   height: calc(var(--safe-bottom) + 96px);
-  background: linear-gradient(to bottom, rgb(242 242 239 / 0), rgb(242 242 239 / 0.92) 62%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 0%, transparent), color-mix(in srgb, var(--bg) 92%, transparent) 62%);
   pointer-events: none;
   z-index: -1;
 }
@@ -1037,8 +1046,8 @@ html[data-teclado] .tabbar::before {
   outline-offset: -2px;
 }
 .botao-perigo {
-  --relevo-cor: color-mix(in srgb, var(--danger) 55%, #000);
-  background: var(--danger);
+  --relevo-cor: color-mix(in srgb, var(--danger-solido) 55%, #000);
+  background: var(--danger-solido);
   color: #fff;
 }
 .botao-relevo:disabled {
@@ -1055,7 +1064,7 @@ html[data-teclado] .tabbar::before {
    navegação, com o mesmo afastamento das margens. Esconde-se com o teclado. */
 .acao-flutuante {
   position: absolute;
-  z-index: 25;
+  z-index: 31; /* acima do véu da navegação (que está em z 30) */
   left: max(16px, calc(var(--safe-left) + 8px));
   right: max(16px, calc(var(--safe-right) + 8px));
   bottom: calc(max(14px, calc(var(--safe-bottom) - 6px)) + 64px + 12px);
