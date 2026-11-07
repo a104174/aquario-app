@@ -134,3 +134,20 @@ test("um deslize horizontal avança a capa sem mudar de ecrã", async ({ app }, 
   await expect(app.getByRole("button", { name: "Mostrar fotografia 2 de 5" })).toHaveAttribute("aria-current", "true");
   await expect(app).toHaveURL(/\/aquario\?id=a1$/);
 });
+
+test("apagar um grupo de fauna registado por engano", async ({ app, erros }, info) => {
+  test.skip(!["iphone-15", "pixel-7"].includes(info.project.name));
+  await app.goto("/aquario?id=a1");
+  await app.getByRole("tab", { name: "Fauna" }).click();
+  const linha = app.getByRole("button", { name: /^Neon/ }).first();
+  await expect(linha).toBeVisible();
+  await linha.click();
+  await app.getByRole("button", { name: "Apagar grupo (registo por engano)" }).click();
+  await expect(app.getByText(/Não conta como morte nem saída/)).toBeVisible();
+  await app.getByRole("button", { name: "Apagar do histórico" }).click();
+  await expect(app.getByRole("button", { name: /^Neon/ })).toHaveCount(0);
+  await expect(app.getByText(/apagado/)).toBeVisible();
+  // os outros grupos ficam
+  await expect(app.getByRole("button", { name: /^Corydora/ }).first()).toBeVisible();
+  expect(erros).toEqual([]);
+});

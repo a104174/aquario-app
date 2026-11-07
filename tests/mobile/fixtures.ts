@@ -136,8 +136,10 @@ export const test = base.extend<Opcoes & { app: Page; erros: string[] }>({
         return route.fulfill({ status: 200, json: objeto ? (linhas[0] ?? null) : linhas });
       }
       if (req.method() === "DELETE") {
-        const id = url.searchParams.get("id")?.replace("eq.", "");
-        db[tabela] = (db[tabela] ?? []).filter((x) => x.id !== id);
+        const f = url.searchParams.get("id") ?? "";
+        // id=eq.X ou id=in.(X,Y) (apagar vários num só pedido)
+        const ids = new Set(f.startsWith("in.(") ? f.slice(4, -1).split(",").map((x) => x.replace(/"/g, "")) : [f.replace("eq.", "")]);
+        db[tabela] = (db[tabela] ?? []).filter((x) => !ids.has(String(x.id)));
         return route.fulfill({ status: 200, json: [] });
       }
       return route.fulfill({ status: 200, json: [] });

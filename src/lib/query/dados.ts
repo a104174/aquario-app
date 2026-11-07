@@ -30,7 +30,8 @@ export type Linhas = {
 };
 
 type Acao = "guardar" | "apagar";
-type VarsApagar = { id: string };
+/** `ids`: apagar vários de uma vez, num só pedido (uma transação no servidor). */
+type VarsApagar = { id: string; ids?: string[] };
 
 const COLECOES: Colecao[] = ["aquarios", "produtos", "tpas", "medicoes", "fauna", "fotos", "ninhadas", "ferias", "desejos", "alertas", "fontes", "novidades"];
 
@@ -85,8 +86,9 @@ async function buscar<C extends Colecao>(c: C): Promise<Linhas[C][]> {
 // ---------------------------------------------------------------------
 function aplicar<C extends Colecao>(c: C, lista: Linhas[C][], acao: Acao, vars: unknown): Linhas[C][] {
   if (acao === "apagar") {
-    const { id } = vars as VarsApagar;
-    return lista.filter((r) => r.id !== id);
+    const { id, ids } = vars as VarsApagar;
+    const fora = new Set(ids ?? [id]);
+    return lista.filter((r) => !fora.has(r.id));
   }
   const linha = vars as Linhas[C];
   const i = lista.findIndex((r) => r.id === linha.id);
@@ -197,7 +199,14 @@ async function enviarPendentes(id: string, path: string | null, thumbPath: strin
   if (blob || thumb) await apagarFotoPendente(id);
 }
 
-async function apagarNoServidor(c: Colecao, { id }: VarsApagar, qc: QueryClient) {
+async function apagarNoServidor(c: Colecao, { id, ids }: VarsApagar, qc: QueryClient) {
+  if (ids?.length && c !== "fotos" && c !== "desejos") {
+    // vários de uma vez: uma só transação (as validações de saldo da fauna
+    // correm no fim, por isso a ordem dos registos não importa)
+    const { error } = await (await supabase()).from(TABELAS[c]).delete().in("id", ids);
+    if (error) throw error;
+    return;
+  }
   if (c === "fotos") {
     const foto = qc.getQueryData<Foto[]>([c])?.find((f) => f.id === id);
     await apagarFotoPendente(id);
