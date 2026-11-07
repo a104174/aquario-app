@@ -5,10 +5,13 @@ import { FaunaSemFoto } from "@/components/aquarium-visual-kit/icone-aquario";
 import { IconChevronDireita } from "@/components/icons";
 import { tipoFaunaPorNome } from "@/lib/fauna-tipo";
 import { Seccao } from "@/components/shell/screen";
-import { escolher } from "@/components/ui/action-sheet";
+import { confirmar, escolher } from "@/components/ui/action-sheet";
 import { Button } from "@/components/ui/button";
 import { faunaAtual } from "@/lib/derivados";
-import { gruposFauna, nomeGrupoFauna, type GrupoFauna } from "@/lib/fauna-grupos";
+import { chaveEspecie, gruposFauna, nomeGrupoFauna, type GrupoFauna } from "@/lib/fauna-grupos";
+import { vibrar } from "@/lib/haptic";
+import { useApagar } from "@/lib/query/dados";
+import { toast } from "@/lib/toast";
 import { plural } from "@/lib/formato";
 import type { FaunaEvento, Foto } from "@/lib/tipos";
 import { abrirRegistar } from "@/lib/ui-store";
@@ -17,6 +20,51 @@ import { abrirVisualizador } from "@/lib/visualizador-store";
 export function FaunaAquario({ id, fauna, fotos }: { id: string; fauna?: FaunaEvento[]; fotos?: Foto[] }) {
   const grupos = gruposFauna(fauna, id);
   const resumo = faunaAtual(fauna, id);
+  const apagar = useApagar("fauna");
+
+  /**
+   * Registos a apagar quando o grupo foi criado por engano (não é morte,
+   * saída nem transferência: é como se nunca tivesse existido).
+   * - Grupo próprio (entrada/nascimento identificado): o registo que o criou
+   *   e os que lhe estão ligados.
+   * - Grupo genérico ou identificação: todos os registos desta espécie
+   *   neste aquário. Transferências PARA outros aquários ficam (são
+   *   história do outro aquário).
+   */
+  function registosDoGrupo(g: GrupoFauna) {
+    const eventos = fauna ?? [];
+    if (g.origem && g.origem.tipo !== "detalhe") {
+      return eventos.filter((e) => e.id === g.origem!.id || e.grupo_id === g.origem!.id);
+    }
+    const chave = chaveEspecie(g.especie);
+    return eventos.filter(
+      (e) => e.aquario_id === id && chaveEspecie(e.especie) === chave && !(e.tipo === "transferencia" && e.aquario_destino_id && e.aquario_destino_id !== id),
+    );
+  }
+
+  async function apagarGrupo(g: GrupoFauna) {
+    const titulo = g.origem ? nomeGrupoFauna(g.origem) : g.especie;
+    const registos = registosDoGrupo(g);
+    if (!registos.length) return toast("Este grupo vem de outro aquário: apaga-o lá ou regista a saída.", "erro");
+    const proprio = !!g.origem && g.origem.tipo !== "detalhe";
+    vibrar("aviso");
+    const ok = await confirmar({
+      titulo: `Apagar “${titulo}”?`,
+      mensagem: proprio
+        ? `Remove o grupo e ${plural(registos.length, "registo", "registos")} do histórico, como se nunca tivesse existido. Não conta como morte nem saída.`
+        : `Remove ${plural(registos.length, "registo", "registos")} de ${g.especie} deste aquário do histórico (todos os animais desta espécie aqui). Não conta como morte nem saída.`,
+      acao: "Apagar do histórico",
+      destrutivo: true,
+    });
+    if (!ok) return;
+    apagar.mutate(
+      { id: registos[0].id, ids: registos.map((r) => r.id) },
+      {
+        onSuccess: () => toast(`${titulo} apagado`, "ok"),
+        onError: () => toast("Não foi possível apagar (estás online?).", "erro"),
+      },
+    );
+  }
 
   async function menu(g: GrupoFauna) {
     const titulo = g.origem ? nomeGrupoFauna(g.origem) : g.especie;
@@ -26,11 +74,13 @@ export function FaunaAquario({ id, fauna, fotos }: { id: string; fauna?: FaunaEv
       opcoes: [
         { texto: g.origem ? "Editar identificação e foto" : "Detalhar animais deste grupo" },
         { texto: "Registar saída, morte ou transferência" },
+        { texto: "Apagar grupo (registo por engano)", destrutivo: true },
       ],
     });
     if (i === 0 && g.origem) abrirRegistar({ tipo: "fauna", aquarioId: g.origem.aquario_id, editarId: g.origem.id });
     if (i === 0 && !g.origem) abrirRegistar({ tipo: "fauna", aquarioId: id, faunaContexto: { especie: g.especie, detalhar: true } });
     if (i === 1) abrirRegistar({ tipo: "fauna", aquarioId: id, faunaContexto: { especie: g.especie, grupoId: g.origem?.id } });
+    if (i === 2) await apagarGrupo(g);
   }
 
   return (
