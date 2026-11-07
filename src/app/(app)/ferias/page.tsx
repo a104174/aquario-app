@@ -65,11 +65,11 @@ export default function FeriasPage() {
       ) : (
         <>
           <button type="button" onClick={() => opcoes(atual)} className="pressable enter-up mb-5 block w-full rounded-[18px] bg-surface p-4 text-left">
-            <p className="text-[22px] font-bold">
+            <p className="text-title2 font-bold">
               {d(atual.ida)} → {d(atual.regresso)}
             </p>
             {atual.quem_alimenta && <p className="text-text-2">Quem alimenta: {atual.quem_alimenta}</p>}
-            {atual.notas && <p className="selectable mt-1 text-[15px] text-text-2">{atual.notas}</p>}
+            {atual.notas && <p className="selectable mt-1 text-subhead text-text-2">{atual.notas}</p>}
           </button>
 
           <Seccao titulo={`Checklist · ${feitos}/${atual.checklist.length}`}>
@@ -91,7 +91,7 @@ export default function FeriasPage() {
                   >
                     {c.feito && <IconVisto size={16} strokeWidth={3} className="pop-in" />}
                   </span>
-                  <span className={cx("text-[16px] transition-colors duration-[var(--dur-std)]", c.feito && "text-text-3 line-through")}>{c.texto}</span>
+                  <span className={cx("text-callout transition-colors duration-[var(--dur-std)]", c.feito && "text-text-3 line-through")}>{c.texto}</span>
                 </button>
               ))}
               <form
@@ -108,7 +108,7 @@ export default function FeriasPage() {
                   value={novoItem}
                   onChange={(e) => setNovoItem(e.target.value)}
                   placeholder="Adicionar item"
-                  className="h-[50px] flex-1 bg-transparent text-[16px] outline-none placeholder:text-text-3"
+                  className="h-[50px] flex-1 bg-transparent text-callout outline-none placeholder:text-text-3"
                 />
               </form>
             </div>
@@ -120,7 +120,7 @@ export default function FeriasPage() {
         <Seccao titulo="Anteriores">
           <div className="overflow-hidden rounded-[14px] bg-surface">
             {passadas.map((f) => (
-              <button key={f.id} type="button" onClick={() => opcoes(f)} className="pressable-row flex min-h-[48px] w-full items-center px-4 text-left text-[16px] text-text-2">
+              <button key={f.id} type="button" onClick={() => opcoes(f)} className="pressable-row flex min-h-[48px] w-full items-center px-4 text-left text-callout text-text-2">
                 {d(f.ida)} → {d(f.regresso)}
                 {f.quem_alimenta ? ` · ${f.quem_alimenta}` : ""}
               </button>

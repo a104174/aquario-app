@@ -37,11 +37,11 @@ export function CapaAquarioSheet({ aquario, fotos, onFechar }: { aquario: Aquari
   return (
     <Sheet open onOpenChange={(aberto) => { if (!aberto && !guardar.isPending) onFechar(); }} titulo="Capa do aquário"
       esquerda={<BotaoSheet onClick={() => { if (!guardar.isPending) onFechar(); }}>Cancelar</BotaoSheet>}>
-      <p className="mb-3 px-1 text-[14px] text-text-2">Escolhe uma foto da galeria ou usa sempre a mais recente.</p>
+      <p className="mb-3 px-1 text-subhead text-text-2">Escolhe uma foto da galeria ou usa sempre a mais recente.</p>
       {guardar.isPending && <p role="status" className="mb-2 text-accent">A guardar a capa…</p>}
       {erro && <p role="alert" className="mb-2 text-danger">Não foi possível guardar a capa. Verifica a ligação e tenta novamente.</p>}
       <button type="button" onClick={() => escolher(null)} disabled={guardar.isPending}
-        aria-pressed={!aquario.foto_capa_id} className="pressable mb-3 min-h-11 w-full rounded-xl bg-surface px-3 text-left text-[14px] font-semibold aria-pressed:text-accent">
+        aria-pressed={!aquario.foto_capa_id} className="pressable mb-3 min-h-11 w-full rounded-xl bg-surface px-3 text-left text-subhead font-semibold aria-pressed:text-accent">
         Usar a fotografia mais recente {!aquario.foto_capa_id && "✓"}
       </button>
       <div className="grid grid-cols-3 gap-2">

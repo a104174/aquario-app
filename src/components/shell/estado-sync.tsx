@@ -10,7 +10,7 @@ export function EstadoSync() {
   if (online && pendentes === 0) return null;
   return (
     <span
-      className="pop-in mr-1 flex h-7 items-center gap-1 rounded-full bg-surface px-2.5 text-text-2 shadow-[var(--shadow-botao)] text-[13px] font-medium"
+      className="pop-in mr-1 flex h-7 items-center gap-1 rounded-full bg-surface px-2.5 text-text-2 shadow-[var(--shadow-botao)] text-footnote font-medium"
       aria-live="polite"
     >
       {!online && <IconNuvemOff size={16} />}

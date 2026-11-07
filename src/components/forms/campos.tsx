@@ -11,9 +11,9 @@ import type { Aquario } from "@/lib/tipos";
 export function Grupo({ titulo, rodape, children }: { titulo?: string; rodape?: ReactNode; children: ReactNode }) {
   return (
     <div className="mb-5">
-      {titulo && <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">{titulo}</p>}
+      {titulo && <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">{titulo}</p>}
       <div className="overflow-hidden rounded-[14px] bg-surface">{children}</div>
-      {rodape && <p className="mt-1.5 px-4 text-[13px] text-text-2">{rodape}</p>}
+      {rodape && <p className="mt-1.5 px-4 text-footnote text-text-2">{rodape}</p>}
     </div>
   );
 }
@@ -25,7 +25,7 @@ export function Linha({ rotulo, children, htmlFor }: { rotulo: ReactNode; childr
       htmlFor={htmlFor}
       className="relative flex min-h-[48px] items-center gap-3 px-4 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator last:after:hidden"
     >
-      <span className="shrink-0 text-[17px]">{rotulo}</span>
+      <span className="shrink-0 text-body">{rotulo}</span>
       <div className="flex min-w-0 flex-1 justify-end">{children}</div>
     </label>
   );
@@ -46,7 +46,7 @@ export function InputLinha({ className, autoFocus, ...props }: InputHTMLAttribut
       autoCorrect={texto && !props.inputMode ? "on" : "off"}
       {...props}
       className={cx(
-        "h-[48px] w-full min-w-0 bg-transparent text-right text-[17px] text-text outline-none placeholder:text-text-3",
+        "h-[48px] w-full min-w-0 bg-transparent text-right text-body text-text outline-none placeholder:text-text-3",
         className,
       )}
     />
@@ -75,7 +75,7 @@ export function InputNumero({
         onChange={(e) => onValor(e.target.value.replace(/[^0-9.,]/g, ""))}
         className="w-24"
       />
-      {unidade && <span className="text-[15px] text-text-3">{unidade}</span>}
+      {unidade && <span className="text-subhead text-text-3">{unidade}</span>}
     </span>
   );
 }
@@ -89,7 +89,7 @@ export function AreaNotas({ valor, onValor, placeholder = "Notas" }: { valor: st
       enterKeyHint="enter"
       autoCapitalize="sentences"
       rows={3}
-      className="block w-full resize-none bg-transparent px-4 py-3 text-[17px] outline-none placeholder:text-text-3"
+      className="block w-full resize-none bg-transparent px-4 py-3 text-body outline-none placeholder:text-text-3"
     />
   );
 }
@@ -132,7 +132,7 @@ export function Segmentado<T extends string>({
             onValor(o.valor);
           }}
           className={cx(
-            "relative z-10 h-11 truncate px-1 text-[14px] font-medium transition-colors duration-[var(--dur-quick)]",
+            "relative z-10 h-11 truncate px-1 text-subhead font-medium transition-colors duration-[var(--dur-quick)]",
             o.valor === valor ? "text-text" : "text-text-2",
           )}
         >
@@ -172,7 +172,7 @@ export function Chips<T extends string>({
             aria-pressed={ativo}
             onClick={() => onValor(o.valor)}
             className={cx(
-              "pressable h-11 shrink-0 whitespace-nowrap rounded-full px-4 text-[15px] font-medium",
+              "pressable h-11 shrink-0 whitespace-nowrap rounded-full px-4 text-subhead font-medium",
               // (o header deixou de ser escuro: `escuro` mantém-se só por compatibilidade)
               ativo
                 ? "bg-accent text-accent-contrast shadow-[var(--shadow-botao)]"
@@ -198,7 +198,7 @@ export function SeletorAquario({
 }) {
   return (
     <div className="mb-5">
-      <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Aquário</p>
+      <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">Aquário</p>
       <Chips opcoes={aquarios.map((a) => ({ valor: a.id, texto: a.nome }))} valor={valor} onValor={onValor} />
     </div>
   );
@@ -234,11 +234,11 @@ export function Stepper({
         aria-label="Menos"
         onClick={() => mudar(-1)}
         disabled={valor <= min}
-        className="pressable flex h-11 w-11 items-center justify-center rounded-l-[11px] bg-surface-3 text-[22px] disabled:opacity-40"
+        className="pressable flex h-11 w-11 items-center justify-center rounded-l-[11px] bg-surface-3 text-title2 disabled:opacity-40"
       >
         −
       </button>
-      <span key={k} className="pop-in min-w-[3ch] text-center text-[17px] font-semibold tabular-nums">
+      <span key={k} className="pop-in min-w-[3ch] text-center text-body font-semibold tabular-nums">
         {valor}
         {sufixo}
       </span>
@@ -303,7 +303,7 @@ export function Interruptor({
 export function ErroForm({ texto }: { texto: string | null }) {
   if (!texto) return null;
   return (
-    <p role="alert" className="shake mb-4 rounded-xl bg-danger-soft px-4 py-3 text-[15px] text-danger">
+    <p role="alert" className="shake mb-4 rounded-xl bg-danger-soft px-4 py-3 text-subhead text-danger">
       {texto}
     </p>
   );

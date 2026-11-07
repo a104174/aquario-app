@@ -77,8 +77,8 @@ export function CartaoAquario({
         <header className="flex items-start gap-3">
           <GlifoAquario nivel={nivel} className="mt-0.5 h-10 w-11 shrink-0" />
           <div className="min-w-0 flex-1">
-            <h2 className="line-clamp-2 text-[19px] font-semibold leading-tight tracking-tight">{aquario.nome}</h2>
-            <p className="mt-0.5 text-[13px] text-text-2 tabular-nums">
+            <h2 className="line-clamp-2 text-title3 font-semibold leading-tight tracking-tight">{aquario.nome}</h2>
+            <p className="mt-0.5 text-footnote text-text-2 tabular-nums">
               {util != null ? (
                 <>
                   <span className="font-semibold text-text">{num(util, 1)} L</span> úteis
@@ -110,9 +110,9 @@ export function CartaoAquario({
             onClick={() => fizTpa.registar(aquario.id)}
             className={cx(
               "aw-interativo",
-              "aw-fiz-tpa",
-              "ml-auto flex h-11 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[14px] font-semibold",
-              estado === "atrasada" ? "bg-danger-soft text-danger" : "bg-accent-soft text-accent-forte",
+              // botão com relevo (afunda ao toque); vermelho quando a TPA está em atraso
+              "botao-relevo ml-auto mb-1 flex h-11 shrink-0 items-center gap-1.5 !rounded-[14px] px-3.5 text-subhead font-bold",
+              estado === "atrasada" ? "botao-perigo" : "botao-primario",
             )}
           >
             <IconeAquario tipo="gota" tamanho={17} />
@@ -128,7 +128,7 @@ export function CartaoAquario({
 function Fauna({ especies, total }: { especies: { especie: string; quantidade: number }[]; total: number }) {
   if (total === 0) {
     return (
-      <div className="flex min-w-0 items-center gap-2 text-[13px] text-text-3">
+      <div className="flex min-w-0 items-center gap-2 text-footnote text-text-3">
         <GlifoPeixe cheio={false} className="h-3.5 w-6 shrink-0" />
         Sem fauna registada
       </div>
@@ -147,9 +147,9 @@ function Fauna({ especies, total }: { especies: { especie: string; quantidade: n
           );
         })}
       </div>
-      <p className="min-w-0 text-[13px] leading-tight text-text-2" aria-hidden>
-        <span className="text-[17px] font-semibold tabular-nums text-text">{total}</span> {total === 1 ? "animal" : "animais"}
-        <span className="block truncate text-[12px] text-text-3">
+      <p className="min-w-0 text-footnote leading-tight text-text-2" aria-hidden>
+        <span className="text-body font-semibold tabular-nums text-text">{total}</span> {total === 1 ? "animal" : "animais"}
+        <span className="block truncate text-caption text-text-3">
           {especies.length === 1 ? especies[0].especie : `${especies.length} espécies · ${especies[0].especie}`}
         </span>
       </p>

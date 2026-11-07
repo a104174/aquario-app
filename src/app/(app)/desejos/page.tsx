@@ -82,11 +82,11 @@ export default function DesejosPage() {
                 </span>
               )}
               <span className="min-w-0 flex-1 py-0.5">
-                <span className="block truncate text-[17px] font-semibold">{d.item}</span>
-                <span className="block truncate text-[14px] text-text-2">
+                <span className="block truncate text-body font-semibold">{d.item}</span>
+                <span className="block truncate text-subhead text-text-2">
                   {[d.loja, d.preco != null && `${num(d.preco, 2)} €`].filter(Boolean).join(" · ") || (d.link ? new URL(d.link).hostname : "")}
                 </span>
-                {d.notas && <span className="mt-0.5 line-clamp-2 block text-[14px] text-text-2">{d.notas}</span>}
+                {d.notas && <span className="mt-0.5 line-clamp-2 block text-subhead text-text-2">{d.notas}</span>}
               </span>
             </button>
           ))}

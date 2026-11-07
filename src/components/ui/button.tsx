@@ -33,13 +33,14 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cx(
-        "pressable inline-flex h-[52px] items-center justify-center gap-2 rounded-full px-6 text-[17px] font-semibold tracking-[-0.01em]",
-        "disabled:opacity-45 disabled:active:scale-100",
+        "inline-flex h-[52px] items-center justify-center gap-2 px-6 text-body font-bold tracking-[-0.01em]",
+        "disabled:opacity-45",
         block && "w-full",
-        variant === "primary" && "bg-accent text-accent-contrast shadow-[var(--shadow-botao)]",
-        variant === "secondary" && "bg-accent-soft text-accent-forte",
-        variant === "ghost" && "bg-transparent text-accent",
-        variant === "danger" && "bg-danger-soft text-danger",
+        // primário e secundário com relevo (lábio que afunda ao toque)
+        variant === "primary" && "botao-relevo botao-primario",
+        variant === "secondary" && "botao-relevo botao-secundario",
+        variant === "ghost" && "pressable rounded-full bg-transparent text-accent",
+        variant === "danger" && "botao-relevo botao-perigo",
         className,
       )}
     >

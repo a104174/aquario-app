@@ -82,7 +82,7 @@ export function MedicaoForm({ formId, inicial, aquarioId, onFeito }: PropsForm<M
               rotulo={
                 <span className="flex items-baseline gap-2">
                   {info.curto}
-                  <span className="text-[13px] text-text-3">{info.nome}</span>
+                  <span className="text-footnote text-text-3">{info.nome}</span>
                 </span>
               }
             >
@@ -95,7 +95,7 @@ export function MedicaoForm({ formId, inicial, aquarioId, onFeito }: PropsForm<M
                   onChange={(e) => setValores((v) => ({ ...v, [p]: e.target.value.replace(/[^0-9.,]/g, "") }))}
                   className={cx("w-20 tabular-nums", faixa === "mau" && "text-danger", faixa === "atencao" && "text-warning")}
                 />
-                {info.unidade && <span className="w-12 text-[13px] text-text-3">{info.unidade}</span>}
+                {info.unidade && <span className="w-12 text-footnote text-text-3">{info.unidade}</span>}
               </span>
             </Linha>
           );

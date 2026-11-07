@@ -123,6 +123,12 @@ export function DetalheAquario() {
       fotos={fotosDoAquario}
       titulo={aquario.nome}
       voltar={{ href: "/aquarios", texto: "Aquários" }}
+      // 1 toque: repete a última TPA — no terço inferior, ao alcance do polegar
+      acaoFlutuante={
+        <Button block onClick={() => fizTpa.registar(id)}>
+          {sugestaoTpa ? `Fiz TPA · ${num(sugestaoTpa.litros, 1)} L${sugestaoTpa.dose != null ? ` · ${num(sugestaoTpa.dose, 2)} ml` : ""}` : "Registar primeira TPA"}
+        </Button>
+      }
       acoes={
         <BotaoHeader label="Opções do aquário" onClick={menu}>
           <IconMaisOpcoes size={26} />
@@ -143,11 +149,6 @@ export function DetalheAquario() {
         </>
       }
     >
-      {/* 1 toque: repete a última TPA */}
-      <Button block className="mb-3" onClick={() => fizTpa.registar(id)}>
-        {sugestaoTpa ? `Fiz TPA · ${num(sugestaoTpa.litros, 1)} L${sugestaoTpa.dose != null ? ` · ${num(sugestaoTpa.dose, 2)} ml` : ""}` : "Registar primeira TPA"}
-      </Button>
-
       {/* Ações rápidas: abrem a sheet de registo já com este aquário */}
       <div className="mb-5 grid grid-cols-4 gap-2">
         {TIPOS_REGISTO.filter((t) => t.tipo !== "ninhada").map((t, i) => {
@@ -158,12 +159,12 @@ export function DetalheAquario() {
               type="button"
               onClick={() => abrirRegistar({ tipo: t.tipo, aquarioId: id })}
               style={{ ["--i" as string]: i }}
-              className="pressable enter-up flex flex-col items-start gap-3 rounded-[var(--r-bloco)] bg-surface px-3 pb-2.5 pt-3 text-[13px] font-semibold shadow-[var(--shadow-card)]"
+              className="pressable enter-up flex flex-col items-start gap-3 rounded-[var(--r-bloco)] bg-surface px-3 pb-2.5 pt-3 text-footnote font-semibold shadow-[var(--shadow-card)]"
             >
               {/* ícone limpo (sem círculo) + "+" discreto: é uma ação de registo */}
               <span className="flex w-full items-start justify-between text-text">
                 <Icon size={22} />
-                <span aria-hidden className="text-[15px] leading-none text-text-3">+</span>
+                <span aria-hidden className="text-subhead leading-none text-text-3">+</span>
               </span>
               {t.titulo}
             </button>
@@ -219,11 +220,11 @@ function Estatistica({ rotulo, valor, alerta }: { rotulo: string; valor: string;
         "group-data-[claro]/ind:backdrop-blur-none",
       )}
     >
-      <p className="text-[12px] text-white/75 group-data-[claro]/ind:text-text-2">
+      <p className="text-caption text-white/75 group-data-[claro]/ind:text-text-2">
         {alerta && <span aria-hidden>⚠︎ </span>}
         {rotulo}
       </p>
-      <p className={cx("truncate text-[17px] font-semibold text-white", alerta ? "group-data-[claro]/ind:text-danger" : "group-data-[claro]/ind:text-text")}>{valor}</p>
+      <p className={cx("truncate text-body font-semibold text-white", alerta ? "group-data-[claro]/ind:text-danger" : "group-data-[claro]/ind:text-text")}>{valor}</p>
     </div>
   );
 }
@@ -250,10 +251,10 @@ function Graficos({ aquarioId }: { aquarioId: string }) {
         <Chips opcoes={disponiveis.map((p) => ({ valor: p, texto: INFO_PARAMETROS[p].curto }))} valor={atual} onValor={setParam} />
       </div>
       <div className="rounded-[18px] bg-surface p-4">
-        <h2 className="text-[17px] font-semibold">
+        <h2 className="text-body font-semibold">
           {info.nome} <span className="font-normal text-text-2">({info.curto}{info.unidade ? ` · ${info.unidade}` : ""})</span>
         </h2>
-        <p className="mb-2 text-[13px] text-text-2">
+        <p className="mb-2 text-footnote text-text-2">
           {plural(pontos.length, "medição", "medições")} · faixa sombreada = referência {num(info.referencia[0], 2)}–
           {num(info.referencia[1], 2)}
         </p>
@@ -264,14 +265,14 @@ function Graficos({ aquarioId }: { aquarioId: string }) {
         type="button"
         onClick={() => setTabela((t) => !t)}
         aria-expanded={tabela}
-        className="pressable mt-3 w-full rounded-[14px] bg-surface py-3 text-[15px] font-medium text-accent"
+        className="pressable mt-3 w-full rounded-[14px] bg-surface py-3 text-subhead font-medium text-accent"
       >
         {tabela ? "Esconder valores" : "Ver valores em tabela"}
       </button>
       {tabela && (
-        <table className="enter-up mt-3 w-full overflow-hidden rounded-[14px] bg-surface text-[15px]">
+        <table className="enter-up mt-3 w-full overflow-hidden rounded-[14px] bg-surface text-subhead">
           <thead>
-            <tr className="text-left text-[13px] text-text-2">
+            <tr className="text-left text-footnote text-text-2">
               <th className="px-4 py-2 font-medium">Data</th>
               <th className="px-4 py-2 text-right font-medium">{info.curto}</th>
             </tr>

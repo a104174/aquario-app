@@ -34,10 +34,10 @@ export function FotosEmDestaque({ fotos, aquarios }: { fotos: Foto[]; aquarios: 
     <section aria-labelledby="inicio-memorias">
       <div className="mb-2.5 flex items-baseline justify-between gap-2">
         <h2 id="inicio-memorias" className="mare-seccao !mb-0">Memórias recentes</h2>
-        <span className="pr-1 text-[12px] text-text-2">{fotos.length} {fotos.length === 1 ? "fotografia" : "fotografias"}</span>
+        <span className="pr-1 text-caption text-text-2">{fotos.length} {fotos.length === 1 ? "fotografia" : "fotografias"}</span>
       </div>
       {n === 0 ? (
-        <div className="mare-superficie flex min-h-20 items-center gap-3 rounded-[20px] px-4 text-[14px] text-text-2">
+        <div className="mare-superficie flex min-h-20 items-center gap-3 rounded-[20px] px-4 text-subhead text-text-2">
           <IconCamara className="text-accent" size={21} /> As fotografias que registares aparecem aqui.
         </div>
       ) : (
@@ -68,9 +68,9 @@ export function FotosEmDestaque({ fotos, aquarios }: { fotos: Foto[]; aquarios: 
                   </div>
                   <span className="absolute inset-0 bg-gradient-to-t from-[#031018]/95 via-[#031018]/25 to-transparent" />
                   <span className="absolute inset-x-0 bottom-0 px-4 pb-4 text-white">
-                    <span className="block text-[11px] font-semibold uppercase tracking-[.15em] text-white/80">{dataCurta(foto.data)}</span>
-                    <span className="mt-1 block text-[22px] font-semibold leading-tight tracking-tight">{nome}</span>
-                    {foto.legenda && <span className="block truncate text-[13px] text-white/85">{foto.legenda}</span>}
+                    <span className="block text-caption font-semibold uppercase tracking-[.15em] text-white/80">{dataCurta(foto.data)}</span>
+                    <span className="mt-1 block text-title2 font-semibold leading-tight tracking-tight">{nome}</span>
+                    {foto.legenda && <span className="block truncate text-footnote text-white/85">{foto.legenda}</span>}
                   </span>
                 </button>
               );
@@ -78,7 +78,7 @@ export function FotosEmDestaque({ fotos, aquarios }: { fotos: Foto[]; aquarios: 
           </div>
           {n > 1 && (
             <div className="flex items-center justify-between gap-1 px-2">
-              <span className="shrink-0 pl-1 text-[12px] tabular-nums text-text-2" aria-label={`Fotografia ${indice + 1} de ${n}`}>{indice + 1} / {n}</span>
+              <span className="shrink-0 pl-1 text-caption tabular-nums text-text-2" aria-label={`Fotografia ${indice + 1} de ${n}`}>{indice + 1} / {n}</span>
               <div className="flex justify-center" role="group" aria-label="Escolher fotografia">
                 {recentes.map((f, i) => (
                   <button

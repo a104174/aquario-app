@@ -1,5 +1,5 @@
 import path from "node:path";
-import { assentar, pastaReview, test } from "./fixtures";
+import { assentar, captura, pastaReview, test } from "./fixtures";
 
 // Vídeos das interações principais (iPhone 16 Pro Max): antes/depois
 test.use({ video: { mode: "on", size: { width: 440, height: 956 } } });
@@ -15,7 +15,9 @@ test("video: fiz TPA, abrir aquário, registar medição", async ({ app }, info)
   await app.goto("/aquarios");
   await assentar(app, 1000);
   await app.getByRole("button", { name: /^Fiz TPA/ }).first().click();
-  await app.waitForTimeout(1400);
+  await app.waitForTimeout(650);
+  await captura(app, info, "celebracao-fiz-tpa");
+  await app.waitForTimeout(800);
   await app.getByRole("link", { name: /^Abrir Principal/ }).click({ position: { x: 140, y: 34 } });
   await assentar(app, 900);
   await app.getByRole("button", { name: "Registar", exact: true }).click();

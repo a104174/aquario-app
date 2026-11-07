@@ -4,8 +4,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { subscreverEscolha, ultimoPedido } from "@/components/ui/action-sheet";
-import { Toasts } from "@/components/ui/toasts";
 import { useSession } from "@/lib/auth/session";
+import { CelebracaoHost } from "@/components/mascote/celebracao";
 import { useUI } from "@/lib/ui-store";
 import { useVisualizador } from "@/lib/visualizador-store";
 import { TabBar } from "./tab-bar";
@@ -53,7 +53,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {registarUsado && <RegistarSheet />}
       {visualizadorUsado && <VisualizadorHost />}
       {actionSheetUsada && <ActionSheetHost />}
-      <Toasts />
+      <CelebracaoHost />
     </>
   );
 }

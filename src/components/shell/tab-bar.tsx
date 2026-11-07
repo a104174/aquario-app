@@ -19,9 +19,10 @@ const TABS = [
 const SLOT = [0, 1, 3, 4];
 
 /**
- * Navegação flutuante: cápsula carvão destacada da página, com um disco
- * branco que desliza para o destino ativo (só transform). O "+" central
- * abre o registo rápido e tem um anel próprio, para não parecer um destino.
+ * Navegação flutuante: cápsula destacada da página, com rótulos curtos
+ * (como no iOS) e uma pastilha clara que desliza para o destino ativo
+ * (só transform). O "+" central é o botão da marca, com relevo: abre o
+ * registo rápido e não parece um destino.
  */
 export function TabBar() {
   const pathname = usePathname();
@@ -52,7 +53,7 @@ export function TabBar() {
           className="tab tab-registar group"
         >
           <span className="tab-registar-anel">
-            <IconMais size={22} strokeWidth={2.2} />
+            <IconMais size={24} strokeWidth={2.6} />
           </span>
         </button>
         <Tab tab={TABS[2]} ativo={ativo === 2} pathname={pathname} />
@@ -81,7 +82,8 @@ function Tab({ tab, ativo, pathname }: { tab: (typeof TABS)[number]; ativo: bool
       }}
       className={cx("tab group")}
     >
-      <Icon size={24} strokeWidth={ativo ? 2.1 : 1.8} className="tab-icone" />
+      <Icon size={23} strokeWidth={ativo ? 2.1 : 1.8} className="tab-icone" />
+      <span className="tab-rotulo" aria-hidden>{tab.label}</span>
     </NavLink>
   );
 }

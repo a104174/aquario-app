@@ -22,8 +22,8 @@ export function ActionSheetHost() {
           <div className="overflow-hidden rounded-[14px] bg-surface/95 backdrop-blur-xl">
             {(conteudo?.titulo || conteudo?.mensagem) && (
               <div className="border-b border-separator px-4 py-3 text-center">
-                {conteudo.titulo && <p className="text-[13px] font-semibold text-text-2">{conteudo.titulo}</p>}
-                {conteudo.mensagem && <p className="mt-0.5 text-[13px] text-text-2">{conteudo.mensagem}</p>}
+                {conteudo.titulo && <p className="text-footnote font-semibold text-text-2">{conteudo.titulo}</p>}
+                {conteudo.mensagem && <p className="mt-0.5 text-footnote text-text-2">{conteudo.mensagem}</p>}
               </div>
             )}
             {conteudo?.opcoes.map((o, i) => (
@@ -32,7 +32,7 @@ export function ActionSheetHost() {
                 type="button"
                 onClick={() => fecharEscolha(i)}
                 className={cx(
-                  "pressable-row block h-14 w-full border-b border-separator text-[20px] last:border-b-0",
+                  "pressable-row block h-14 w-full border-b border-separator text-title3 last:border-b-0",
                   o.destrutivo ? "text-danger" : "text-accent",
                 )}
               >
@@ -43,7 +43,7 @@ export function ActionSheetHost() {
           <button
             type="button"
             onClick={() => fecharEscolha(null)}
-            className="pressable-row mt-2 block h-14 w-full rounded-[14px] bg-surface text-[20px] font-semibold text-accent"
+            className="pressable-row mt-2 block h-14 w-full rounded-[14px] bg-surface text-title3 font-semibold text-accent"
           >
             Cancelar
           </button>

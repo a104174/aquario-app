@@ -26,9 +26,9 @@ export function Agua({ dados }: { dados: DadosParametro[] }) {
     return (
       <div className="flex min-h-[76px] flex-1 items-center gap-2.5 text-text-2">
         <GlifoTeste className="h-5 w-4 shrink-0 text-text-3" />
-        <p className="text-[14px] leading-snug">
+        <p className="text-subhead leading-snug">
           Sem medições
-          <span className="block text-[12px] text-text-3">Os valores aparecem após o 1.º teste</span>
+          <span className="block text-caption text-text-3">Os valores aparecem após o 1.º teste</span>
         </p>
       </div>
     );
@@ -36,7 +36,7 @@ export function Agua({ dados }: { dados: DadosParametro[] }) {
   const recente = Math.min(...dados.map((d) => diasDesde(d.data)));
   return (
     <div className="min-w-0 flex-1">
-      <p className="mb-1 text-[12px] text-text-3">Água · medida {textoHaDias(recente)}</p>
+      <p className="mb-1 text-caption text-text-3">Água · medida {textoHaDias(recente)}</p>
       <div className="grid grid-cols-2 gap-x-3 gap-y-2">
         {dados.map((d) => (
           <Celula key={d.p} d={d} />
@@ -59,18 +59,18 @@ function Celula({ d }: { d: DadosParametro }) {
 
   return (
     <div role="group" className="@container min-w-0" aria-label={`${info.nome}: ${num(d.valor, info.decimais)} ${info.unidade}${faixa !== "ok" ? ", fora da referência" : ""}, medido ${textoHaDias(idade)}`}>
-      <div className="flex items-center gap-1 text-[11px] font-medium text-text-2" aria-hidden>
+      <div className="flex items-center gap-1 text-caption font-medium text-text-2" aria-hidden>
         <span className={cx("h-1.5 w-1.5 rounded-full", faixa === "mau" ? "bg-danger" : faixa === "atencao" ? "bg-warning" : "bg-[var(--tom)]")} />
         {info.curto}
         {faixa !== "ok" && <span className={faixa === "mau" ? "text-danger" : "text-warning"}>!</span>}
       </div>
       <div className="flex items-end justify-between gap-1" aria-hidden>
         <p className={cx("shrink-0 whitespace-nowrap leading-none tabular-nums", corValor)}>
-          <span className="text-[20px] font-semibold tracking-tight">{num(d.valor, info.decimais)}</span>
-          {unidade && <span className="ml-0.5 text-[11px] font-medium text-text-3">{unidade}</span>}
+          <span className="text-title3 font-semibold tracking-tight">{num(d.valor, info.decimais)}</span>
+          {unidade && <span className="ml-0.5 text-caption font-medium text-text-3">{unidade}</span>}
         </p>
         {antigo ? (
-          <span className="shrink-0 text-[11px] text-text-3">{textoHaDias(idade)}</span>
+          <span className="shrink-0 text-caption text-text-3">{textoHaDias(idade)}</span>
         ) : (
           <span className="flex shrink-0 items-center gap-0.5 text-text-3">
             {/* mini-gráfico só quando a célula tem largura (o valor nunca é cortado) */}

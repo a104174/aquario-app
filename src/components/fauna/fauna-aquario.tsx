@@ -87,7 +87,7 @@ export function FaunaAquario({ id, fauna, fotos }: { id: string; fauna?: FaunaEv
     <Seccao titulo="Fauna no aquário">
       {grupos.length ? (
         <>
-          <p className="mb-2 px-1 text-[13px] text-text-2">{plural(resumo.total, "animal", "animais")} · {plural(resumo.lista.length, "espécie", "espécies")}</p>
+          <p className="mb-2 px-1 text-footnote text-text-2">{plural(resumo.total, "animal", "animais")} · {plural(resumo.lista.length, "espécie", "espécies")}</p>
           <ul className="space-y-1.5">
             {grupos.map((g) => {
               const titulo = g.origem ? nomeGrupoFauna(g.origem) : g.especie;
@@ -104,12 +104,12 @@ export function FaunaAquario({ id, fauna, fotos }: { id: string; fauna?: FaunaEv
                   )}
                   <button type="button" onClick={() => void menu(g)} className="pressable flex min-h-[66px] min-w-0 flex-1 items-center gap-2 py-2 pr-2.5 text-left">
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[15px] font-semibold leading-tight">{titulo}</span>
-                      <span className="mt-0.5 block truncate text-[12px] text-text-2">
+                      <span className="block text-subhead font-semibold leading-tight">{titulo}</span>
+                      <span className="mt-0.5 block truncate text-caption text-text-2">
                         {g.origem?.notas || (g.origem ? "Grupo identificado" : "Grupo genérico")}
                       </span>
                     </span>
-                    <span className="shrink-0 rounded-lg bg-surface-2 px-1.5 py-1 text-[14px] font-semibold tabular-nums">×{g.quantidade}</span>
+                    <span className="shrink-0 rounded-lg bg-surface-2 px-1.5 py-1 text-subhead font-semibold tabular-nums">×{g.quantidade}</span>
                     <IconChevronDireita size={15} className="shrink-0 text-text-3" />
                   </button>
                 </li>

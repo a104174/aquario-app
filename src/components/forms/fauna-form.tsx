@@ -148,19 +148,19 @@ export function FaunaForm({ formId, inicial, aquarioId, onFeito, contexto, edita
   return (
     <form id={formId} onSubmit={submeter} noValidate>
       <ErroForm key={erro} texto={erro} />
-      {(aGuardar || aProcessar) && <p role="status" className="mb-3 text-[14px] text-accent">{aProcessar ? "A preparar a fotografia…" : "A guardar o registo…"}</p>}
+      {(aGuardar || aProcessar) && <p role="status" className="mb-3 text-subhead text-accent">{aProcessar ? "A preparar a fotografia…" : "A guardar o registo…"}</p>}
       <fieldset className="min-w-0" disabled={aGuardar}>
         {bloquearOrigem ? (
-          <p className="mb-3 px-2 text-[14px] text-text-2">{aquarios.find((a) => a.id === aqId)?.nome}</p>
+          <p className="mb-3 px-2 text-subhead text-text-2">{aquarios.find((a) => a.id === aqId)?.nome}</p>
         ) : <SeletorAquario aquarios={aquarios} valor={aqId} onValor={(v) => { setAqId(v); setGrupoId(null); setEscolha(null); }} />}
         {detalhar && (
-          <p className="mb-4 rounded-xl bg-accent-soft px-3 py-2.5 text-[14px] text-text">
+          <p className="mb-4 rounded-xl bg-accent-soft px-3 py-2.5 text-subhead text-text">
             Estás a identificar animais já registados. O total mantém-se. Disponíveis para este grupo: {maxDetalhar}.
           </p>
         )}
 
         {!detalhar && !inicial?.grupo_proprio && <div className="mb-5">
-          <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Tipo</p>
+          <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">Tipo</p>
           <Chips opcoes={contexto ? TIPOS_FAUNA.filter((t) => t.valor !== "entrada" && t.valor !== "nascimento") : TIPOS_FAUNA} valor={tipo} onValor={(v) => { setTipo(v); if (v === "entrada" || v === "nascimento") setGrupoId(null); }} />
         </div>}
 
@@ -197,14 +197,14 @@ export function FaunaForm({ formId, inicial, aquarioId, onFeito, contexto, edita
 
         {tipo === "transferencia" && outros.length > 0 && (
           <div className="enter-up mb-5">
-            <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Para o aquário</p>
+            <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">Para o aquário</p>
             <Chips opcoes={outros.map((a) => ({ valor: a.id, texto: a.nome }))} valor={destino} onValor={setDestino} />
           </div>
         )}
 
         {sai && opcoesGrupos.length > 0 && (
           <div className="mb-5">
-            <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Animais a movimentar</p>
+            <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">Animais a movimentar</p>
             <Chips opcoes={[{ valor: "", texto: `Grupo genérico · ×${genericos}` }, ...opcoesGrupos]}
               valor={grupoId ?? ""} onValor={(v) => setGrupoId(v || null)} />
           </div>

@@ -1,0 +1,95 @@
+/* Mascote: cores derivadas dos tokens (claro e escuro) */
+.mascote {
+  --mascote-barriga: color-mix(in srgb, var(--marca) 35%, #fff);
+  --mascote-tinta: #10262c;
+  --mascote-bochecha: color-mix(in srgb, #ff8a7a 70%, var(--marca));
+  overflow: visible;
+}
+@media (prefers-color-scheme: dark) {
+  .mascote {
+    --mascote-barriga: color-mix(in srgb, var(--marca) 45%, #fff);
+  }
+}
+
+/* Entrada com mola (uma vez, sem loops) */
+.mascote-entra {
+  animation: mascote-entra 520ms var(--mola-festa) both;
+  transform-origin: 50% 70%;
+}
+@keyframes mascote-entra {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.9) rotate(-6deg);
+  }
+}
+/* Festa: um salto e a cauda a abanar duas vezes; bolhas sobem */
+.mascote-festa .mascote-cauda {
+  transform-origin: 24px 50px;
+  animation: mascote-cauda 360ms var(--ease-in-out) 2 alternate;
+}
+@keyframes mascote-cauda {
+  to {
+    transform: rotate(-14deg);
+  }
+}
+.mascote-bolhas circle {
+  animation: mascote-bolha 900ms var(--ease-out) both;
+}
+.mascote-bolhas circle:nth-child(2) {
+  animation-delay: 120ms;
+}
+.mascote-bolhas circle:nth-child(3) {
+  animation-delay: 240ms;
+}
+@keyframes mascote-bolha {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  60% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mascote-entra,
+  .mascote-festa .mascote-cauda,
+  .mascote-bolhas circle {
+    animation: mascote-fade 200ms ease-out both;
+  }
+  @keyframes mascote-fade {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/* Cartão da celebração: sobe com mola, desaparece aos 1,8 s */
+.celebracao {
+  animation:
+    celebracao-entra 420ms var(--mola-festa) both,
+    celebracao-sai var(--dur-exit) var(--ease-out) 1640ms both;
+}
+@keyframes celebracao-entra {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+  }
+}
+@keyframes celebracao-sai {
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .celebracao {
+    animation:
+      mascote-fade 200ms ease-out both,
+      celebracao-sai-fade var(--dur-exit) linear 1640ms both;
+  }
+  @keyframes celebracao-sai-fade {
+    to {
+      opacity: 0;
+    }
+  }
+}

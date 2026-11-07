@@ -104,7 +104,7 @@ export default function AlertasPage() {
   function mostrarPorDia(alertas: Alerta[], tratados = false) {
     return agruparPorDia(alertas).map((grupo, i) => (
       <div key={grupo.dia} className="enter-up" style={{ ["--i" as string]: Math.min(i, 6) }}>
-        <h3 className="mb-1.5 px-1 text-[13px] font-medium text-text-2">{cabecalhoDia(grupo.data)}</h3>
+        <h3 className="mb-1.5 px-1 text-footnote font-medium text-text-2">{cabecalhoDia(grupo.data)}</h3>
         <div className="space-y-2">
           {grupo.itens.map((a) => (
             <CartaoAlerta
@@ -143,26 +143,26 @@ export default function AlertasPage() {
         </div>
       ) : lista.length === 0 ? (
         <div className="enter-up rounded-[14px] bg-surface px-4 py-10 text-center">
-          <p className="text-[17px] font-semibold">Está tudo bem 🐟</p>
+          <p className="text-body font-semibold">Está tudo bem 🐟</p>
           <p className="mt-1 text-text-2">Quando houver algo a fazer, aparece aqui e no telemóvel.</p>
         </div>
       ) : (
         <>
           <section className="enter-up mb-6">
-            <h2 className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">A fazer</h2>
+            <h2 className="mb-2 px-1 text-footnote font-semibold uppercase tracking-wide text-text-2">A fazer</h2>
             {ativos.length ? (
               <div className="space-y-4">{mostrarPorDia(ativos)}</div>
             ) : (
               <div className="rounded-[14px] bg-ok-soft px-4 py-4 text-center text-ok">
                 <p className="font-semibold">Tudo tratado 🐟</p>
-                <p className="mt-0.5 text-[14px] opacity-80">Não há ações pendentes.</p>
+                <p className="mt-0.5 text-subhead opacity-80">Não há ações pendentes.</p>
               </div>
             )}
           </section>
 
           {historico.length > 0 && (
             <section className="enter-up mb-5" style={{ ["--i" as string]: 1 }}>
-              <h2 className="mb-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-text-2">Tratados recentemente</h2>
+              <h2 className="mb-2 px-1 text-footnote font-semibold uppercase tracking-wide text-text-2">Tratados recentemente</h2>
               <div className="space-y-4">{mostrarPorDia(historico, true)}</div>
             </section>
           )}

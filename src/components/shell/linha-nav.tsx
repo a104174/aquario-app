@@ -26,11 +26,11 @@ export function LinhaNav({
     >
       <span className="text-accent">{icone}</span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[17px]">{texto}</span>
-        {detalhe && <span className="block truncate text-[13px] text-text-2">{detalhe}</span>}
+        <span className="block text-body">{texto}</span>
+        {detalhe && <span className="block truncate text-footnote text-text-2">{detalhe}</span>}
       </span>
       {!!badge && (
-        <span className="pop-in min-w-[22px] rounded-full bg-danger px-1.5 text-center text-[13px] font-semibold leading-[22px] text-white">
+        <span className="pop-in min-w-[22px] rounded-full bg-danger px-1.5 text-center text-footnote font-semibold leading-[22px] text-white">
           {badge}
         </span>
       )}

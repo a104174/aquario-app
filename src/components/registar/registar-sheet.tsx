@@ -101,7 +101,7 @@ export function RegistarSheet() {
       <div key={`${sessao}-${tipo ?? "escolha"}`} className={tipo ? "step-forward" : direcao === "back" ? "step-back" : ""}>
         {semAquarios ? (
           <div className="py-10 text-center">
-            <p className="text-[17px] font-semibold">Ainda não tens aquários</p>
+            <p className="text-body font-semibold">Ainda não tens aquários</p>
             <p className="mt-1 text-text-2">Cria um aquário no ecrã Aquários para começares a registar.</p>
           </div>
         ) : form ? (
@@ -125,8 +125,8 @@ export function RegistarSheet() {
                     <Icon size={24} />
                   </span>
                   <span>
-                    <span className="block text-[17px] font-semibold">{t.titulo}</span>
-                    <span className="block text-[13px] leading-snug text-text-2">{t.descricao}</span>
+                    <span className="block text-body font-semibold">{t.titulo}</span>
+                    <span className="block text-footnote leading-snug text-text-2">{t.descricao}</span>
                   </span>
                 </button>
               );

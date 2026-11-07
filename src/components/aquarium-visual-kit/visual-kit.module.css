@@ -156,7 +156,7 @@
 .areaGrafico {
   display: flex;
   gap: .5rem;
-  animation: revelar .34s cubic-bezier(.2, 0, 0, 1) both;
+  animation: revelar var(--dur-std, .34s) var(--ease-out, cubic-bezier(.2, 0, 0, 1)) both;
 }
 
 .areaGrafico svg {
@@ -247,7 +247,7 @@
 .nivelAnimado {
   transform-box: fill-box;
   transform-origin: center bottom;
-  animation: encher .38s cubic-bezier(.2, 0, 0, 1) both;
+  animation: encher var(--dur-slow, .38s) var(--ease-out, cubic-bezier(.2, 0, 0, 1)) both;
 }
 
 .datasCiclo {
@@ -333,4 +333,13 @@
   .nivelAnimado {
     animation: none;
   }
+}
+
+/* Variante compacta: menos ar e destaque quando o valor sai da referência */
+.compacto {
+  padding: .75rem .875rem;
+}
+.compacto[data-fora] {
+  box-shadow: inset 0 0 0 2px var(--warning, #9a5b00), var(--shadow-card, none);
+  background: color-mix(in srgb, var(--warning, #9a5b00) 7%, var(--kit-superficie));
 }

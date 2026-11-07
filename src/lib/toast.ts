@@ -1,43 +1,21 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { createElement } from "react";
+import { toast as sonner } from "sonner";
+import { ToastPill } from "@/components/ui/toasts";
 import { vibrar } from "./haptic";
 
 export type AcaoToast = { texto: string; onClick: () => void };
-export type Toast = { id: number; texto: string; tipo: "info" | "erro" | "ok"; saindo?: boolean; acao?: AcaoToast };
+export type TipoToast = "info" | "erro" | "ok";
 
-let toasts: Toast[] = [];
-let seq = 0;
-const ouvintes = new Set<() => void>();
-const emitir = () => ouvintes.forEach((f) => f());
-
-export function toast(texto: string, tipo: Toast["tipo"] = "info", ms = 3200, acao?: AcaoToast) {
-  const id = ++seq;
+/**
+ * Mostra um toast (Sonner). A mesma mensagem não se repete: o id é o texto,
+ * por isso um segundo toast igual atualiza o primeiro em vez de empilhar.
+ */
+export function toast(texto: string, tipo: TipoToast = "info", ms = 3200, acao?: AcaoToast) {
   if (tipo === "ok") vibrar("sucesso");
   if (tipo === "erro") vibrar("aviso");
-  toasts = [...toasts.filter((t) => t.texto !== texto), { id, texto, tipo, acao }].slice(-3);
-  emitir();
-  setTimeout(() => fecharToast(id), ms);
-}
-
-export function fecharToast(id: number) {
-  if (!toasts.some((t) => t.id === id && !t.saindo)) return;
-  toasts = toasts.map((t) => (t.id === id ? { ...t, saindo: true } : t));
-  emitir();
-  // remove depois da animação de saída (--dur-exit = 200ms)
-  setTimeout(() => {
-    toasts = toasts.filter((t) => t.id !== id);
-    emitir();
-  }, 200);
-}
-
-export function useToasts() {
-  return useSyncExternalStore(
-    (f) => {
-      ouvintes.add(f);
-      return () => ouvintes.delete(f);
-    },
-    () => toasts,
-    () => toasts,
-  );
+  // o selo da pastilha já mostra o estado: tira "✓ "/"⚠︎ " do início do texto
+  const limpo = texto.replace(/^(✓|⚠︎|⚠)\s*/u, "");
+  sonner.custom((id) => createElement(ToastPill, { id, texto: limpo, tipo, acao }), { id: limpo, duration: ms });
 }

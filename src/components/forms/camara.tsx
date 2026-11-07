@@ -84,25 +84,25 @@ export function PainelCamara({
           <IconCamara size={22} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-[17px] font-semibold">{recusada ? "A câmara está bloqueada" : "Acesso à câmara"}</p>
+          <p className="text-body font-semibold">{recusada ? "A câmara está bloqueada" : "Acesso à câmara"}</p>
           {recusada ? (
-            <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-[15px] text-text-2">
+            <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-subhead text-text-2">
               <li>Abre as Definições do iPhone</li>
               <li>Toca em Aquário (ou Safari)</li>
               <li>Em Câmara, escolhe Permitir</li>
             </ol>
           ) : (
-            <p className="mt-0.5 text-[15px] text-text-2">
+            <p className="mt-0.5 text-subhead text-text-2">
               Para tirares fotos dos aquários, o iPhone vai pedir acesso à câmara — só desta vez. As fotos ficam apenas na tua conta.
             </p>
           )}
         </div>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <Button type="button" variant="secondary" className="h-11 text-[15px]" onClick={recusada ? onGaleria : onFechar}>
+        <Button type="button" variant="secondary" className="h-11 text-subhead" onClick={recusada ? onGaleria : onFechar}>
           {recusada ? "Usar a galeria" : "Agora não"}
         </Button>
-        <Button type="button" className="h-11 text-[15px]" onClick={recusada ? onFechar : onContinuar}>
+        <Button type="button" className="h-11 text-subhead" onClick={recusada ? onFechar : onContinuar}>
           {recusada ? "OK" : "Continuar"}
         </Button>
       </div>

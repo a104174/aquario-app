@@ -62,7 +62,7 @@ export function TpaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Tpa>)
               placeholder="0"
               value={litros}
               onChange={(e) => setLitros(e.target.value.replace(/[^0-9.,]/g, ""))}
-              className="w-24 text-[22px] font-semibold tabular-nums"
+              className="w-24 text-title2 font-semibold tabular-nums"
               autoFocus={!inicial}
             />
             <span className="text-text-3">L</span>
@@ -89,15 +89,15 @@ export function TpaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Tpa>)
           <IconGota size={24} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] text-text-2">{condEscolhido ? `Dose de ${condEscolhido.nome}` : "Sem condicionador"}</p>
-          <p className="text-[28px] font-bold leading-tight tabular-nums">
+          <p className="text-footnote text-text-2">{condEscolhido ? `Dose de ${condEscolhido.nome}` : "Sem condicionador"}</p>
+          <p className="text-title1 font-bold leading-tight tabular-nums">
             {/* a key reinicia o pop a cada mudança: feedback imediato */}
             <span key={dose ?? "x"} className="pop-in inline-block">
               {dose !== null ? `${num(dose, 2)} ml` : "—"}
             </span>
           </p>
           {pct !== null && (
-            <p className="text-[13px] text-text-2">
+            <p className="text-footnote text-text-2">
               {pct}% dos {num(volume, 1)} L {aquario?.volume_util_l ? "úteis" : "brutos"}
             </p>
           )}
@@ -106,7 +106,7 @@ export function TpaForm({ formId, inicial, aquarioId, onFeito }: PropsForm<Tpa>)
 
       {condicionadores.length > 0 && (
         <div className="mb-5">
-          <p className="mb-1.5 px-4 text-[13px] uppercase tracking-wide text-text-2">Condicionador</p>
+          <p className="mb-1.5 px-4 text-footnote uppercase tracking-wide text-text-2">Condicionador</p>
           <Chips
             opcoes={[
               ...condicionadores.map((c) => ({ valor: c.id, texto: `${c.nome} · ${num(c.dose_por_litro ?? 0, 3)} ml/L` })),

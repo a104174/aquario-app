@@ -84,11 +84,11 @@ export default function DefinicoesPage() {
 
       <Grupo titulo="Lembrete de TPA" rodape="Primeiro aviso ao fim do intervalo e um segundo, urgente, mais tarde. Nada é enviado se as TPAs estiverem em dia.">
         <div className="relative flex min-h-[52px] items-center justify-between px-4 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator">
-          <span className="text-[17px]">Aviso aos</span>
+          <span className="text-body">Aviso aos</span>
           <Stepper valor={d.intervalo_tpa_dias} onValor={(v) => guardarDef.mutate({ intervalo_tpa_dias: v })} min={1} max={60} sufixo=" d" />
         </div>
         <div className="relative flex min-h-[52px] items-center justify-between px-4 after:absolute after:bottom-0 after:left-4 after:right-0 after:h-px after:bg-separator">
-          <span className="text-[17px]">Urgente aos</span>
+          <span className="text-body">Urgente aos</span>
           <Stepper
             valor={d.aviso_tpa_urgente_dias}
             onValor={(v) => guardarDef.mutate({ aviso_tpa_urgente_dias: v })}
@@ -99,8 +99,8 @@ export default function DefinicoesPage() {
         </div>
         <div className="flex min-h-[52px] items-center gap-3 px-4 py-2">
           <span className="flex-1">
-            <span className="block text-[17px]">Esponja do filtro</span>
-            <span className="block text-[13px] text-text-2">Uma vez por mês: lavar na água da TPA</span>
+            <span className="block text-body">Esponja do filtro</span>
+            <span className="block text-footnote text-text-2">Uma vez por mês: lavar na água da TPA</span>
           </span>
           <Interruptor ligado={d.lembrete_esponja} label="Lembrete mensal da esponja" onMudar={(v) => guardarDef.mutate({ lembrete_esponja: v })} />
         </div>
@@ -111,13 +111,13 @@ export default function DefinicoesPage() {
       <Grupo>
         <button type="button" onClick={terminarSessao} className="pressable-row flex min-h-[48px] w-full items-center gap-3 px-4 text-left text-danger">
           <IconSair size={22} />
-          <span className="text-[17px]">Terminar sessão</span>
+          <span className="text-body">Terminar sessão</span>
         </button>
       </Grupo>
 
       {/* no fim da página: aparece depois da hidratação sem empurrar nada (CLS) */}
       {!instalada && (
-        <div className="mb-5 rounded-[14px] bg-surface px-4 py-3 text-[15px]">
+        <div className="mb-5 rounded-[14px] bg-surface px-4 py-3 text-subhead">
           <p className="font-semibold">Instala no ecrã principal</p>
           <p className="text-text-2">
             No Safari, toca em <span className="font-medium">Partilhar</span> → <span className="font-medium">Adicionar ao ecrã principal</span>.
@@ -125,7 +125,7 @@ export default function DefinicoesPage() {
         </div>
       )}
 
-      <p className="pb-2 text-center text-[12px] text-text-3">Aquário · diário pessoal</p>
+      <p className="pb-2 text-center text-caption text-text-3">Aquário · diário pessoal</p>
     </Screen>
   );
 }

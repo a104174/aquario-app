@@ -42,7 +42,7 @@ export function BotaoSheet({
       onClick={onClick}
       disabled={disabled}
       className={cx(
-        "pressable flex min-h-11 items-center rounded-lg px-2 text-[17px] text-accent disabled:opacity-40",
+        "pressable flex min-h-11 items-center rounded-lg px-2 text-body text-accent disabled:opacity-40",
         forte && "font-semibold",
       )}
     >

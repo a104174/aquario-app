@@ -30,8 +30,8 @@ export function HomeDashboard() {
         <NavLink href="/alertas" className="mare-toque mare-superficie mt-2.5 flex min-h-[70px] items-center gap-3 rounded-[18px] px-3.5 py-2.5">
           {primeiro ? <IconeAlerta tipo={primeiro.tipo} /> : <IconSino size={22} className="mx-2 shrink-0 text-accent" />}
           <span className="min-w-0 flex-1">
-            <span className="block text-[14px] font-semibold leading-snug">{!alertas ? "Alertas" : primeiro ? `${ativos.length} ${ativos.length === 1 ? "alerta ativo" : "alertas ativos"}` : "Sem alertas ativos"}</span>
-            <span className="mt-0.5 block truncate text-[13px] text-text-2">{primeiro?.titulo ?? (alertas ? "Ver centro de alertas" : "Consultar avisos")}</span>
+            <span className="block text-subhead font-semibold leading-snug">{!alertas ? "Alertas" : primeiro ? `${ativos.length} ${ativos.length === 1 ? "alerta ativo" : "alertas ativos"}` : "Sem alertas ativos"}</span>
+            <span className="mt-0.5 block truncate text-footnote text-text-2">{primeiro?.titulo ?? (alertas ? "Ver centro de alertas" : "Consultar avisos")}</span>
           </span>
           <IconChevronDireita size={17} className="shrink-0 text-text-3" />
         </NavLink>

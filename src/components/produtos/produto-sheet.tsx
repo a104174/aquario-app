@@ -151,7 +151,7 @@ function Form({ inicial, onFeito }: { inicial?: Produto; onFeito: () => void }) 
                 key={m}
                 type="button"
                 onClick={() => setModoDose(m)}
-                className={`pressable h-9 rounded-full px-4 text-[15px] font-medium ${modoDose === m ? "bg-accent text-accent-contrast" : "bg-surface"}`}
+                className={`pressable h-9 rounded-full px-4 text-subhead font-medium ${modoDose === m ? "bg-accent text-accent-contrast" : "bg-surface"}`}
               >
                 {m === "litro" ? "ml por litro" : "Como no rótulo"}
               </button>
@@ -178,7 +178,7 @@ function Form({ inicial, onFeito }: { inicial?: Produto; onFeito: () => void }) 
 
       <Grupo>
         <div className="flex min-h-[48px] items-center justify-between px-4">
-          <span className="text-[17px]">Em uso</span>
+          <span className="text-body">Em uso</span>
           <Interruptor ligado={ativo} onMudar={setAtivo} label="Em uso" />
         </div>
       </Grupo>

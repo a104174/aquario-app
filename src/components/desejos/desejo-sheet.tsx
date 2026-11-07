@@ -106,17 +106,17 @@ function Form({ inicial, onFeito }: { inicial?: Desejo; onFeito: () => void }) {
         ) : inicial?.foto_path ? (
           <FotoImg foto={{ id: inicial.id, storage_path: inicial.foto_path, thumb_path: inicial.thumb_path }} className="aspect-[16/10] w-full" />
         ) : (
-          <div className="flex aspect-[16/10] w-full items-center justify-center text-[15px] text-text-3">Print ou foto (opcional)</div>
+          <div className="flex aspect-[16/10] w-full items-center justify-center text-subhead text-text-3">Print ou foto (opcional)</div>
         )}
       </div>
       <div className="mb-5 grid grid-cols-3 gap-2">
-        <button type="button" onClick={async () => escolher(await lerImagemColada().catch(() => null))} className="pressable h-11 rounded-xl bg-surface text-[15px] font-medium text-accent">
+        <button type="button" onClick={async () => escolher(await lerImagemColada().catch(() => null))} className="pressable h-11 rounded-xl bg-surface text-subhead font-medium text-accent">
           Colar print
         </button>
-        <button type="button" onClick={() => galeria.current?.click()} className="pressable h-11 rounded-xl bg-surface text-[15px] font-medium text-accent">
+        <button type="button" onClick={() => galeria.current?.click()} className="pressable h-11 rounded-xl bg-surface text-subhead font-medium text-accent">
           Galeria
         </button>
-        <button type="button" onClick={cam.abrir} className="pressable h-11 rounded-xl bg-surface text-[15px] font-medium text-accent">
+        <button type="button" onClick={cam.abrir} className="pressable h-11 rounded-xl bg-surface text-subhead font-medium text-accent">
           Câmara
         </button>
       </div>

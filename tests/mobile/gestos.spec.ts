@@ -31,7 +31,8 @@ test("swipe a partir da borda esquerda volta atrás", async ({ app }) => {
   await app.goto("/aquario?id=a1");
   await assentar(app);
   await gesto(app, [linha({ x: 4, y: 420 }, { x: 300, y: 430 }, 16)]);
-  await app.waitForTimeout(900);
+  // espera pela navegação (animação de saída + transição), não um tempo fixo
+  await app.waitForURL((u) => u.pathname === "/aquarios", { timeout: 4000 }).catch(() => {});
   expect.soft(new URL(app.url()).pathname, "swipe da borda não voltou atrás").toBe("/aquarios");
 });
 
@@ -143,7 +144,7 @@ test("pull-to-refresh no histórico", async ({ app }, info) => {
 test("toque longo numa linha abre ações", async ({ app }) => {
   await app.goto("/historico");
   await assentar(app);
-  const linha1 = app.locator("section button").first();
+  const linha1 = app.locator("main section button").first();
   const b = await linha1.boundingBox();
   await gesto(app, [Array.from({ length: 40 }, () => ({ x: b!.x + 60, y: b!.y + b!.height / 2 }))], { passoMs: 16 });
   await app.waitForTimeout(400);
