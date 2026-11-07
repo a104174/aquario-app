@@ -96,7 +96,7 @@ export function LinhaEvento({
     const cond = condicionadores?.find((c) => c.id === t.condicionador_id);
     const aq = aquarios?.find((a) => a.id === t.aquario_id);
     const vol = aq?.volume_util_l ?? aq?.volume_bruto_l;
-    icone = <Bolha className="bg-accent-soft text-accent"><IconGota size={20} /></Bolha>;
+    icone = <Bolha className="bg-accent-soft text-accent-forte"><IconGota size={20} /></Bolha>;
     titulo = (
       <>
         TPA de {num(t.litros, 1)} L{vol ? <span className="font-normal text-text-2"> · {Math.round((t.litros / vol) * 100)}%</span> : null}
@@ -105,7 +105,7 @@ export function LinhaEvento({
     detalhe = t.dose_ml != null ? `${num(t.dose_ml, 2)} ml de ${cond?.nome ?? "condicionador"}` : "Sem condicionador";
   } else if (evento.tipo === "medicao") {
     const m = evento.item;
-    icone = <Bolha className="bg-accent-soft text-accent"><IconTubo size={20} /></Bolha>;
+    icone = <Bolha className="bg-accent-soft text-accent-forte"><IconTubo size={20} /></Bolha>;
     titulo = <>Medição{m.metodo && <span className="font-normal text-text-2"> · {m.metodo === "gotas" ? "gotas" : "tira"}</span>}</>;
     detalhe = (
       <span className="mt-1 flex flex-wrap gap-1">

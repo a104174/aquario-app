@@ -81,7 +81,7 @@ export default function DesejosPage() {
               {d.foto_path ? (
                 <FotoImg foto={{ id: d.id, storage_path: d.foto_path, thumb_path: d.thumb_path }} thumb className="h-[72px] w-[72px] shrink-0 rounded-[12px]" />
               ) : (
-                <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-[12px] bg-accent-soft text-accent">
+                <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-[12px] bg-accent-soft text-accent-forte">
                   <IconEstrela size={28} />
                 </span>
               )}

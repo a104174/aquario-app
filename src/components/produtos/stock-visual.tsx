@@ -48,7 +48,7 @@ export function StockVisual({ produto, onFeito }: { produto: Produto; onFeito: (
         <button
           type="button"
           onClick={novaEmbalagem}
-          className="pressable flex min-h-[74px] flex-col items-center justify-center gap-2 rounded-[14px] bg-accent-soft px-1 text-accent"
+          className="pressable flex min-h-[74px] flex-col items-center justify-center gap-2 rounded-[14px] bg-accent-soft px-1 text-accent-forte"
         >
           <IconCaixa size={22} />
           <span className="text-caption font-semibold">Nova</span>

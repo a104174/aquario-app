@@ -79,6 +79,46 @@ Decisões do dono (2026-11-07): modo escuro automático volta; personalidade exp
 
 Testes: suite móvel 289 ✓; três testes ajustados à estrutura nova (seletor do toque longo, espera pela navegação no swipe, nome acessível do hero) — sem regressões de teclado, safe areas, scroll ou PWA.
 
-<!-- CICLO2 -->
+### Ciclo 2 — re-critique (A: 31/40 · B: sem P0/P1) e correções
+Re-avaliação com as duas avaliações isoladas sobre o ciclo 1. Encontraram 2 P1 (véu claro por baixo da navegação no escuro; branco sobre vermelho no escuro a 2,7:1) e vários P2/P3, todos tratados:
+
+| Prioridade | O que mudou |
+|---|---|
+| P1 | Véu da navegação feito de `--bg` (já não fica claro no escuro); ação flutuante por cima dele |
+| P1 | `--danger-solido` / `--sobre-ok`: texto sobre vermelho e verde ≥ 4,5:1 nos dois temas (toast de erro, badges, botão de perigo, visto das férias) |
+| P2 | Contrastes no limite no claro (4,3–4,48:1) → marca `#07707f`, perigo `#b02f29`, texto sobre `accent-soft` em `accent-forte` (10 sítios) |
+| P2 | Ações de criar de Produtos, Desejos e Férias no terço inferior (Aquários e Fontes mantêm o "+" do header: criar é raro) |
+| P2 | Personalidade nos ecrãs secundários: mascote nos vazios de Desejos e Férias; celebração ao completar a checklist das férias; aviso de stock só depois da celebração da TPA |
+| P2 | Header compacto mais opaco (0,94) — o conteúdo já não se lê através do título |
+| P3 | Segmento ativo mais claro que a calha no escuro; pastilha da navegação mais larga; expressões da mascote mais distintas; ícone de raio para os cortes de luz; cartões de escolha do Registar com relevo e tons por tipo (tokens `--tom-*`, partilhados com o Início) |
+
+Decisões registadas: a sheet da TPA não vem pré-preenchida (o "Fiz TPA" já é o caminho de um toque; um valor pré-preenchido arriscava registos por engano). `bounce-easing` do detetor fica como aviso intencional (`--mola-suave`/`--mola-festa`, só em botões com relevo, mascote e celebrações). `hard-offset-shadow` nos botões é a direção pedida (relevo à Duolingo).
+
+## 3. Resultado
+
+| Medida | Antes | Depois |
+|---|---|---|
+| Heurísticas de Nielsen (critique A) | 26/40 | **31/40** no ciclo 2, antes das correções desse ciclo |
+| Audit técnico | 12/20 | **17/20** (a11y 4 · perf 3 · tema 4 · responsivo 3 · integridade 3) |
+| Problemas P0/P1 abertos | 4 P1 | **0** |
+| axe (8 rotas × claro/escuro × WebKit/Chromium) | `region` em 10/10 rotas | **0 violações** |
+| Texto < 12 px | 1 (10 px) + 40 de 11–12 px | **0** < 12 px; papéis iOS em rem |
+| Modo escuro | inexistente | automático, com tokens próprios |
+| Suite móvel | 289 | **297 ✓** (+ axe em escuro) |
+| Detetor Impeccable | 1 aviso | 2 avisos intencionais (molas) |
+
+Antes/depois (iPhone 16 Pro Max, 440×956): ![antes e depois](review-design-antes-depois.jpg)
+
+Capturas completas: `reviews/2026-11-07/design-antes/` e `reviews/2026-11-07/design-depois/` (claro, escuro, scroll, sheets, estados); vídeos em `…/videos/` (Fiz TPA + navegação + registo; tabs).
+
+Ficam para depois (P3): `nested-cards` no Detalhe (ciclo de TPA + parâmetros dentro da secção), violeta dos alertas de ninhada sem token, números que mudam sem transição.
+
+## 4. Para confirmar no iPhone real (5 pontos)
+1. **Tema escuro**: muda o iPhone para escuro com a app aberta — fundo, cartões, navegação, sheets e a barra de estado (cor do tema) acompanham, sem faixas claras.
+2. **Botões com relevo**: carrega devagar no "Fiz TPA", no "Guardar" e no "+" da navegação — afundam enquanto o dedo está em baixo e voltam com uma pequena mola ao largar.
+3. **Celebração**: faz uma TPA com "Fiz TPA" (e anula a seguir) — a mascote aparece a festejar ~2 s, sente-se a vibração de sucesso, e o toast com "Anular" fica visível e pode ser arrastado para o lado.
+4. **Uma mão**: no detalhe de um aquário, o "Fiz TPA" está no fundo, ao alcance do polegar, acima da navegação, e desaparece quando abres o teclado numa sheet.
+5. **Tamanho do texto**: em Definições → Acessibilidade → Tamanho do texto, aumenta um ou dois níveis — a app acompanha (Dynamic Type) sem cortar títulos nem rótulos da navegação.
+
 
 

@@ -195,7 +195,7 @@ export function Lembretes() {
         }
       >
         <div className="flex flex-col items-center px-2 pb-2 pt-2 text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent-forte">
             <IconSino size={32} />
           </span>
           <p className="mt-3 text-title2 font-bold leading-tight">Lembretes na hora certa</p>

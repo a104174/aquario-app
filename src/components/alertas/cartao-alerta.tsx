@@ -61,7 +61,7 @@ export function CartaoAlerta({
           <button type="button" onClick={onIgnorar} className="pressable min-h-11 rounded-[10px] px-2.5 text-footnote font-medium text-text-2">
             Ignorar
           </button>
-          <button type="button" onClick={onResolver} className="pressable min-h-11 rounded-[10px] bg-accent-soft px-3 text-footnote font-semibold text-accent">
+          <button type="button" onClick={onResolver} className="pressable min-h-11 rounded-[10px] bg-accent-soft px-3 text-footnote font-semibold text-accent-forte">
             Já tratei
           </button>
         </div>

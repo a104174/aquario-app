@@ -82,7 +82,7 @@ export function AtalhosRapidos() {
                 aria-pressed={ativa}
                 onClick={() => alternar(opcao.tipo)}
                 className={`pressable flex min-h-12 items-center gap-2 rounded-[12px] px-3 text-left text-subhead font-medium ${
-                  ativa ? "bg-accent-soft text-accent" : "bg-surface-2 text-text-2"
+                  ativa ? "bg-accent-soft text-accent-forte" : "bg-surface-2 text-text-2"
                 }`}
               >
                 <Icon size={20} />

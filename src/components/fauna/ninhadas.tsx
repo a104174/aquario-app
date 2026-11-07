@@ -53,7 +53,7 @@ export function Ninhadas({ aquarioId }: { aquarioId: string }) {
                   n.estado === "encerrada" && "opacity-55",
                 )}
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent-forte">
                   <IconBebe size={22} />
                 </span>
                 <span className="min-w-0 flex-1">

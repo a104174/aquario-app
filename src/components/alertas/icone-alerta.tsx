@@ -28,7 +28,7 @@ export function IconeAlerta({ tipo }: { tipo: string }) {
 }
 
 const CLASSES: Record<TomAlerta, string> = {
-  azul: "bg-accent-soft text-accent",
+  azul: "bg-accent-soft text-accent-forte",
   verde: "bg-ok-soft text-ok",
   amarelo: "bg-warning-soft text-warning",
   vermelho: "bg-danger-soft text-danger",

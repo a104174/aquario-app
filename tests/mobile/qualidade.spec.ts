@@ -3,8 +3,12 @@ import { achado, assentar, expect, test } from "./fixtures";
 
 test.describe("acessibilidade (axe-core)", () => {
   test.beforeEach(({}, info) => test.skip(!["iphone-15", "pixel-7"].includes(info.project.name)));
-  for (const [nome, url] of [["aquarios", "/aquarios"], ["detalhe", "/aquario?id=a1"], ["historico", "/historico"], ["definicoes", "/definicoes"], ["fontes", "/fontes"]]) {
-    test(`axe ${nome}`, async ({ app }, info) => {
+  const ROTAS = [["aquarios", "/aquarios"], ["detalhe", "/aquario?id=a1"], ["detalhe-atraso", "/aquario?id=a2"], ["inicio", "/"], ["historico", "/historico"], ["definicoes", "/definicoes"], ["alertas", "/alertas"], ["fontes", "/fontes"]];
+  // claro e escuro (o tema escuro tem tokens próprios: o contraste também tem de passar)
+  for (const tema of ["light", "dark"] as const)
+  for (const [nome, url] of ROTAS) {
+    test(`axe ${nome}${tema === "dark" ? " (escuro)" : ""}`, async ({ app }, info) => {
+      await app.emulateMedia({ colorScheme: tema });
       await app.goto(url);
       await assentar(app, 1200);
       const r = await new AxeBuilder({ page: app as never }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).exclude("#__moldura").analyze();

@@ -80,7 +80,7 @@ export function PainelCamara({
   return (
     <div role="region" aria-label="Acesso à câmara" className="pop-in mb-4 rounded-[14px] bg-surface p-4">
       <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent-forte">
           <IconCamara size={22} />
         </span>
         <div className="min-w-0 flex-1">

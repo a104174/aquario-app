@@ -18,11 +18,11 @@
   --text-3: #6a6d72; /* ≥ 4,5:1 em --bg e --surface */
   --separator: rgb(20 21 23 / 0.08);
   /* marca: água (ações primárias, estado ativo) — texto branco ≥ 4,5:1 */
-  --marca: #087a8d;
-  --marca-relevo: #055866; /* lábio inferior do botão com relevo */
+  --marca: #07707f; /* ≥ 5:1 com branco e sobre --bg */
+  --marca-relevo: #04505b; /* lábio inferior do botão com relevo */
   --accent: var(--marca);
-  --accent-soft: rgb(8 122 141 / 0.1);
-  --accent-forte: #06606f; /* texto sobre accent-soft */
+  --accent-soft: rgb(7 112 127 / 0.1);
+  --accent-forte: #055a66; /* texto sobre accent-soft (≥ 6:1) */
   --accent-contrast: #ffffff;
   /* secundário com relevo */
   --botao-2: var(--surface);
@@ -31,8 +31,8 @@
   /* cor aquática: dados e estados, com parcimónia */
   --agua: #0b7f90;
   --agua-soft: rgb(11 127 144 / 0.1);
-  --danger: #c0352e;
-  --danger-solido: #c0352e; /* fundo para texto branco (≥ 4,5:1) */
+  --danger: #b02f29; /* ≥ 4,5:1 também sobre --danger-soft */
+  --danger-solido: #b02f29; /* fundo para texto branco (≥ 4,5:1) */
   --sobre-ok: #ffffff;
   --segmento-ativo: #ffffff; /* segmento ativo do controlo segmentado (mais claro que a calha) */
   --danger-soft: rgb(214 69 61 / 0.1);
