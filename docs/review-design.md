@@ -8,4 +8,57 @@ Capturas e vídeos: `reviews/2026-11-07/design-antes/` e `design-depois/` (`ipho
 Decisões do dono (2026-11-07): modo escuro automático volta; personalidade expressiva à Duolingo
 **em toda a app**; mascote-peixe original a criar.
 
-<!-- AUDITORIA -->
+## 1. Auditoria (ciclo 0, antes de mexer em código)
+
+**Método:** `critique` com duas avaliações isoladas em sub-agentes — A (revisão de design) e B (detetor CLI + overlay no browser + axe) —, `audit` técnico e auditoria de motion com `review-animations` / `improve-animations` (Emil).
+
+### Notas
+| Medida | Resultado |
+|---|---|
+| Heurísticas de Nielsen (critique A) | **26/40** — Aceitável |
+| Audit técnico (a11y 3 · perf 3 · tema 1 · responsivo 3 · integridade 2) | **12/20** — Aceitável |
+| Detetor (CLI + browser) | 1 advisory (`--ease-pop` com overshoot) · `radial-spotlight-glow` e `ai-color-palette` no hero do Início · texto a 10 px · 5 `nested-cards` (falso positivo: a folha sobre o hero) |
+| axe-core (10 rotas, WCAG 2.2 AA) | 0 sérias/críticas · `region` (moderada) em 10/10 rotas · 64 contrastes por verificar sobre fotos/gradientes |
+| CLS | 0,000 em todas as rotas |
+| Alvos < 44 px | 0 |
+| Texto < 13 px | 103 nós (Início 38 · Aquários 30 · Detalhe 28); 1× 10 px |
+| Modo escuro | **inexistente**: 0 regras `prefers-color-scheme`; capturas claro/escuro iguais (0,00 % de diferença) |
+| Cores fora dos tokens | 35 em `.tsx` + 25 em CSS locais (mare, kit, widget) |
+
+**Veredito de especificidade:** o conteúdo é muito do domínio (TPA, AMTRA, AGERE, maternidade), mas a forma é genérica — off-white, carvão, cartões com sombra, ícones em círculos — e serve igual a uma app de finanças. Contradiz o compromisso de marca (expressiva, à Duolingo, com mascote).
+
+### O que funciona (manter)
+- "Fiz TPA" num toque com litros e dose pelo volume útil e "Anular".
+- Sheets de registo: Guardar fixo, predefinições em chips, unidades, teclado certo (revisão anterior).
+- Histórico agrupado por dia com os parâmetros em chips.
+- Base técnica: teclado/visualViewport, safe areas, scroll, PWA, CLS 0, alvos ≥ 44 px.
+
+### Motion (Emil: `review-animations`)
+| # | Achado | Regra | Prioridade |
+|---|---|---|---|
+| M1 | Toasts com keyframes próprios (não interrompíveis, sem swipe, fecham com qualquer toque) | interruptibilidade; Sonner | P1 |
+| M2 | O momento de maior mérito (TPA feita) acaba num toast; não há celebração (pico/fim) | delight em ações raras/significativas | P1 |
+| M3 | Saídas com `--ease-in` (tab bar, toasts, visualizador, fade das view transitions) | "nunca ease-in em UI": saídas rápidas com ease-out | P2 |
+| M4 | Overshoot (`--ease-pop`) usado em 12 elementos genéricos (imagens, badges) | bounce só em interações lúdicas/celebrações | P2 |
+| M5 | Brilho radial animado/decorativo no hero do Início | decoração sem propósito | P2 |
+| M6 | Durações/curvas literais no kit (`.34s`, `.38s`, `cubic-bezier` repetida) e em `globals.css` | tokens únicos | P3 |
+| M7 | Números que mudam (dias, contagens) saltam sem transição | continuidade de estado | P3 |
+| ✓ | Pressão `scale(.97)` 120 ms, disco da navegação 280 ms ease-out, sheets vaul com curva de gaveta, `prefers-reduced-motion` tratado | — | manter |
+
+### Relatório priorizado (impacto × esforço)
+| Prio | Problema | Onde | Correção | Comando | Impacto | Esforço |
+|---|---|---|---|---|---|---|
+| **P1** | Sem modo escuro | `globals.css`, `layout.tsx`, cores literais em `ciclo-tpa`, `hero-aquario`, `screen`, CSS locais | Tokens claro/escuro, `themeColor` por esquema, literais → tokens | `colorize`, `adapt` | Alto | M |
+| **P1** | Personalidade ausente (carvão sóbrio vs. "Duolingo aquático") | `button.tsx`, tokens, Início, estados vazios | Cor de marca aquática saturada nas ações; botões com relevo que afundam; celebrações; mascote | `bolder`, `delight` | Alto | M–L |
+| **P1** | Ação principal fora do terço inferior (Fiz TPA a 29–47 % da altura) | `aquario/detalhe.tsx` | "Fiz TPA" flutuante acima da navegação no detalhe | `layout` | Alto | S |
+| **P1** | Toasts sem swipe/empilhamento, fecham com toque acidental | `ui/toasts.tsx`, `lib/toast.ts` | Sonner (skill `ask-sonner`), mantendo a API `toast()` | `animate` | Médio | S |
+| **P2** | Escala tipográfica fragmentada (16 tamanhos, 103 nós < 13 px, px fixos) | 17 ficheiros + kit | Papéis iOS em tokens (34/22/17/15/13/12) em rem; nada < 12 px | `typeset` | Médio | M |
+| **P2** | Cartões do kit densos (≈28 dados, data repetida 4×, referência sempre visível) | `agua-manutencao.tsx`, kit | Variante compacta: data uma vez, referência só fora da faixa, fora da faixa em destaque | `distill` | Médio | S–M |
+| **P2** | Navegação só com ícones (reconhecer vs. recordar) | `tab-bar.tsx` | Rótulos curtos sob os ícones, como no iOS | `clarify` | Médio | S |
+| **P2** | Motion M3–M5 | `globals.css`, `mare.css` | Saídas ease-out curtas; overshoot só em celebrações; sem brilho decorativo | `animate`, `quieter` | Médio | S |
+| **P3** | Iconografia genérica (ícone em círculo; peixe para 3 conceitos; sino para cortes de luz) | Registar, alertas, histórico | Glifos próprios (raio, ninhada) e menos círculos | `polish` | Baixo | S |
+| **P3** | axe `region`: título fora de landmarks | `screen.tsx` | Título dentro de `<header>` | `audit` | Baixo | S |
+| **P3** | Literais de motion (M6), números a saltar (M7) | kit, `globals.css` | Tokens; transição nos números | `polish` | Baixo | S |
+
+<!-- CICLOS -->
+
