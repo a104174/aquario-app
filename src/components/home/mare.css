@@ -47,22 +47,15 @@
 
 /* atalhos: superfícies claras, cada tipo com um tom próprio (só na arte e no sinal) */
 .mare-acao {
-  --acao-tom: #0b7f90;
+  --acao-tom: var(--tom-tpa);
   color: var(--text);
   background: radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--acao-tom) 11%, transparent), transparent 68%), var(--surface);
   box-shadow: var(--shadow-card);
 }
-.mare-acao[data-acao="medicao"] { --acao-tom: #4a63c9; }
-.mare-acao[data-acao="foto"] { --acao-tom: #b4693a; }
-.mare-acao[data-acao="fauna"] { --acao-tom: #2f8a55; }
-.mare-acao[data-acao="ninhada"] { --acao-tom: #9a4fb3; }
-@media (prefers-color-scheme: dark) {
-  .mare-acao { --acao-tom: #4cc9db; }
-  .mare-acao[data-acao="medicao"] { --acao-tom: #93a6ff; }
-  .mare-acao[data-acao="foto"] { --acao-tom: #f0a877; }
-  .mare-acao[data-acao="fauna"] { --acao-tom: #6fd99a; }
-  .mare-acao[data-acao="ninhada"] { --acao-tom: #d29ae6; }
-}
+.mare-acao[data-acao="medicao"] { --acao-tom: var(--tom-medicao); }
+.mare-acao[data-acao="foto"] { --acao-tom: var(--tom-foto); }
+.mare-acao[data-acao="fauna"] { --acao-tom: var(--tom-fauna); }
+.mare-acao[data-acao="ninhada"] { --acao-tom: var(--tom-ninhada); }
 .mare-acao-sinal {
   color: var(--acao-tom);
   border: 1px solid color-mix(in srgb, var(--acao-tom) 33%, transparent);

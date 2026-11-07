@@ -119,11 +119,10 @@ export function RegistarSheet() {
                     escolherTipoRegisto(t.tipo);
                   }}
                   style={{ ["--i" as string]: i }}
-                  className={`pressable ${direcao === "back" ? "" : "enter-up"} ${i === 4 ? "col-span-2 !flex-row items-center" : ""} flex flex-col items-start gap-3 rounded-[18px] bg-surface p-4 text-left`}
+                  data-tipo={t.tipo}
+                  className={`cartao-escolha ${direcao === "back" ? "" : "enter-up"} ${i === 4 ? "col-span-2 !flex-row items-center" : ""} flex flex-col items-start gap-3 p-4 text-left`}
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <Icon size={24} />
-                  </span>
+                  <span className="cartao-escolha-icone"><Icon size={28} /></span>
                   <span>
                     <span className="block text-body font-semibold">{t.titulo}</span>
                     <span className="block text-footnote leading-snug text-text-2">{t.descricao}</span>

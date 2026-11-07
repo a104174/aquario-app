@@ -93,6 +93,13 @@
   --mola-festa: cubic-bezier(0.34, 1.56, 0.64, 1); /* celebrações */
   --relevo: 4px; /* altura do lábio dos botões com relevo */
 
+  /* ----- Tons por tipo de registo (atalhos, cartões de escolha) ----- */
+  --tom-tpa: #0b7f90;
+  --tom-medicao: #4a63c9;
+  --tom-foto: #b4693a;
+  --tom-fauna: #2f8a55;
+  --tom-ninhada: #9a4fb3;
+
   /* Série dos gráficos (contraste >= 3:1 contra --surface) */
   --chart-series: #0b7f90;
   --chart-wash: rgb(11 127 144 / 0.1);
@@ -138,6 +145,11 @@
     --chart-wash: rgb(76 201 219 / 0.12);
     --chart-grid: rgb(237 242 244 / 0.08);
     --chart-band: rgb(237 242 244 / 0.05);
+    --tom-tpa: #4cc9db;
+    --tom-medicao: #93a6ff;
+    --tom-foto: #f0a877;
+    --tom-fauna: #6fd99a;
+    --tom-ninhada: #d29ae6;
   }
 }
 
@@ -1064,4 +1076,38 @@ html[data-teclado] .acao-flutuante {
   transform: translateY(40px);
   opacity: 0;
   pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ *
+ *  Cartões de escolha com relevo (Registar): contorno + lábio no tom do
+ *  tipo; ao toque descem 2 px. Ícone no tom, sem círculo.
+ * ------------------------------------------------------------------ */
+.cartao-escolha {
+  --tom: var(--tom-tpa);
+  border: 2px solid color-mix(in srgb, var(--tom) 22%, var(--separator));
+  border-bottom-width: 5px;
+  border-radius: 18px;
+  background: var(--surface);
+  transition:
+    transform 220ms var(--mola-suave),
+    border-bottom-width 220ms var(--mola-suave);
+  -webkit-tap-highlight-color: transparent;
+}
+.cartao-escolha:active {
+  transform: translateY(3px);
+  border-bottom-width: 2px;
+  transition-duration: 80ms;
+}
+.cartao-escolha .cartao-escolha-icone {
+  color: var(--tom);
+}
+.cartao-escolha[data-tipo="medicao"] { --tom: var(--tom-medicao); }
+.cartao-escolha[data-tipo="foto"] { --tom: var(--tom-foto); }
+.cartao-escolha[data-tipo="fauna"] { --tom: var(--tom-fauna); }
+.cartao-escolha[data-tipo="ninhada"] { --tom: var(--tom-ninhada); }
+@media (prefers-reduced-motion: reduce) {
+  .cartao-escolha,
+  .cartao-escolha:active {
+    transition-duration: 1ms;
+  }
 }

@@ -193,3 +193,10 @@ export const IconBebe = (p: P) => (
     <path d="M4 12c2-5 9-7 14-3l2-2v8l-2-2c-5 4-12 2-14-1" />
   </Base>
 );
+
+/** Raio: cortes de luz (E-REDES). */
+export const IconRaio = (p: P) => (
+  <Base {...p}>
+    <path d="M13.2 2.8 5.6 13.4h5.5l-1.2 7.8 7.6-10.6h-5.5l1.2-7.8Z" />
+  </Base>
+);

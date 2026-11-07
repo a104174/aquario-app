@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Exterior } from "@/components/fontes/exterior";
 import { FonteSheet } from "@/components/fontes/fonte-sheet";
-import { IconChevronDireita, IconGlobo, IconGota, IconMais, IconSino, IconEstrela, IconTermometro } from "@/components/icons";
+import { IconChevronDireita, IconGlobo, IconGota, IconMais, IconRaio, IconEstrela, IconTermometro } from "@/components/icons";
 import { BotaoHeader, Screen, Seccao } from "@/components/shell/screen";
 import { Button } from "@/components/ui/button";
 import { SkeletonLista } from "@/components/ui/skeleton";
@@ -18,7 +18,7 @@ import type { FonteExterna } from "@/lib/tipos";
 
 const ICONE: Record<string, React.ReactNode> = {
   meteo: <IconTermometro size={22} />,
-  eredes: <IconSino size={22} />,
+  eredes: <IconRaio size={22} />,
   agere_avisos: <IconGota size={22} />,
   agere_qualidade: <IconGota size={22} />,
   loja: <IconEstrela size={22} />,

@@ -60,5 +60,25 @@ Decisões do dono (2026-11-07): modo escuro automático volta; personalidade exp
 | **P3** | axe `region`: título fora de landmarks | `screen.tsx` | Título dentro de `<header>` | `audit` | Baixo | S |
 | **P3** | Literais de motion (M6), números a saltar (M7) | kit, `globals.css` | Tokens; transição nos números | `polish` | Baixo | S |
 
-<!-- CICLOS -->
+## 2. Ciclos de correção
+
+### Ciclo 1 — fundação expressiva (`78eb10c`)
+| Prioridade | O que mudou | Ficheiros |
+|---|---|---|
+| P1 escuro | Tokens claro/escuro automáticos (fundo, superfícies, texto, marca, estados, gráficos, sombras), `themeColor` por esquema, CSS do Início e do kit sem cores presas ao claro | `globals.css`, `layout.tsx`, `mare.css` |
+| P1 personalidade | Cor de marca aquática (`--marca`) nas ações; **botões com relevo** que afundam ao toque (primário/secundário/perigo); "+" da navegação com relevo | `globals.css`, `ui/button.tsx`, `shell/tab-bar.tsx` |
+| P1 mascote | Peixinho original em SVG (contente · festa · preocupado), cores dos tokens: hero do Início como **indicador de estado**, estados vazios e de erro | `mascote/*`, `home/ciclo-tpa.tsx`, `ui/estado-erro.tsx`, páginas |
+| P1 celebração | "TPA feita!" — mascote em festa com bolhas, 1,8 s, não bloqueante, anunciada a leitores de ecrã | `lib/celebrar.ts`, `mascote/celebracao.tsx`, `lib/fiz-tpa.ts` |
+| P1 uma mão | "Fiz TPA" flutuante no terço inferior do Detalhe (esconde-se com o teclado) | `shell/screen.tsx`, `aquario/detalhe.tsx` |
+| P1 toasts | **Sonner** headless (swipe, em lista, interrompível); toque já não fecha; "Anular" sempre visível; selo SVG em vez de ✓ | `ui/toasts.tsx`, `lib/toast.ts`, `layout.tsx` |
+| P2 tipografia | Papéis iOS em rem com Dynamic Type (`font: -apple-system-body`): 236 tamanhos soltos → 9 papéis; nada < 12 px | `globals.css` + 40 ficheiros |
+| P2 densidade | Variante `compacto` do `ParametroAgua` (kit): data uma vez no título da secção, referência só fora da faixa, cartão fora da faixa destacado | kit, `agua-manutencao.tsx`, `ultima-medicao.tsx` |
+| P2 navegação | Rótulos sob os ícones; pastilha ativa desliza (só transform) | `tab-bar.tsx`, `globals.css` |
+| P2 motion | Saídas ease-out 160 ms (sem ease-in); overshoot só em celebrações; `pop-in` sem bounce e a partir de 0,92; sem brilho decorativo; literais do kit → tokens | `globals.css`, kit, `mare.css` |
+| P3 a11y | Título do ecrã dentro de um landmark (axe `region`); contexto "Ciclo de TPA" para o VoiceOver | `screen.tsx`, `ciclo-tpa.tsx` |
+
+Testes: suite móvel 289 ✓; três testes ajustados à estrutura nova (seletor do toque longo, espera pela navegação no swipe, nome acessível do hero) — sem regressões de teclado, safe areas, scroll ou PWA.
+
+<!-- CICLO2 -->
+
 

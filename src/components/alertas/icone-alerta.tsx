@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { IconBebe, IconCaixa, IconCamara, IconEstrela, IconGlobo, IconGota, IconMala, IconSino, IconTermometro } from "@/components/icons";
+import { IconBebe, IconCaixa, IconCamara, IconEstrela, IconGlobo, IconGota, IconMala, IconRaio, IconSino, IconTermometro } from "@/components/icons";
 import { apresentacaoAlerta, type TomAlerta } from "@/lib/alertas";
 import { cx } from "@/lib/cx";
 
@@ -11,7 +11,7 @@ const MAPA: Record<string, ReactNode> = {
   ferias: <IconMala size={20} />,
   foto: <IconCamara size={20} />,
   meteo: <IconTermometro size={20} />,
-  luz: <IconSino size={20} />,
+  luz: <IconRaio size={20} />,
   agua: <IconGota size={20} />,
   qualidade: <IconGota size={20} />,
   loja: <IconEstrela size={20} />,
